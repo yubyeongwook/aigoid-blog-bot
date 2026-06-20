@@ -1,0 +1,75 @@
+{
+  "_comment": "여기 notebook_id는 전부 NotebookLM 노트북 ID입니다",
+  "experts": [
+    {
+      "slot": 1,
+      "name": "Expert①_매크로",
+      "notebooklm_notebook_id": "6b15e827-4c61-4f3f-bfbd-7bdfc8f1c67a",
+      "domains": [
+        "FOMC",
+        "CPI",
+        "금리",
+        "환율",
+        "달러",
+        "나스닥",
+        "S&P500",
+        "코스피",
+        "국채",
+        "VIX",
+        "연준",
+        "한국은행"
+      ]
+    },
+    {
+      "slot": 2,
+      "name": "Expert②_반도체AI",
+      "notebooklm_notebook_id": "5b7d5465-5745-4750-ab1f-e200ad005918",
+      "domains": [
+        "반도체",
+        "SK하이닉스",
+        "삼성전자",
+        "HBM",
+        "엔비디아",
+        "TSMC",
+        "AI칩",
+        "데이터센터",
+        "메모리",
+        "파운드리"
+      ]
+    },
+    {
+      "slot": 3,
+      "name": "Expert③_2차전지로봇",
+      "notebooklm_notebook_id": "a94ab8d0-24a2-458a-bfa4-2388bf76ef12",
+      "domains": [
+        "2차전지",
+        "배터리",
+        "에코프로",
+        "전고체",
+        "양극재",
+        "전기차",
+        "로봇",
+        "변압기",
+        "ESS",
+        "LG에너지솔루션"
+      ]
+    },
+    {
+      "slot": 4,
+      "name": "Expert④_수급공시정책",
+      "notebooklm_notebook_id": "02cc4ae8-748e-41b8-a5ae-0fa89e8b8db5",
+      "domains": [
+        "수급",
+        "외국인",
+        "기관",
+        "순매수",
+        "공시",
+        "수주",
+        "정책",
+        "규제",
+        "어닝",
+        "서킷브레이커"
+      ]
+    }
+  ]
+}
