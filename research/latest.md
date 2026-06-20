@@ -1,6 +1,6 @@
 # 전력/변압기 슈퍼사이클 분석 보고서 & 블로그 원고
 
-**작성자**: 증짱부장 (투자 전략실)
+**작성자**: 멋쟁이 인사이트 (투자 전략실)
 **작성일**: 2026-06-20
 
 ---
@@ -51,7 +51,7 @@
 
 ---
 
-#전력기기 #변압기슈퍼사이클 #HD현대일렉트릭 #LS일렉트릭 #효성중공업 #AI데이터센터 #재테크 #주식투자 #증짱부장
+#전력기기 #변압기슈퍼사이클 #HD현대일렉트릭 #LS일렉트릭 #효성중공업 #AI데이터센터 #재테크 #주식투자 #멋쟁이
 
 ---
 
@@ -158,7 +158,7 @@
 
 <div class="blog-container">
     <div class="post-meta">
-        <strong>작성자: 증짱부장</strong> | 투자 전략실 결재 대기 건
+        <strong>작성자: 멋쟁이 인사이트</strong> | 투자 전략실 결재 대기 건
     </div>
 
     <h1>1. "AI가 밥만 먹는 줄 알아? 전기를 먹어치운다!" 전력 슈퍼사이클 완벽 정리<br>
@@ -208,7 +208,7 @@
     </div>
 
     <p>
-        <span class="hashtag">#전력기기</span> <span class="hashtag">#변압기슈퍼사이클</span> <span class="hashtag">#HD현대일렉트릭</span> <span class="hashtag">#LS일렉트릭</span> <span class="hashtag">#효성중공업</span> <span class="hashtag">#AI데이터센터</span> <span class="hashtag">#재테크</span> <span class="hashtag">#주식투자</span> <span class="hashtag">#증짱부장</span>
+        <span class="hashtag">#전력기기</span> <span class="hashtag">#변압기슈퍼사이클</span> <span class="hashtag">#HD현대일렉트릭</span> <span class="hashtag">#LS일렉트릭</span> <span class="hashtag">#효성중공업</span> <span class="hashtag">#AI데이터센터</span> <span class="hashtag">#재테크</span> <span class="hashtag">#주식투자</span> <span class="hashtag">#멋쟁이</span>
     </p>
 </div>
 
