@@ -388,9 +388,9 @@ def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
         print("⚠️ 경고: AI 생성 결과에 투자 고지(Disclaimer)가 누락되거나 잘렸습니다. 자동으로 보정합니다.")
         disclaimer_html = """
     <!-- 자동 보정된 투자 고지 영역 -->
-    <table style="width: 100%; border: 2px solid #ef4444; border-radius: 8px; margin-top: 40px; padding: 20px; background-color: rgba(239, 68, 68, 0.03); border-collapse: separate;">
+    <table style="width: 100%; border: 1px solid #ef4444; border-radius: 8px; margin-top: 40px; padding: 20px; background-color: #fff5f5; border-collapse: separate;">
         <tr>
-            <td style="font-size: 13px; color: #e2e8f0; line-height: 1.8; text-align: left;">
+            <td style="font-size: 13px; color: #333333; line-height: 1.8; text-align: left;">
                 <strong style="color: #ef4444; font-size: 14px; display: block; margin-bottom: 8px; text-align: center;">[투자 고지 및 면책 조항 / Investment Disclaimer]</strong>
                 본 리포트에서 제공하는 모든 정보(수치, 전망, 분석 결과 등)는 투자 판단을 돕기 위한 참고용 자료일 뿐이며, 어떠한 경우에도 특정 금융 상품이나 주식 종목의 매수·매도 권유 또는 투자 추천으로 해석될 수 없습니다. 본 정보는 공시 및 신뢰할 만한 취재원을 바탕으로 작성되었으나 그 완전성이나 정확성을 전적으로 보장할 수 없습니다. 모든 투자의 최종 의사결정과 결과에 대한 책임은 전적으로 투자자 본인에게 귀속됩니다. 투자 실행 전 반드시 충분한 확인과 전문가 상담을 거치시기 바랍니다.
             </td>
