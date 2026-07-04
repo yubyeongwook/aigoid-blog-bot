@@ -34,18 +34,27 @@ def main():
     weekday = ["월","화","수","목","금","토","일"][today.weekday()]
     
     # AI가 생성한 HTML에서 h1 태그나 JSON-LD의 headline 추출 시도
+    # AI가 생성한 HTML에서 진짜 제목 추출 시도 (JSON-LD 우선, 그 후 h1 태그 검사)
     seo_title = None
     import re
-    h1_match = re.search(r'<h1[^>]*>(.*?)</h1>', html_content, re.DOTALL)
-    if h1_match:
-        seo_title = h1_match.group(1).strip()
-        seo_title = re.sub(r'<[^>]+>', '', seo_title) # HTML 태그 제거
-        
+    
+    # 1. JSON-LD "headline" 추출 시도
+    headline_match = re.search(r'"headline"\s*:\s*"([^"]+)"', html_content)
+    if headline_match:
+        temp_title = headline_match.group(1).strip()
+        if temp_title and temp_title not in ["멋쟁이 인사이트", "멋쟁이인사이트"]:
+            seo_title = temp_title
+
+    # 2. <h1> 태그들 중 "멋쟁이 인사이트"가 아닌 진짜 제목 추출 시도
     if not seo_title:
-        headline_match = re.search(r'"headline"\s*:\s*"([^"]+)"', html_content)
-        if headline_match:
-            seo_title = headline_match.group(1).strip()
-            
+        h1_tags = re.findall(r'<h1[^>]*>(.*?)</h1>', html_content, re.DOTALL | re.IGNORECASE)
+        for tag in h1_tags:
+            title_text = re.sub(r'<[^>]+>', '', tag).strip()
+            title_text = " ".join(title_text.split()) # 줄바꿈 및 공백 문자 정리
+            if title_text and title_text not in ["멋쟁이 인사이트", "멋쟁이인사이트"]:
+                seo_title = title_text
+                break
+
     if not seo_title:
         base_title = f"코스피 오늘 분석 — {today.strftime('%m월 %d일')} {weekday}요일 브리핑"
         seo_title = build_seo_title(base_title, "daily")
