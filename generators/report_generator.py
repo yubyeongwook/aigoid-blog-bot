@@ -192,8 +192,33 @@ div-only HTML 전체 출력.
 # ────────────────────────────────
 def generate_weekly_report(market_data: dict, news_data: dict) -> str:
     today = datetime.datetime.now()
+    
+    # 다음 주 월~금 날짜 계산 (기존의 날짜/요일 오류 방지)
+    current_weekday = today.weekday()
+    if current_weekday == 6:  # 일요일
+        days_to_monday = 1
+    elif current_weekday == 5:  # 토요일
+        days_to_monday = 2
+    else:  # 평일
+        days_to_monday = 7 - current_weekday
+        
+    next_monday = today + datetime.timedelta(days=days_to_monday)
+    
+    weekday_names = ["월", "화", "수", "목", "금"]
+    next_week_info = []
+    for i in range(5):
+        day = next_monday + datetime.timedelta(days=i)
+        next_week_info.append(f"- {weekday_names[i]}요일: {day.strftime('%m월 %d일')}")
+        
+    next_week_dates_str = "\n".join(next_week_info)
+    next_week_range_str = f"{next_monday.strftime('%Y.%m.%d')} - {(next_monday + datetime.timedelta(days=4)).strftime('%m.%d')}"
+
     prompt = f"""
 주간 결산: {today.strftime("%Y년 %m월 %d일")} (일요일)
+
+=== 다음 주 날짜 정보 (한국 시간 기준) ===
+기간: {next_week_range_str}
+{next_week_dates_str}
 
 === 주간 시장 데이터 ===
 {json.dumps(market_data, ensure_ascii=False, indent=2)}
@@ -212,6 +237,7 @@ def generate_weekly_report(market_data: dict, news_data: dict) -> str:
   4. 로마숫자 섹션 (I. 이번 주 핵심 사건 분석, II. 글로벌 자금 흐름 진단, III. 수익률 및 수급 해석)
   5. '멋쟁이의 시각' 요약 카드 (매크로 변수 역학관계 해설)
   6. '멋쟁이의 생각' 섹션 (다음 주 핵심 이벤트 캘린더 및 '멋쟁이 픽' 관심 종목을 포함한 대응 포지셔닝)
+     * 중요: 다음 주 핵심 이벤트 캘린더를 작성할 때는 반드시 위의 '다음 주 날짜 정보'를 참조하여 날짜와 요일을 정확하게 일치시켜 주십시오 (예: 7월 6일(월), 7월 7일(화) ...). 임의로 날짜와 요일을 추정하거나 다르게 적지 마십시오.
   7. 투자 고지 (Disclaimer) 및 출처 표기 (Sources)
 - 글의 마지막 </div> 태그까지 확실하게 닫혀야 합니다. 전체 글이 중간에 잘리지 않고 매끄럽게 끝나도록 문단 호흡과 상세도를 설계하여 5000자 이내로 완결 지어 주십시오.
 
