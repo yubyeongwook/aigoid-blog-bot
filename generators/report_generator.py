@@ -162,16 +162,8 @@ SYSTEM_PROMPT = """
 HTML 구조 — 반드시 이 순서대로
 ═══════════════════════════════
 
-1. SEO JSON-LD (반드시 포함)
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "SEO 최적화 제목",
-  "description": "150자 이내 설명",
-  "keywords": "키워드1,키워드2,키워드3"
-}
-```
+1. 숨김 요약 설명 Div (반드시 문서 첫 줄에 작성)
+- 형식: <div style="display: none;">[글의 전반적인 내용을 150자 내외의 명료한 한글 문장으로 요약한 텍스트. JSON-LD 코드나 특수 기호를 절대 포함하지 마십시오. 블로그 목록의 본문 미리보기 피드 텍스트로 깔끔하게 노출됩니다.]</div>
 
 2. 마스트헤드 (table 태그)
 - 왼쪽: VOL·날짜·브리핑 종류
@@ -191,9 +183,12 @@ HTML 구조 — 반드시 이 순서대로
 - 모든 수치의 출처를 한 줄로
 
 6. 히어로 이미지
-- Unsplash URL만 사용
+- 반드시 아래의 검증된 고화질 금융/주식 Unsplash 이미지 목록 중 글의 주제에 가장 어울리는 단 하나만 선택하여 img 태그의 src에 그대로 복사해서 삽입하십시오. (임의로 다른 Unsplash ID를 지어내면 링크가 완전히 깨집니다. 반드시 아래 4개 주소 중 하나만 똑같이 사용해야 합니다.)
+  * 파란색/빨간색 금융 차트 선: https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80
+  * 어두운 다크톤의 주식 호가/차트: https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=900&auto=format&fit=crop&q=80
+  * 모니터 화면의 주식 캔들 차트: https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=900&auto=format&fit=crop&q=80
+  * 분석 중인 금융 그래프 차트: https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=900&auto=format&fit=crop&q=80
 - SVG 절대 금지 (Blogger에서 제거됨)
-- 형식: https://images.unsplash.com/photo-XXXXX?w=900&auto=format&fit=crop&q=80
 
 7. 헤드라인 H1
 - SEO 키워드 포함 필수
@@ -222,6 +217,18 @@ HTML 구조 — 반드시 이 순서대로
 - 배경: #f5f4f0
 - font-size: 11px
 - 모든 수치의 원본 출처 나열
+
+13. SEO JSON-LD (반드시 문서의 맨 마지막에 포함)
+- 중요: 블로그 메인 화면 피드에 지저분한 JSON 코드가 그대로 노출되는 것을 막기 위해, 반드시 본문의 가장 마지막 위치에 삽입하십시오.
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SEO 최적화 제목",
+  "description": "150자 이내 설명",
+  "keywords": "키워드1,키워드2,키워드3"
+}
+```
 
 ═══════════════════════════════
 분석 구조 — 반드시 이 흐름으로
