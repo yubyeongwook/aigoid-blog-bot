@@ -57,6 +57,10 @@ HTML 필수 구조:
 8. 멋쟁이의 생각 (최종 투자 전술, 포지셔닝 및 핵심 대응 방안)
 9. 투자 고지 (Disclaimer)
 10. 출처 표기 (Sources)
+
+11. 이모지 및 마크다운 기호 금지 규칙 (필수):
+    - 본문, 제목, 대시보드 등 HTML 출력 전체에 이모지(예: 📊, 🤖, ⚠️, ✅, 📈, 📉, 🔥, 💡 등)를 절대 사용하지 마십시오. 오직 정갈한 한글/영어 텍스트만 사용하십시오.
+    - 마크다운의 굵게 표시 기호(**)는 HTML 내에서 사용하지 마십시오. 글씨를 굵게 하고 싶다면 반드시 <strong> 태그를 사용하십시오.
 """
 
 # ────────────────────────────────
@@ -82,13 +86,44 @@ def fix_heading_line_height(html_content: str) -> str:
             return f'<{tag} style="line-height: 1.4;" {attrs}>'
 
     pattern = r'<(h[1-6])\b([^>]*)>'
-    pattern = r'<(h[1-6])\b([^>]*)>'
     return re.sub(pattern, repl, html_content, flags=re.IGNORECASE)
+
+# ────────────────────────────────
+# 마크다운 ** 및 이모지/특수 기호 제거
+# ────────────────────────────────
+def clean_html_content(html_content: str) -> str:
+    import re
+    # 1. 마크다운 별표(**) 제거
+    html_content = html_content.replace("**", "")
+    
+    # 2. 이모지 및 특수 데코용 기호 제거 (정규식 활용)
+    emoji_pattern = re.compile(
+        '['
+        '\U0001F600-\U0001F64F'  # emoticons
+        '\U0001F300-\U0001F5FF'  # symbols & pictographs
+        '\U0001F680-\U0001F6FF'  # transport & map symbols
+        '\U0001F1E0-\U0001F1FF'  # flags
+        '\U0001F900-\U0001F9FF'  # supplemental symbols
+        '\u2600-\u26FF'          # misc symbols
+        '\u2700-\u27BF'          # dingbats
+        '\ufe0f'                 # variation selector
+        ']+', flags=re.UNICODE
+    )
+    html_content = emoji_pattern.sub('', html_content)
+    
+    # 혹시 남을 수 있는 대표적인 데코용 특수문자 개별 소거
+    for char in ["📊", "🤖", "⚠️", "✅", "✔", "📈", "📉", "🔥", "💡", "📢", "🔍", "⚡", "⭐", "☑", "✨"]:
+        html_content = html_content.replace(char, "")
+        
+    return html_content
 
 # ────────────────────────────────
 # 투자 고지(Disclaimer) 보장 및 닫는 태그 보정
 # ────────────────────────────────
 def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
+    # 0. 마크다운 기호 및 이모지 자동 정화
+    html_content = clean_html_content(html_content)
+
     # 1. 잘려나간 마지막 불완전한 태그 제거 (예: <p style="font-size: 1.1em; 로 끝나는 경우)
     last_open_angle = html_content.rfind("<")
     last_close_angle = html_content.rfind(">")
@@ -103,7 +138,7 @@ def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
         disclaimer_html = """
     <!-- 자동 보정된 투자 고지 영역 -->
     <div style="margin-top: 40px; padding: 25px; border-top: 1px solid rgba(255,255,255,0.1); background-color: rgba(255,255,255,0.02); border-radius: 12px; font-size: 0.9em; color: #a0aec0; line-height: 1.7;">
-        <p style="margin-bottom: 10px; font-weight: 700; color: #f0c040;">⚠️ [투자 고지 / Disclaimer]</p>
+        <p style="margin-bottom: 10px; font-weight: 700; color: #f0c040;">[투자 고지 / Disclaimer]</p>
         <p style="margin: 0;">본 리포트에서 제공하는 정보는 투자 판단의 참고용 자료이며, 특정 금융 상품이나 주식 종목에 대한 투자 권유 또는 매수·매도 추천이 아닙니다. 모든 투자 의사결정과 이에 따른 책임은 전적으로 투자자 본인에게 귀속됩니다. 제공된 정보의 무결성이나 정확성을 완전하게 보장할 수 없으므로, 투자 실행 전 별도의 확인 절차를 거치시기를 권장합니다.</p>
     </div>
 """
@@ -186,12 +221,28 @@ def call_anthropic(prompt: str) -> str:
 # 일일 리포트 생성
 # ────────────────────────────────
 def generate_daily_report(market_data: dict, news_data: dict) -> str:
+    import datetime
     today = datetime.datetime.now()
-    date_str = today.strftime("%Y년 %m월 %d일")
-    weekday = ["월","화","수","목","금","토","일"][today.weekday()]
+    
+    # 실행 시점이 주말(토/일)인지 평일인지 판별하여 개장일 정보 동적 설정
+    current_weekday = today.weekday()
+    if current_weekday == 5:  # 토요일
+        target_date = today + datetime.timedelta(days=2)
+        trading_day_word = "다음 거래일(월요일)"
+    elif current_weekday == 6:  # 일요일
+        target_date = today + datetime.timedelta(days=1)
+        trading_day_word = "다음 거래일(월요일)"
+    else:  # 평일
+        target_date = today
+        trading_day_word = "오늘"
+        
+    target_date_str = target_date.strftime("%Y년 %m월 %d일")
+    target_weekday = ["월","화","수","목","금","토","일"][target_date.weekday()]
 
     prompt = f"""
-오늘: {date_str} {weekday}요일
+리포트 작성 기준일: {today.strftime("%Y년 %m월 %d일")} (현재 실행 시점)
+목표 개장일(국장 기준): {target_date_str} ({target_weekday}요일)
+개장일 지칭 표현: {trading_day_word}
 
 === 시장 데이터 ===
 {json.dumps(market_data, ensure_ascii=False, indent=2)}
@@ -209,20 +260,20 @@ def generate_daily_report(market_data: dict, news_data: dict) -> str:
   3. 로마숫자 섹션:
      - I. 미국 증시 마감 진단 (전날 밤 미국 증시에서 상승한 테마/섹터 분석 및 시장에 영향을 준 핵심 뉴스의 구조적 요약 정리)
      - II. 글로벌 매크로와 자금 이동 (연준 금리, 유가, MSCI 등 거시경제 변수의 변화가 글로벌 자금 흐름에 미치는 영향 분석)
-     - III. 오늘 오전 9시 국장 개장 시나리오 (미국 증시 분석을 적용하여 한국 시간 오늘 오전 9시 개장과 동시에 상승/강세를 보일 예상 테마와 구체적인 한국 시장 수급 분석)
+     - III. {trading_day_word} 오전 9시 국장 개장 시나리오 (미국 증시 분석을 적용하여 한국 시간 {trading_day_word} 오전 9시 개장과 동시에 상승/강세를 보일 예상 테마와 구체적인 한국 시장 수급 분석)
   4. '멋쟁이의 시각' 요약 카드 (구조적 이면과 자금 이동에 대한 거물 매니저의 매크로 해설)
-  5. '멋쟁이의 생각' 섹션 (오늘 오전 9시 개장 직후 강세 예상 테마 및 후보 종목 '멋쟁이 픽', 그리고 낙관/중립/비관 3대 시나리오를 포함한 구체적 투자 전술과 결론)
+  5. '멋쟁이의 생각' 섹션 ({trading_day_word} 오전 9시 개장 직후 강세 예상 테마 및 후보 종목 '멋쟁이 픽', 그리고 낙관/중립/비관 3대 시나리오를 포함한 구체적 투자 전술과 결론)
   6. 투자 고지 (Disclaimer) 및 출처 표기 (Sources)
 - 글의 마지막 </div> 태그까지 확실하게 닫혀야 합니다. 전체 글이 중간에 잘리지 않고 매끄럽게 끝나도록 문단 호흡과 상세도를 설계하여 5000자 이내로 완결 지어 주십시오.
 
 [트래픽 유입 극대화를 위한 SEO 제목 작성 규칙 (필수)]
 - JSON-LD의 "headline"과 H1 헤드라인(제목)은 검색 포털(네이버, 구글 등)에서 트래픽을 대량으로 유입시킬 수 있는 핵심 검색 키워드를 조합하여 자극적으로 작성하십시오.
 - 필수 키워드 유형 (그날의 이슈에 맞는 키워드를 적절히 선택하여 제목 전면에 노출):
-  * 주요 지수/시황: '코스피(KOSPI) 전망', '나스닥(NASDAQ)', '오늘 주식시장 분석'
+  * 주요 지수/시황: '코스피(KOSPI) 전망', '나스닥(NASDAQ)', '오늘 주식시장 분석' (단, 주말 실행 시 '다음 주 주식시장 전망' 또는 '월요일 코스피 전망'으로 자동 변경 적용)
   * 핵심 기업/주가: '엔비디아 주가', 'SK하이닉스 주식', '삼성전자 주가전망' 등 수급이 강하게 쏠린 대장주명
   * 주요 매크로 변수: 'FOMC 금리', 'CPI 발표일', '환율', '유가' 등 시장 영향력이 큰 지표
 - 제목 조합 공식: [타겟 핵심 검색 키워드] + [독자의 클릭을 강하게 유도하는 호기심/비밀스러운 후크형 질문이나 문구]
-  * 예시 1: "엔비디아 폭등과 코스피 전망: 외국인 양매수 속 오늘 오전 9시 국장 개장 직후 상승할 반도체 대장주 분석"
+  * 예시 1: "엔비디아 폭등과 코스피 전망: 외국인 양매수 속 {trading_day_word} 오전 9시 국장 개장 직후 상승할 반도체 대장주 분석"
   * 예시 2: "미국 CPI 발표일 대비법: 코스피 8000 돌파 속 SK하이닉스·삼성전자 매도 타이밍과 '멋쟁이'의 3개월 선행 포트폴리오"
 - 단순히 '멋쟁이 인사이트', '일일 브리핑'과 같이 밋밋하거나 텍스트와 무관하게 고정된 제목은 무조건 금지합니다.
 
