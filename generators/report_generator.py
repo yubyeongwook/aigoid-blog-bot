@@ -82,7 +82,42 @@ def fix_heading_line_height(html_content: str) -> str:
             return f'<{tag} style="line-height: 1.4;" {attrs}>'
 
     pattern = r'<(h[1-6])\b([^>]*)>'
+    pattern = r'<(h[1-6])\b([^>]*)>'
     return re.sub(pattern, repl, html_content, flags=re.IGNORECASE)
+
+# ────────────────────────────────
+# 투자 고지(Disclaimer) 보장 및 닫는 태그 보정
+# ────────────────────────────────
+def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
+    # 1. 잘려나간 마지막 불완전한 태그 제거 (예: <p style="font-size: 1.1em; 로 끝나는 경우)
+    last_open_angle = html_content.rfind("<")
+    last_close_angle = html_content.rfind(">")
+    if last_open_angle > last_close_angle:
+        print(f"⚠️ 경고: 불완전한 태그 '{html_content[last_open_angle:]}'를 잘라내어 문장을 정리합니다.")
+        html_content = html_content[:last_open_angle]
+
+    # 2. 투자 고지 문구 존재 여부 확인 및 보정
+    has_disclaimer = any(word in html_content for word in ["Disclaimer", "투자 고지", "투자고지", "투자 주의", "투자주의"])
+    if not has_disclaimer:
+        print("⚠️ 경고: AI 생성 결과에 투자 고지(Disclaimer)가 누락되거나 잘렸습니다. 자동으로 보정합니다.")
+        disclaimer_html = """
+    <!-- 자동 보정된 투자 고지 영역 -->
+    <div style="margin-top: 40px; padding: 25px; border-top: 1px solid rgba(255,255,255,0.1); background-color: rgba(255,255,255,0.02); border-radius: 12px; font-size: 0.9em; color: #a0aec0; line-height: 1.7;">
+        <p style="margin-bottom: 10px; font-weight: 700; color: #f0c040;">⚠️ [투자 고지 / Disclaimer]</p>
+        <p style="margin: 0;">본 리포트에서 제공하는 정보는 투자 판단의 참고용 자료이며, 특정 금융 상품이나 주식 종목에 대한 투자 권유 또는 매수·매도 추천이 아닙니다. 모든 투자 의사결정과 이에 따른 책임은 전적으로 투자자 본인에게 귀속됩니다. 제공된 정보의 무결성이나 정확성을 완전하게 보장할 수 없으므로, 투자 실행 전 별도의 확인 절차를 거치시기를 권장합니다.</p>
+    </div>
+"""
+        html_content += disclaimer_html
+
+    # 3. 열려있는 div 태그 수와 닫힌 div 태그 수 분석 후 보정
+    open_divs = html_content.count("<div")
+    close_divs = html_content.count("</div>")
+    if open_divs > close_divs:
+        diff = open_divs - close_divs
+        print(f"⚠️ 경고: 열린 div({open_divs})와 닫힌 div({close_divs}) 수가 일치하지 않아 {diff}개의 닫는 </div> 태그를 자동으로 추가합니다.")
+        html_content += "</div>" * diff
+        
+    return html_content
 
 # ────────────────────────────────
 # Gemini API 호출
@@ -114,7 +149,9 @@ def call_gemini(prompt: str) -> str:
             text = text.split("```html")[1].split("```")[0].strip()
         elif "```" in text:
             text = text.split("```")[1].split("```")[0].strip()
-        return fix_heading_line_height(text)
+        
+        processed_text = fix_heading_line_height(text)
+        return ensure_disclaimer_and_closed_tags(processed_text)
     except Exception as e:
         print(f"Gemini 오류: {e} → Anthropic으로 대체")
         try:
@@ -141,7 +178,9 @@ def call_anthropic(prompt: str) -> str:
         text = text.split("```html")[1].split("```")[0].strip()
     elif "```" in text:
         text = text.split("```")[1].split("```")[0].strip()
-    return fix_heading_line_height(text)
+    
+    processed_text = fix_heading_line_height(text)
+    return ensure_disclaimer_and_closed_tags(processed_text)
 
 # ────────────────────────────────
 # 일일 리포트 생성
