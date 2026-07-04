@@ -1,0 +1,9 @@
+.env
+.env.txt
+__pycache__/
+*.pyc
+*.pyo
+data/
+*.log
+.DS_Store
+blogger_credentials.json

@@ -1,0 +1,14 @@
+anthropic
+pykrx
+finance-datareader
+pandas
+requests
+beautifulsoup4
+python-dotenv
+dart-fss
+google-auth
+google-auth-oauthlib
+google-api-python-client
+schedule
+pytz
+google-genai
