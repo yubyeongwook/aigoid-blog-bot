@@ -771,11 +771,20 @@ div-only HTML 전체 출력.
 # ────────────────────────────────
 # 오후 마감 리포트 생성 (신규)
 # ────────────────────────────────
-def generate_afternoon_report(market_data: dict, news_data: dict) -> str:
+def generate_afternoon_report(market_data: dict, news_data: dict, morning_brief_data: dict = None) -> str:
     import datetime
     today = datetime.datetime.now()
     date_str = today.strftime("%Y년 %m월 %d일")
     weekday = ["월","화","수","목","금","토","일"][today.weekday()]
+
+    morning_info = "제공된 오전 브리핑 정보가 없습니다."
+    if morning_brief_data:
+        morning_info = f"""
+제목: {morning_brief_data.get('title', 'N/A')}
+발행일자: {morning_brief_data.get('published', 'N/A')}
+오전 브리핑 주요내용 요약:
+{morning_brief_data.get('text_summary', '')}
+"""
 
     prompt = f"""
 리포트 작성 기준일: {date_str} ({weekday}요일)
@@ -786,6 +795,13 @@ def generate_afternoon_report(market_data: dict, news_data: dict) -> str:
 
 === 뉴스·공시 ===
 {json.dumps(news_data, ensure_ascii=False, indent=2)}
+
+=== 오전 발행 브리핑 정보 ===
+{morning_info}
+
+[중요 - 오전 브리핑 및 미 증시 연계 분석]
+- 오전에 발행된 글로벌 매크로 브리핑(미국 증시 마감 상황 및 오전 시황 예측) 내용과 금일 오후 3시 30분 마감된 한국 증시의 실제 결과를 정밀 비교 분석하십시오.
+- 오전에 다뤘던 미국 증시 흐름(반도체 가격 움직임, 금리 지표 등)이 오늘 한국 증시 마감 결과에 실제 어떤 경로로 투영되어 나타났는지, 오전의 시각/가정 대비 실제 마감 현황이 어떻게 변경되었고 보정되었는지를 본문 I섹션(마감 결과 해석) 및 IV섹션(내일을 위한 전략)에 각각 1~2개 문장으로 비교하여 설명하십시오.
 
 멋쟁이 인사이트 오후 마감 브리핑을 작성해라.
 
@@ -892,6 +908,66 @@ def generate_weekly_report(market_data: dict, news_data: dict) -> str:
 div-only HTML 전체 출력.
 """
     return call_gemini(prompt)
+
+# ────────────────────────────────
+# 개장 직전 동시호가 속보 리포트 생성 (신규)
+# ────────────────────────────────
+def generate_premarket_report(premarket_data: dict, morning_brief_data: dict = None) -> str:
+    import datetime, json
+    today = datetime.datetime.now()
+    date_str = today.strftime("%Y년 %m월 %d일")
+    weekday = ["월","화","수","목","금","토","일"][today.weekday()]
+
+    morning_info = "제공된 오전 브리핑 정보가 없습니다."
+    if morning_brief_data:
+        morning_info = f"""
+제목: {morning_brief_data.get('title', 'N/A')}
+발행일자: {morning_brief_data.get('published', 'N/A')}
+오전 브리핑 주요내용 요약:
+{morning_brief_data.get('text_summary', '')}
+"""
+
+    prompt = f"""
+리포트 작성 기준일: {date_str} ({weekday}요일)
+브리핑 종류: 개장 10분 전 동시호가 속보 (오전 8시 50분 발행)
+
+=== 실시간 개장 전 수급 및 선물 데이터 ===
+{json.dumps(premarket_data, ensure_ascii=False, indent=2)}
+
+=== 아침 7시 발행 매크로 브리핑 정보 ===
+{morning_info}
+
+멋쟁이 인사이트 개장 10분 전 동시호가 속보(Opening Flash)를 작성해라.
+
+작성 구조 및 분량 규칙 (완결성 필수):
+- [중요 - 분량 극단적 단축]: 개장 직전에 읽는 아주 긴급한 속보이므로, 모든 단락은 1~2개 문장으로 극도로 짧고 굵게 핵심 사실만 기술하십시오.
+- 다음 요소를 순서대로 누락 없이 모두 포함하여 전체 HTML 문서 크기가 공백 포함 2,500자 내외가 되도록 하십시오:
+  1. SEO JSON-LD
+  2. 마스트헤드 (table 태그로 구성, '멋쟁이 인사이트' 메인 타이틀 및 'DAILY OPENING FLASH' 서브타이틀 포함)
+  3. 에디션바 (검정 배경 #0a0a0a, 왼쪽: 오늘 개장 핵심 키워드, 오른쪽: 개장 전 예상체결 시각)
+  4. 예상 수치 대시보드 (table, 검정 배경, 4칸 x 1행 = 코스피 예상지수, 코스닥 예상지수, 나스닥 선물 변동률, 삼성전자 예상체결가 표시)
+  5. 출처 표기 (font-size 11px, 회색, 동시호가 수치 출처 요약)
+  6. 히어로 이미지 (제시된 Unsplash URL 중 가장 잘 맞는 이미지 하나만 활용, SVG 절대 금지)
+  7. 헤드라인 H1 (SEO 키워드 포함, 동시호가/개장 직전/상승 테마 키워드 강조)
+  8. 본문 섹션 (로마숫자 I·II·III·IV)
+     - I. 개장 직전 동시호가 진단 — 출발점 분석 (코스피/코스닥 예상 출발지수 및 등락 원인)
+     - II. 미국 선물 & 매크로 긴급 연계 (오전 7시 이후 미국 야간 선물 지수 흐름 및 외인 개장 초반 유입 영향 분석)
+     - III. 오늘 유력 급등 테마 & 주도주 포착 (인기 검색어 10대 종목 및 관심 종목의 예상 체결가 흐름을 바탕으로 장 초반 강세 유력한 업종/종목 픽)
+     - IV. 개장 초반 대응 및 포지션 가이드 (장 초반 9:00~9:30 변동성 구간에서 추격 매수 자제 혹은 분할 매수 등 초단기 전술 제시)
+  9. 결론: 멋쟁이의 시각 (검정 박스, 당일 매매 핵심 마인드셋 2문장 요약)
+  10. 투자 고지 (table 태그 적용)
+  11. 출처 표기 푸터 (배경 #f5f4f0, font-size 11px, 모든 언급 수치의 원본 출처 명시)
+- 글의 마지막 </div> 태그까지 확실하게 닫혀야 합니다. 전체 글이 중간에 잘리지 않고 매끄럽게 끝나도록 문단 호흡과 상세도를 설계하여 반드시 결론과 고지 조항까지 완결 지어 주십시오.
+
+[트래픽 유입 극대화를 위한 SEO 제목 작성 규칙 (필수)]
+- JSON-LD의 "headline"과 H1 헤드라인(제목)은 [개장 10분 전], [동시호가], 오늘 상승이 강하게 예상되는 키워드(예: 반도체 수급, 삼전 예상 등)를 조합하여 클릭을 유도하도록 자극적으로 작성하십시오.
+
+div-only HTML 전체 출력.
+"""
+    print("🤖 AI 개장 속보 리포트 생성 중...")
+    result = call_gemini(prompt)
+    print("✅ 개장 속보 리포트 생성 완료")
+    return result
 
 if __name__ == "__main__":
     print("Gemini API Key:", "있음" if GEMINI_API_KEY else "없음 (Anthropic 사용)")

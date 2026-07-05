@@ -287,6 +287,96 @@ def get_watchlist_naver():
     return result
 
 # ────────────────────────────────
+# 장전 동시호가 데이터 수집
+# ────────────────────────────────
+def get_us_futures():
+    futures = {}
+    for symbol, name in [("NQ=F", "nasdaq_futures"), ("ES=F", "sp_futures")]:
+        try:
+            url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1m"
+            headers = {"User-Agent": "Mozilla/5.0"}
+            res = requests.get(url, headers=headers, timeout=10)
+            data = res.json()
+            meta = data['chart']['result'][0]['meta']
+            price = meta.get('regularMarketPrice')
+            prev_close = meta.get('previousClose')
+            if price and prev_close:
+                chg = price - prev_close
+                chg_pct = round(chg / prev_close * 100, 2)
+                futures[name] = {
+                    "price": price,
+                    "change": round(chg, 2),
+                    "change_pct": f"{chg_pct:+.2f}%" if chg_pct >= 0 else f"{chg_pct:.2f}%"
+                }
+        except Exception as e:
+            futures[name] = {"error": str(e)}
+    return futures
+
+def get_premarket_popular_search_naver():
+    result = []
+    try:
+        url = "https://finance.naver.com/sise/lastsearch2.naver"
+        res = requests.get(url, headers=HEADERS, timeout=10)
+        res.encoding = "euc-kr"
+        soup = BeautifulSoup(res.text, "html.parser")
+        table = soup.select_one("table.type_5")
+        if table:
+            count = 0
+            for row in table.select("tr"):
+                a_tag = row.select_one("td a.tltle")
+                tds = row.select("td")
+                if a_tag and len(tds) >= 6:
+                    name = a_tag.text.strip()
+                    code = a_tag['href'].split('code=')[-1].strip()
+                    price = tds[3].text.strip()
+                    
+                    # 상승/하락 기호 파악
+                    change_pct = "0%"
+                    rate_td = tds[5]
+                    if rate_td:
+                        raw_rate = rate_td.text.strip()
+                        direction = ""
+                        blind = rate_td.select_one(".blind")
+                        if blind:
+                            dir_text = blind.text.strip()
+                            raw_rate = raw_rate.replace(dir_text, "").strip()
+                            if "하락" in dir_text or "하한" in dir_text:
+                                direction = "-"
+                            elif "상승" in dir_text or "상한" in dir_text:
+                                direction = "+"
+                        if not raw_rate.startswith("-") and not raw_rate.startswith("+"):
+                            raw_rate = direction + raw_rate
+                        change_pct = raw_rate
+                        
+                    result.append({
+                        "code": code,
+                        "name": name,
+                        "price": price,
+                        "change_pct": change_pct
+                    })
+                    count += 1
+                    if count >= 10:
+                        break
+    except Exception as e:
+        print(f"인기 검색어 수집 실패: {e}")
+    return result
+
+def collect_premarket_data():
+    print("📊 장전 동시호가 데이터 수집 시작...")
+    today, week_ago, last_trading = get_dates()
+    
+    data = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "is_weekend": datetime.datetime.now().weekday() >= 5,
+        "us_futures": get_us_futures(),
+        "index_indicative": get_index_naver(),
+        "watchlist_indicative": get_watchlist_naver(),
+        "popular_search_indicative": get_premarket_popular_search_naver()
+    }
+    print("✅ 장전 동시호가 데이터 수집 완료")
+    return data
+
+# ────────────────────────────────
 # 전체 수집
 # ────────────────────────────────
 def collect_all():
