@@ -105,6 +105,41 @@ def auto_labels(content: str) -> list:
             labels.append(label)
     return labels[:10]
 
+# ────────────────────────────────
+# 최신 오전 브리핑 내용 조회
+# ────────────────────────────────
+def get_latest_morning_brief() -> dict:
+    token = get_access_token()
+    if not token:
+        return {}
+
+    url = f"https://www.googleapis.com/blogger/v3/blogs/{BLOG_ID}/posts?maxResults=5&status=live"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    try:
+        res = requests.get(url, headers=headers, timeout=15)
+        posts = res.json().get("items", [])
+        for post in posts:
+            title = post.get("title", "")
+            content = post.get("content", "")
+            # 제목이나 본문에 오전 매크로 브리핑 키워드가 있는 글 찾기
+            if "오전" in title or "글로벌 매크로 브리핑" in title or "오전 글로벌 매크로 브리핑" in content:
+                from bs4 import BeautifulSoup
+                soup = BeautifulSoup(content, 'html.parser')
+                text = soup.get_text(separator=' ').strip()
+                # 불필요한 줄바꿈 및 다중 공백 정리
+                text = " ".join(text.split())
+                return {
+                    "title": title,
+                    "published": post.get("published"),
+                    "text_summary": text[:2500]
+                }
+    except Exception as e:
+        print(f"오전 브리핑 조회 실패: {e}")
+    return {}
+
 if __name__ == "__main__":
     print("blogger_publisher.py 로드 완료")
     token = get_access_token()

@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(__file__))
 from collectors.market_collector import collect_all as collect_market
 from collectors.news_collector import collect_all as collect_news
 from generators.report_generator import generate_afternoon_report
-from publishers.blogger_publisher import publish_post, build_seo_title, auto_labels
+from publishers.blogger_publisher import publish_post, build_seo_title, auto_labels, get_latest_morning_brief
 
 def main():
     print("=" * 60)
@@ -27,7 +27,13 @@ def main():
 
     # 2. 리포트 생성
     print("\n[3/4] AI 리포트 생성...")
-    html_content = generate_afternoon_report(market_data, news_data)
+    print("오전 발행된 브리핑 조회 중...")
+    morning_brief_data = get_latest_morning_brief()
+    if morning_brief_data:
+        print(f"오전 브리핑 발견: {morning_brief_data.get('title')}")
+    else:
+        print("오전 브리핑 조회 결과가 없습니다.")
+    html_content = generate_afternoon_report(market_data, news_data, morning_brief_data)
 
     # 3. 제목·라벨 설정
     today = datetime.datetime.now()
