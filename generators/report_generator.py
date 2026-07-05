@@ -158,85 +158,97 @@ SYSTEM_PROMPT = """
 모든 투자의 최종 판단과 책임은 
 전적으로 투자자 본인에게 있습니다."
 
-═══════════════════════════════
-HTML 구조 — 반드시 이 순서대로
-═══════════════════════════════
-
-1. 숨김 요약 설명 Div (반드시 문서 첫 줄에 작성)
-- 형식: <div style="display: none;">[글의 전반적인 내용을 150자 내외의 명료한 한글 문장으로 요약한 텍스트. JSON-LD 코드나 특수 기호를 절대 포함하지 마십시오. 블로그 목록의 본문 미리보기 피드 텍스트로 깔끔하게 노출됩니다.]</div>
-
-2. 마스트헤드 (table 태그)
-- 왼쪽: VOL·날짜·브리핑 종류
-- 가운데: 멋쟁이 인사이트 (Georgia 폰트 22px)
-- 오른쪽: 날짜·기준·발행처 정보
-- [필수] 우측 메타 정보 컬럼(날짜, 대상 주간, 발행처 등)의 발행처/발행인은 반드시 "발행처: 멋쟁이 인사이트" 혹은 "발행인: 멋쟁이 인사이트"로 기재하십시오. 어떠한 경우에도 "수석 글로벌 매크로 애널리스트"나 "수석 애널리스트" 등을 발행처/발행인으로 작성해서는 안 되며, 무조건 "멋쟁이 인사이트"로 고정해서 출력해야 합니다.
-- 중요: 우측 메타 정보 컬럼의 각 p 태그에는 줄바꿈(wrapping) 현상으로 레이아웃이 지저분해지지 않도록 반드시 인라인 스타일에 'white-space: nowrap;'을 명시하여 각 항목이 정확히 한 줄씩 깔끔한 3줄로 출력되도록 하십시오.
-
-3. 에디션바 (검정 배경 #0a0a0a)
-- 왼쪽: 오늘 핵심 키워드
-- 오른쪽: 가장 중요한 수치 (골드 #f0c040)
-
-4. 수치 대시보드 (table, 검정 배경)
-- 4칸 × 2행 = 8개 핵심 수치
-- 상승: #4ade80 / 하락: #ef4444 / 주목: #f0c040
-
-5. 출처 표기 (font-size 11px, 회색)
-- 모든 수치의 출처를 한 줄로
-
-6. 히어로 이미지
-- 반드시 아래의 검증된 고화질 금융/주식 Unsplash 이미지 목록 중 글의 주제에 가장 어울리는 단 하나만 선택하여 img 태그의 src에 그대로 복사해서 삽입하십시오. (임의로 다른 Unsplash ID를 지어내면 링크가 완전히 깨집니다. 반드시 아래 4개 주소 중 하나만 똑같이 사용해야 합니다.)
-  * 파란색/빨간색 금융 차트 선: https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80
-  * 어두운 다크톤의 주식 호가/차트: https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=900&auto=format&fit=crop&q=80
-  * 모니터 화면의 주식 캔들 차트: https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=900&auto=format&fit=crop&q=80
-  * 분석 중인 금융 그래프 차트: https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=900&auto=format&fit=crop&q=80
-- SVG 절대 금지 (Blogger에서 제거됨)
-
-7. 헤드라인 H1 및 리드 영역 (클래스 기반 구조)
-- 반드시 다음 구조를 준수하십시오:
-  `<div class="mi-headline-container">`
-    `<p class="mi-headline-meta">DAILY BRIEF (또는 WEEKLY 등) · [날짜] · [오늘의 핵심 키워드]</p>`
-    `<h1 class="mi-headline-title">[SEO 키워드를 포함한 제목]</h1>`
-    `<p class="mi-headline-lead">[전체 글의 핵심 주제와 흐름을 3~4줄로 요약한 리드문]</p>`
-  `</div>`
-
-8. 본문 섹션 (로마숫자 I·II·III·IV·V)
-- 각 섹션 시작 부분에 하단 보더가 있는 섹션 헤더 배치:
-  `<p class="mi-section-header">[로마숫자] · [섹션 제목]</p>`
-- 본문 단락: `<p class="mi-paragraph">...</p>`
-- 본문 내 핵심 포인트/메시지/시나리오 분석은 반드시 색상 왼쪽 선이 들어간 하이라이트 박스(Card) 구조로 작성:
-  `<div class="[카드클래스]">`
-    `<p class="[타이틀클래스]">[항목 타이틀]</p>`
-    `<p class="mi-card-content">[내용]</p>`
-  `</div>`
-  - 카드 및 타이틀 클래스 선택 가이드:
-    * 긍정/낙관/강세: 카드클래스="mi-card-positive", 타이틀클래스="mi-card-positive-title"
-    * 부정/비관/하락/리스크: 카드클래스="mi-card-negative", 타이틀클래스="mi-card-negative-title"
-    * 중립/정보/캘린더/일반: 카드클래스="mi-card-neutral" (또는 "mi-card-blue"), 타이틀클래스="mi-card-neutral-title" (또는 "mi-card-blue-title")
-
-9. 멋쟁이의 시각 및 결론 박스
-- 어두운 카드 형태:
-  `<div class="mi-dark-box">`
-    `<p class="mi-dark-box-title">멋쟁이의 시각 (또는 멋쟁이의 결론)</p>`
-    `<p class="mi-dark-box-content">...</p>`
-  `</div>`
-
-10. 멋쟁이 픽 (공시 검증 기반만)
-- A그룹·B그룹·C그룹별로 각각 테두리 박스로 감싸기:
-  `<div class="mi-group-container">`
-- 각 그룹의 타이틀 바 (flex 배치):
-  `<div class="[헤더클래스]">`
-    `<p class="mi-group-header-title">[A/B/C그룹 명칭 및 요약]</p>`
-    `<p class="mi-group-header-stars">[★★★★★ 등 별점]</p>`
-  `</div>`
-  - 그룹별 헤더 클래스:
-    * A그룹: "mi-group-header-a"
-    * B그룹: "mi-group-header-b"
-    * C그룹: "mi-group-header-c"
-- 타이틀 바 하단 내용 영역:
-  `<div class="mi-group-content">`
-    `<p><strong>[종목명] ([종목코드]):</strong> [팩트 근거 + 리스크 동시 서술]</p>`
-    `<p><strong>[종목명] ([종목코드]):</strong> [팩트 근거 + 리스크 동시 서술]</p>`
-  `</div>`
+161: ═══════════════════════════════
+162: HTML 구조 — 반드시 이 순서대로
+163: ═══════════════════════════════
+164: 
+165: 1. 숨김 요약 설명 Div (반드시 문서 첫 줄에 작성)
+166: - 형식: <div style="display: none;">[글의 전반적인 내용을 150자 내외의 명료한 한글 문장으로 요약한 텍스트. JSON-LD 코드나 특수 기호를 절대 포함하지 마십시오. 블로그 목록의 본문 미리보기 피드 텍스트로 깔끔하게 노출됩니다.]</div>
+167: 
+168: 2. 마스트헤드 (table 태그)
+169: - 왼쪽: VOL·날짜·브리핑 종류
+170: - 가운데: 멋쟁이 인사이트 (Georgia 폰트 22px) + 그 바로 아래 줄에 작고 세련된 "SMART MONEY INTELLIGENCE" 영문 서브타이틀(font-size: 8px; letter-spacing: 0.25em; color: #888; font-weight: bold; display: block; margin-top: 4px;) 추가
+171: - 오른쪽: 날짜·기준·발행처 정보
+172: - [필수] 우측 메타 정보 컬럼(날짜, 대상 주간, 발행처 등)의 발행처/발행인은 반드시 "발행처: 멋쟁이 인사이트" 혹은 "발행인: 멋쟁이 인사이트"로 기재하십시오. 어떠한 경우에도 "수석 글로벌 매크로 애널리스트"나 "수석 애널리스트" 등을 발행처/발행인으로 작성해서는 안 되며, 무조건 "멋쟁이 인사이트"로 고정해서 출력해야 합니다.
+173: - 중요: 우측 메타 정보 컬럼의 각 p 태그에는 줄바꿈(wrapping) 현상으로 레이아웃이 지저분해지지 않도록 반드시 인라인 스타일에 'white-space: nowrap;'을 명시하여 각 항목이 정확히 한 줄씩 깔끔한 3줄로 출력되도록 하십시오.
+174: 
+175: 3. 에디션바 (검정 배경 #0a0a0a)
+176: - 왼쪽: 오늘 핵심 키워드
+177: - 오른쪽: 가장 중요한 수치 (골드 #f0c040)
+178: 
+179: 4. 수치 대시보드 (table, 검정 배경)
+180: - 4칸 × 2행 = 8개 핵심 수치
+181: - [디자인 규칙] 각 셀에는 상단에 회색(#888)의 9px 크기 레이블(예: "코스피 지수"), 가운데에 큰 폰트(bold, 15px~18px)의 수치(상승: #4ade80 / 하락: #ef4444 / 날짜나 주목: #f0c040), 하단에 아주 작고 조밀한 세부 설명/출처(예: "에프앤가이드 집계")가 정렬되어 배치되어야 합니다.
+182: 
+183: 5. 출처 표기 (font-size 11px, 회색)
+184: - 모든 수치의 출처를 한 줄로
+185: 
+186: 6. 히어로 이미지
+187: - 반드시 아래의 검증된 고화질 금융/주식 Unsplash 이미지 목록 중 글의 주제에 가장 어울리는 단 하나만 선택하여 img 태그의 src에 그대로 복사해서 삽입하십시오. (임의로 다른 Unsplash ID를 지어내면 링크가 완전히 깨집니다. 반드시 아래 4개 주소 중 하나만 똑같이 사용해야 합니다.)
+188:   * 파란색/빨간색 금융 차트 선: https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80
+189:   * 어두운 다크톤의 주식 호가/차트: https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=900&auto=format&fit=crop&q=80
+190:   * 모니터 화면의 주식 캔들 차트: https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=900&auto=format&fit=crop&q=80
+191:   * 분석 중인 금융 그래프 차트: https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=900&auto=format&fit=crop&q=80
+192: - SVG 절대 금지 (Blogger에서 제거됨)
+193: 
+194: 7. 헤드라인 H1 및 리드 영역 (클래스 기반 구조)
+195: - 반드시 다음 구조를 준수하십시오:
+196:   `<div class="mi-headline-container">`
+197:     `<p class="mi-headline-meta">DAILY BRIEF (또는 WEEKLY 등) · [날짜] · [오늘의 핵심 키워드]</p>`
+198:     `<h1 class="mi-headline-title">[SEO 키워드를 포함한 제목]</h1>`
+199:     `<p class="mi-headline-lead">[전체 글의 핵심 주제와 흐름을 3~4줄로 요약한 리드문]</p>`
+200:   `</div>`
+201: 
+202: 8. 본문 섹션 (로마숫자 I·II·III·IV·V)
+203: - 각 섹션 시작 부분에 하단 보더가 있는 섹션 헤더 배치:
+204:   `<p class="mi-section-header">[로마숫자] · [섹션 제목]</p>`
+205: - 본문 단락: `<p class="mi-paragraph">...</p>`
+206: - [필수] 본문 중에 여러 수치나 증권사별 예측치, 기관/외인 수급 지표 등을 비교할 때는 줄글 대신 반드시 깔끔한 <table> 태그를 직접 코딩하여 삽입하십시오.
+207:   * 테이블 구조 예시:
+208:     `<table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">`
+209:       `<tr style="background: #0a0a0a; color: #fff; font-size: 12px; font-weight: bold;"><th style="padding: 8px;">증권사</th><th style="padding: 8px;">매출</th><th style="padding: 8px;">영업이익</th><th style="padding: 8px;">핵심 가정</th></tr>`
+210:       `<tr style="background: #f9f8f5; font-size: 13px;"><td style="padding: 8px; border-bottom: 1px solid #eee;">KB증권</td><td style="padding: 8px; border-bottom: 1px solid #eee;">-</td><td style="padding: 8px; border-bottom: 1px solid #eee; color: #1a7a4a; font-weight: bold;">90조원</td><td style="padding: 8px; border-bottom: 1px solid #eee;">충당금 보수적 반영</td></tr>`
+211:     `</table>`
+212: - 본문 내 핵심 포인트/메시지는 반드시 색상 왼쪽 선이 들어간 하이라이트 박스(Card) 구조로 작성:
+213:   `<div class="[카드클래스]">`
+214:     `<p class="[타이틀클래스]">[항목 타이틀]</p>`
+215:     `<p class="mi-card-content">[내용]</p>`
+216:   `</div>`
+217:   - 카드 및 타이틀 클래스 선택 가이드:
+218:     * 긍정/낙관/강세: 카드클래스="mi-card-positive", 타이틀클래스="mi-card-positive-title"
+219:     * 부정/비관/하락/리스크: 카드클래스="mi-card-negative", 타이틀클래스="mi-card-negative-title"
+220:     * 중립/정보/캘린더/일반: 카드클래스="mi-card-neutral" (또는 "mi-card-blue"), 타이틀클래스="mi-card-neutral-title" (또는 "mi-card-blue-title")
+221: 
+222: 9. 멋쟁이의 시각 및 결론 박스
+223: - 결론 부분에는 반드시 다음의 2단계 구조를 적용하십시오:
+224:   1) 요약 박스: 전체 요약 및 핵심 논조를 어두운 카드 형태로 배치:
+225:      `<div class="mi-dark-box">`
+226:        `<p class="mi-dark-box-title">멋쟁이의 시각 (또는 멋쟁이의 결론)</p>`
+227:        `<p class="mi-dark-box-content">...</p>`
+228:      `</div>`
+229:   2) 3대 대응 시나리오 (독립 카드): 요약 박스 바로 아래(검정 박스 외부)에 낙관/중립/비관 시나리오를 각각 독립된 카드 클래스로 작성하여, 오프 화이트 배경의 화려한 3색 보더로 구성하십시오:
+230:      - 낙관 시나리오: `<div class="mi-card-positive"><p class="mi-card-positive-title">시나리오 1 — 낙관 시나리오 제목</p><p class="mi-card-content">구체적 발동 조건 및 코스피 예상 범위</p></div>`
+231:      - 중립 시나리오: `<div class="mi-card-neutral"><p class="mi-card-neutral-title">시나리오 2 — 중립 시나리오 제목</p><p class="mi-card-content">구체적 발동 조건 및 코스피 예상 범위</p></div>`
+232:      - 비관 시나리오: `<div class="mi-card-negative"><p class="mi-card-negative-title">시나리오 3 — 비관 시나리오 제목</p><p class="mi-card-content">구체적 발동 조건 및 코스피 예상 범위</p></div>`
+233:      * 중요: 시나리오 카드들을 검정 박스(mi-dark-box) 내부에 넣지 마십시오. 내부 글씨와 배경 대비가 깨져 가독성이 저하됩니다. 반드시 독립된 바깥 요소로 구성해야 합니다.
+234: 
+235: 10. 멋쟁이 픽 (공시 검증 기반만)
+236: - A그룹·B그룹·C그룹별로 각각 테두리 박스로 감싸기:
+237:   `<div class="mi-group-container">`
+238: - 각 그룹의 타이틀 바 (flex 배치):
+239:   `<div class="[헤더클래스]">`
+240:     `<p class="mi-group-header-title">[A/B/C그룹 명칭 및 요약]</p>`
+241:     `<p class="mi-group-header-stars">[★★★★★ 등 별점]</p>`
+242:   `</div>`
+243:   - 그룹별 헤더 클래스:
+244:     * A그룹: "mi-group-header-a"
+245:     * B그룹: "mi-group-header-b"
+246:     * C그룹: "mi-group-header-c"
+247: - 타이틀 바 하단 내용 영역:
+248:   `<div class="mi-group-content">`
+249:     `<p><strong>[종목명] ([종목코드]):</strong> [팩트 근거 + 리스크 동시 서술]</p>`
+250:     `<p><strong>[종목명] ([종목코드]):</strong> [팩트 근거 + 리스크 동시 서술]</p>`
+251:   `</div>`
 
 11. 투자 고지 (table 태그)
 - 반드시 포함.
