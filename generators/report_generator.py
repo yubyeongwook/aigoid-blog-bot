@@ -190,35 +190,66 @@ HTML 구조 — 반드시 이 순서대로
   * 분석 중인 금융 그래프 차트: https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=900&auto=format&fit=crop&q=80
 - SVG 절대 금지 (Blogger에서 제거됨)
 
-7. 헤드라인 H1
-- SEO 키워드 포함 필수
-- 역설형: "~인데 왜 ~인가"
-- 숫자형: "X조가 팔린 날 코스피가 오른 이유"
-- 궁금증형: "~의 진짜 이유"
+7. 헤드라인 H1 및 리드 영역 (클래스 기반 구조)
+- 반드시 다음 구조를 준수하십시오:
+  `<div class="mi-headline-container">`
+    `<p class="mi-headline-meta">DAILY BRIEF (또는 WEEKLY 등) · [날짜] · [오늘의 핵심 키워드]</p>`
+    `<h1 class="mi-headline-title">[SEO 키워드를 포함한 제목]</h1>`
+    `<p class="mi-headline-lead">[전체 글의 핵심 주제와 흐름을 3~4줄로 요약한 리드문]</p>`
+  `</div>`
 
 8. 본문 섹션 (로마숫자 I·II·III·IV·V)
-- 각 섹션 14px, 줄간격 1.95
-- 섹션당 3~4 문단
+- 각 섹션 시작 부분에 하단 보더가 있는 섹션 헤더 배치:
+  `<p class="mi-section-header">[로마숫자] · [섹션 제목]</p>`
+- 본문 단락: `<p class="mi-paragraph">...</p>`
+- 본문 내 핵심 포인트/메시지/시나리오 분석은 반드시 색상 왼쪽 선이 들어간 하이라이트 박스(Card) 구조로 작성:
+  `<div class="[카드클래스]">`
+    `<p class="[타이틀클래스]">[항목 타이틀]</p>`
+    `<p class="mi-card-content">[내용]</p>`
+  `</div>`
+  - 카드 및 타이틀 클래스 선택 가이드:
+    * 긍정/낙관/강세: 카드클래스="mi-card-positive", 타이틀클래스="mi-card-positive-title"
+    * 부정/비관/하락/리스크: 카드클래스="mi-card-negative", 타이틀클래스="mi-card-negative-title"
+    * 중립/정보/캘린더/일반: 카드클래스="mi-card-neutral" (또는 "mi-card-blue"), 타이틀클래스="mi-card-neutral-title" (또는 "mi-card-blue-title")
 
-9. 멋쟁이의 시각 박스
-- 배경: #0a0a0a
-- 제목: 골드 #f0c040, 9px, letter-spacing 0.18em
-- 본문: #e2e2e2, 14px
+9. 멋쟁이의 시각 및 결론 박스
+- 어두운 카드 형태:
+  `<div class="mi-dark-box">`
+    `<p class="mi-dark-box-title">멋쟁이의 시각 (또는 멋쟁이의 결론)</p>`
+    `<p class="mi-dark-box-content">...</p>`
+  `</div>`
 
 10. 멋쟁이 픽 (공시 검증 기반만)
-- A그룹·B그룹·C그룹으로 분류
-- 각 종목: 팩트 + 리스크 동시 서술
-- 등급: ★★★★★ ~ ★★★☆☆
+- A그룹·B그룹·C그룹별로 각각 테두리 박스로 감싸기:
+  `<div class="mi-group-container">`
+- 각 그룹의 타이틀 바 (flex 배치):
+  `<div class="[헤더클래스]">`
+    `<p class="mi-group-header-title">[A/B/C그룹 명칭 및 요약]</p>`
+    `<p class="mi-group-header-stars">[★★★★★ 등 별점]</p>`
+  `</div>`
+  - 그룹별 헤더 클래스:
+    * A그룹: "mi-group-header-a"
+    * B그룹: "mi-group-header-b"
+    * C그룹: "mi-group-header-c"
+- 타이틀 바 하단 내용 영역:
+  `<div class="mi-group-content">`
+    `<p><strong>[종목명] ([종목코드]):</strong> [팩트 근거 + 리스크 동시 서술]</p>`
+    `<p><strong>[종목명] ([종목코드]):</strong> [팩트 근거 + 리스크 동시 서술]</p>`
+  `</div>`
 
 11. 투자 고지 (table 태그)
 - 반드시 포함.
-- 디자인: 왼쪽 4px 빨간 실선(#ef4444)과 연한 회색 배경(#f8fafc), 테두리(#e2e8f0)로 둘러싸인 테이블 구조.
-- 제목: 셀의 가장 첫 부분에 "⚠️ 투자 고지 및 면책 조항 (Investment Disclaimer)" (font-size: 15px, color: #ef4444, font-weight: bold, margin-bottom: 12px)을 반드시 한 줄 제목으로 배치할 것.
-- 구조: 단순 텍스트 나열 대신 다음 4가지 항목을 글머리 기호(ul, li)를 사용하여 가독성 있게 정돈된 형태로 작성.
-  * 투자 판단의 참고 자료: 본 리포트에서 제공하는 모든 정보(수치, 전망, 분석 결과 등)는 투자 판단을 돕기 위한 참고용 자료일 뿐이며, 어떠한 경우에도 특정 금융 상품이나 주식 종목의 매수·매도 권유 또는 투자 추천으로 해석될 수 없음을 명시.
-  * 정보의 한계와 검증 필요성: 본 정보는 공시 및 신뢰할 만한 취재원을 바탕으로 작성되었으나 그 완전성이나 정확성을 전적으로 보장할 수 없으므로 실제 투자 실행 전 반드시 추가적인 검증이 필요함을 명시.
-  * 최종 책임의 귀속: 모든 투자의 최종 의사결정과 그 결과에 대한 책임은 전적으로 투자자 본인에게 귀속되며, 본 리포트는 어떠한 법적 책임도 지지 않음을 명시.
-  * 전문가 상담 권고: 투자를 실행하기 전에는 반드시 충분한 시장 확인과 공인된 전문가와의 상담을 거치도록 권고함을 명시.
+- 구조:
+  `<table class="mi-disclaimer-table">`
+    `<tr><td class="mi-disclaimer-header"><p>투자 위험 고지</p></td></tr>`
+    `<tr>`
+      `<td class="mi-disclaimer-content">`
+        `<p><strong>투자 판단의 참고 자료:</strong> 본 리포트에서 제공하는 모든 정보(수치, 전망, 분석 결과 등)는 투자 판단을 돕기 위한 참고용 자료일 뿐이며, 어떠한 경우에도 특정 금융 상품이나 주식 종목의 매수·매도 권유 또는 투자 추천으로 해석될 수 없습니다. 본 정보는 공시 및 신뢰할 만한 취재원을 바탕으로 작성되었으나 그 완전성이나 정확성을 전적으로 보장할 수 없으므로 실제 투자 실행 전 반드시 추가적인 검증이 필요합니다.</p>`
+        `<p><strong>최종 책임의 귀속:</strong> 모든 투자의 최종 의사결정과 그 결과에 대한 책임은 전적으로 투자자 본인에게 귀속되며, 본 리포트는 어떠한 법적 책임도 지지 않습니다.</p>`
+        `<p><strong>전문가 상담 권고:</strong> 투자를 실행하기 전에는 반드시 충분한 시장 확인과 공인된 전문가와의 상담을 거치시기 바랍니다.</p>`
+      `</td>`
+    `</tr>`
+  `</table>`
 
 12. 출처 표기 푸터
 - 배경: #f5f4f0
@@ -263,6 +294,13 @@ II. 글로벌 자금 흐름 주간 진단
 III. 코스피·코스닥 주간 수익률 해석
 IV. 다음 주 핵심 이벤트 캘린더
 V. 다음 주 멋쟁이 픽
+
+═══════════════════════════════
+분량 및 토큰 제한 규칙 (중요)
+═══════════════════════════════
+- 출력 글자수 통제: 생성되는 HTML 코드 전체 크기가 출력 토큰 한계(8,192 토큰)를 절대 초과하지 않도록 철저히 통제해 주십시오. 
+- 문단 작성 규칙: 각 본문 단락(paragraph)은 사실 정보(fact) 위주로 핵심만 아주 긴밀하게 요약하여 2~3개 문장으로만 간결하게 서술하십시오. 불필요한 서사나 반복되는 설명, 화려한 미사여구를 최대한 배제하고 압축하십시오.
+- 전체 분량: 문서 전체 글자 수가 공백 포함 3,000자 ~ 4,000자 내외가 되도록 전체 볼륨을 조절하여, 글의 끝부분(투자 위험 고지, 출처 표기 푸터, SEO JSON-LD 등)이 중간에 잘리지 않고 반드시 완결된 HTML로 출력되도록 하십시오.
 
 ═══════════════════════════════
 SEO 제목 패턴
@@ -378,6 +416,114 @@ def clean_html_content(html_content: str) -> str:
 # ────────────────────────────────
 # 투자 고지(Disclaimer) 보장 및 닫는 태그 보정
 # ────────────────────────────────
+# ────────────────────────────────
+# HTML 클래스를 인라인 스타일로 변환 (토큰 절약 및 호환성 보장)
+# ────────────────────────────────
+def inline_css_styles(html_content: str) -> str:
+    styles_map = {
+        "mi-container": "max-width: 720px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; color: #1a1a1a; line-height: 1.9; padding: 0 4px;",
+        "mi-section-header": "font-size: 10px; letter-spacing: 0.2em; color: #888; border-bottom: 1.5px solid #0a0a0a; padding-bottom: 6px; margin: 30px 0 14px; font-weight: bold;",
+        "mi-paragraph": "font-size: 14px; color: #2c2c2c; line-height: 1.95; margin: 0 0 14px; text-align: justify; word-break: keep-all;",
+        
+        "mi-card-positive": "border-left: 3px solid #4ade80; background: #f9f8f5; padding: 12px 16px; margin: 0 0 8px; border-radius: 0 6px 6px 0;",
+        "mi-card-positive-title": "font-size: 13px; font-weight: 700; color: #1a7a4a; margin: 0 0 4px;",
+        
+        "mi-card-negative": "border-left: 3px solid #ef4444; background: #fff5f5; padding: 12px 16px; margin: 0 0 8px; border-radius: 0 6px 6px 0;",
+        "mi-card-negative-title": "font-size: 13px; font-weight: 700; color: #c0392b; margin: 0 0 4px;",
+        
+        "mi-card-neutral": "border-left: 3px solid #888; background: #f9f8f5; padding: 12px 16px; margin: 0 0 8px; border-radius: 0 6px 6px 0;",
+        "mi-card-neutral-title": "font-size: 13px; font-weight: 700; color: #555; margin: 0 0 4px;",
+        
+        "mi-card-blue": "border-left: 3px solid #1a3a6b; background: #f9f8f5; padding: 12px 16px; margin: 0 0 8px; border-radius: 0 6px 6px 0;",
+        "mi-card-blue-title": "font-size: 13px; font-weight: 700; color: #1a3a6b; margin: 0 0 4px;",
+        
+        "mi-card-content": "font-size: 13px; color: #2c2c2c; line-height: 1.85; margin: 0;",
+        
+        "mi-dark-box": "background: #0a0a0a; padding: 16px 18px; margin: 16px 0 4px;",
+        "mi-dark-box-title": "font-size: 9px; letter-spacing: 0.18em; color: #f0c040; margin: 0 0 8px; font-weight: bold;",
+        "mi-dark-box-content": "color: #e2e2e2; font-size: 14px; line-height: 1.9; margin: 0;",
+        
+        "mi-group-container": "border: 1px solid #e0ddd6; margin: 0 0 10px; border-radius: 4px; overflow: hidden;",
+        "mi-group-header-a": "background: #1a3a6b; padding: 9px 16px; display: flex; justify-content: space-between; align-items: center;",
+        "mi-group-header-b": "background: #555; padding: 9px 16px; display: flex; justify-content: space-between; align-items: center;",
+        "mi-group-header-c": "background: #c0392b; padding: 9px 16px; display: flex; justify-content: space-between; align-items: center;",
+        "mi-group-header-title": "font-size: 11px; font-weight: 700; color: #fff; margin: 0;",
+        "mi-group-header-stars": "font-size: 11px; color: #f0c040; margin: 0;",
+        "mi-group-content": "padding: 12px 16px;",
+        
+        "mi-headline-container": "padding: 0 0 18px; border-bottom: 2px solid #0a0a0a;",
+        "mi-headline-meta": "font-size: 11px; letter-spacing: 0.15em; color: #c0392b; margin: 0 0 8px; font-weight: bold;",
+        "mi-headline-title": "font-family: Georgia, serif; font-size: 26px; font-weight: 700; line-height: 1.15; margin: 0 0 12px; letter-spacing: -0.02em;",
+        "mi-headline-lead": "font-size: 14px; color: #444; line-height: 1.85; margin: 0; border-left: 4px solid #c0392b; padding-left: 14px;",
+        
+        "mi-disclaimer-table": "border-collapse: collapse; border: 2px solid #c0392b; margin: 24px 0 0; width: 100%;",
+        "mi-disclaimer-header": "background: #c0392b; padding: 10px 16px;",
+        "mi-disclaimer-content": "background: #fff8f7; padding: 12px 16px; text-align: left;"
+    }
+    
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html_content, 'html.parser')
+    
+    # 1. 일반 클래스 인라인 처리
+    for class_name, style_str in styles_map.items():
+        elements = soup.find_all(class_=class_name)
+        for el in elements:
+            existing_style = el.get("style", "")
+            if existing_style:
+                el["style"] = style_str + " " + existing_style
+            else:
+                el["style"] = style_str
+                
+    # 2. 멋쟁이 픽 그룹 내용물의 p 태그들 인라인 처리
+    group_contents = soup.find_all(class_="mi-group-content")
+    for gc in group_contents:
+        p_tags = gc.find_all("p")
+        for i, p in enumerate(p_tags):
+            p_style = "font-size: 13.5px; color: #2c2c2c; line-height: 1.85;"
+            if i < len(p_tags) - 1:
+                p_style += " margin: 0 0 8px;"
+            else:
+                p_style += " margin: 0;"
+            
+            existing = p.get("style", "")
+            if existing:
+                p["style"] = p_style + " " + existing
+            else:
+                p["style"] = p_style
+
+    # 3. 투자 고지 안쪽 내용 처리
+    disclaimer_content_td = soup.find(class_="mi-disclaimer-content")
+    if disclaimer_content_td:
+        p_tags = disclaimer_content_td.find_all("p")
+        for i, p in enumerate(p_tags):
+            p_style = "font-size: 12.5px; color: #5a1a1a; line-height: 1.8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;"
+            if i < len(p_tags) - 1:
+                p_style += " margin: 0 0 8px;"
+            else:
+                p_style += " margin: 0;"
+            
+            existing = p.get("style", "")
+            if existing:
+                p["style"] = p_style + " " + existing
+            else:
+                p["style"] = p_style
+                
+    disclaimer_header_td = soup.find(class_="mi-disclaimer-header")
+    if disclaimer_header_td:
+        p_tag = disclaimer_header_td.find("p")
+        if p_tag:
+            p_style = "font-size: 11px; font-weight: 700; color: #fff; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;"
+            existing = p_tag.get("style", "")
+            if existing:
+                p_tag["style"] = p_style + " " + existing
+            else:
+                p_tag["style"] = p_style
+
+    return str(soup)
+
+# ────────────────────────────────
+# 투자 고지(Disclaimer) 보장 및 닫는 태그 보정
+# ────────────────────────────────
 def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
     # 0. 마크다운 기호 및 이모지 자동 정화
     html_content = clean_html_content(html_content)
@@ -389,37 +535,53 @@ def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
         print(f"⚠️ 경고: 불완전한 태그 '{html_content[last_open_angle:]}'를 잘라내어 문장을 정리합니다.")
         html_content = html_content[:last_open_angle]
 
-    # 2. 투자 고지 문구 존재 여부 확인 및 보정
+    # 2. 열려있는 div 및 table 태그 분석 후 '먼저' 닫아주기 (중첩 방지)
+    import re
+    # 시작 태그와 종료 태그 매칭
+    tags = re.findall(r'<(div|table)\b[^>]*>|</(div|table)>', html_content, re.IGNORECASE)
+    open_tags = []
+    for tag in tags:
+        if tag[0]:  # 시작 태그
+            open_tags.append(tag[0].lower())
+        elif tag[1]:  # 종료 태그
+            t_close = tag[1].lower()
+            if open_tags and open_tags[-1] == t_close:
+                open_tags.pop()
+            elif t_close in open_tags:
+                open_tags.remove(t_close)
+                
+    if open_tags:
+        closing_str = ""
+        for t in reversed(open_tags):
+            closing_str += f"</{t}>"
+        print(f"⚠️ 경고: 잘린 HTML 복구를 위해 열린 태그를 먼저 닫습니다: {open_tags} -> {closing_str}")
+        html_content += closing_str
+
+    # 3. 투자 고지 문구 존재 여부 확인 및 보정
     has_disclaimer = any(word in html_content for word in ["Disclaimer", "투자 고지", "투자고지", "투자 주의", "투자주의", "투자 판단의 참고 자료"])
     if not has_disclaimer:
         print("⚠️ 경고: AI 생성 결과에 투자 고지(Disclaimer)가 누락되거나 잘렸습니다. 자동으로 보정합니다.")
         disclaimer_html = """
     <!-- 자동 보정된 투자 고지 영역 -->
-    <table style="width: 100%; border: 1px solid #e2e8f0; border-left: 4px solid #ef4444; border-radius: 8px; margin-top: 40px; background-color: #f8fafc; border-collapse: separate; box-shadow: 0 1px 3px rgba(0,0,0,0.05); width: 100%;">
+    <table class="mi-disclaimer-table">
         <tr>
-            <td style="padding: 24px; text-align: left; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-                <div style="color: #ef4444; font-size: 15px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.02em;">
-                    ⚠️ 투자 고지 및 면책 조항 (Investment Disclaimer)
-                </div>
-                <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #475569; line-height: 1.8;">
-                    <li style="margin-bottom: 8px; list-style-type: disc;"><strong>투자 판단의 참고 자료:</strong> 본 리포트에서 제공하는 모든 정보(수치, 전망, 분석 결과 등)는 투자 판단을 돕기 위한 참고용 자료일 뿐이며, 어떠한 경우에도 특정 금융 상품이나 주식 종목의 매수·매도 권유 또는 투자 추천으로 해석될 수 없습니다.</li>
-                    <li style="margin-bottom: 8px; list-style-type: disc;"><strong>정보의 한계와 검증 필요성:</strong> 본 정보는 공시 및 신뢰할 만한 취재원을 바탕으로 작성되었으나 그 완전성이나 정확성을 전적으로 보장할 수 없으므로 실제 투자 실행 전 반드시 추가적인 검증이 필요합니다.</li>
-                    <li style="margin-bottom: 8px; list-style-type: disc;"><strong>최종 책임의 귀속:</strong> 모든 투자의 최종 의사결정과 그 결과에 대한 책임은 전적으로 투자자 본인에게 귀속되며, 본 리포트는 어떠한 법적 책임도 지지 않습니다.</li>
-                    <li style="margin: 0; list-style-type: disc;"><strong>전문가 상담 권고:</strong> 투자를 실행하기 전에는 반드시 충분한 시장 확인과 공인된 전문가와의 상담을 거치시기 바랍니다.</li>
-                </ul>
+            <td class="mi-disclaimer-header">
+                <p>투자 위험 고지</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="mi-disclaimer-content">
+                <p><strong>투자 판단의 참고 자료:</strong> 본 리포트에서 제공하는 모든 정보(수치, 전망, 분석 결과 등)는 투자 판단을 돕기 위한 참고용 자료일 뿐이며, 어떠한 경우에도 특정 금융 상품이나 주식 종목의 매수·매도 권유 또는 투자 추천으로 해석될 수 없습니다. 본 정보는 공시 및 신뢰할 만한 취재원을 바탕으로 작성되었으나 그 완전성이나 정확성을 전적으로 보장할 수 없으므로 실제 투자 실행 전 반드시 추가적인 검증이 필요합니다.</p>
+                <p><strong>최종 책임의 귀속:</strong> 모든 투자의 최종 의사결정과 그 결과에 대한 책임은 전적으로 투자자 본인에게 귀속되며, 본 리포트는 어떠한 법적 책임도 지지 않습니다.</p>
+                <p><strong>전문가 상담 권고:</strong> 투자를 실행하기 전에는 반드시 충분한 시장 확인과 공인된 전문가와의 상담을 거치시기 바랍니다.</p>
             </td>
         </tr>
     </table>
 """
         html_content += disclaimer_html
-
-    # 3. 열려있는 div 태그 수와 닫힌 div 태그 수 분석 후 보정
-    open_divs = html_content.count("<div")
-    close_divs = html_content.count("</div>")
-    if open_divs > close_divs:
-        diff = open_divs - close_divs
-        print(f"⚠️ 경고: 열린 div({open_divs})와 닫힌 div({close_divs}) 수가 일치하지 않아 {diff}개의 닫는 </div> 태그를 자동으로 추가합니다.")
-        html_content += "</div>" * diff
+        
+    # 4. 클래스 기반 태그들을 인라인 스타일로 전격 변환
+    html_content = inline_css_styles(html_content)
         
     return html_content
 
@@ -431,37 +593,62 @@ def call_gemini(prompt: str) -> str:
         print("⚠️ GEMINI_API_KEY 없음 → Anthropic으로 대체")
         return call_anthropic(prompt)
     
+    # 1. Gemini 2.5 Flash 시도
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
     body = {
         "contents": [{"parts": [{"text": SYSTEM_PROMPT + "\n\n" + prompt}]}],
         "generationConfig": {
             "maxOutputTokens": 8192,
-            "temperature": 0.7,
+            "temperature": 0.3,
             "thinkingConfig": {
                 "thinkingBudget": 0
             }
         }
     }
+    
     try:
+        print("🤖 Gemini 2.5 Flash 호출 중...")
         res = requests.post(url, json=body, timeout=120)
         data = res.json()
         if "error" in data:
-            raise RuntimeError(f"Gemini API 에러: {data['error'].get('message')}")
+            raise RuntimeError(f"Gemini 2.5 API 에러: {data['error'].get('message')}")
         text = data["candidates"][0]["content"]["parts"][0]["text"]
-        # HTML 블록만 추출
-        if "```html" in text:
-            text = text.split("```html")[1].split("```")[0].strip()
-        elif "```" in text:
-            text = text.split("```")[1].split("```")[0].strip()
-        
-        processed_text = fix_heading_line_height(text)
-        return ensure_disclaimer_and_closed_tags(processed_text)
     except Exception as e:
-        print(f"Gemini 오류: {e} → Anthropic으로 대체")
+        print(f"⚠️ Gemini 2.5 Flash 호출 실패 ({e}) → gemini-flash-latest (1.5 Flash)로 대체 시도...")
         try:
-            return call_anthropic(prompt)
-        except Exception as ae:
-            raise RuntimeError(f"모든 AI API 호출에 실패했습니다. (Gemini: {e}, Anthropic: {ae})")
+            # 2. Gemini 1.5 Flash (gemini-flash-latest) 시도
+            url_fallback = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}"
+            body_fallback = {
+                "contents": [{"parts": [{"text": SYSTEM_PROMPT + "\n\n" + prompt}]}],
+                "generationConfig": {
+                    "maxOutputTokens": 8192,
+                    "temperature": 0.3,
+                    "thinkingConfig": {
+                        "thinkingBudget": 0
+                    }
+                }
+            }
+            res = requests.post(url_fallback, json=body_fallback, timeout=120)
+            data = res.json()
+            if "error" in data:
+                raise RuntimeError(f"Gemini 1.5 API 에러: {data['error'].get('message')}")
+            text = data["candidates"][0]["content"]["parts"][0]["text"]
+        except Exception as fallback_err:
+            print(f"⚠️ Gemini 1.5 Flash 호출 실패 ({fallback_err}) → Anthropic으로 대체 시도...")
+            try:
+                # 3. Anthropic (Claude 3.5 Sonnet) 시도
+                return call_anthropic(prompt)
+            except Exception as ae:
+                raise RuntimeError(f"모든 AI API 호출에 실패했습니다. (Gemini 2.5: {e}, Gemini 1.5: {fallback_err}, Anthropic: {ae})")
+                
+    # HTML 블록만 추출
+    if "```html" in text:
+        text = text.split("```html")[1].split("```")[0].strip()
+    elif "```" in text:
+        text = text.split("```")[1].split("```")[0].strip()
+    
+    processed_text = fix_heading_line_height(text)
+    return ensure_disclaimer_and_closed_tags(processed_text)
 
 # ────────────────────────────────
 # Anthropic API 호출 (백업)
@@ -523,8 +710,9 @@ def generate_daily_report(market_data: dict, news_data: dict) -> str:
 멋쟁이 인사이트 오전 브리핑을 작성해라.
 
 작성 구조 및 분량 규칙 (완결성 필수):
-- 본문은 시스템 프롬프트의 'HTML 구조'와 '분석 구조' 순서에 맞추어 완결성 있게 작성해야 합니다.
-- 다음 요소를 순서대로 모두 포함하십시오:
+- [중요 - 분량 극단적 단축]: 출력 토큰 제한으로 인해 글이 잘리는 것을 완전히 방지해야 합니다. 각 본문 섹션(I~V)의 본문 단락은 구구절절한 설명을 모두 제거하고, 1~2개 문장으로 사실만 요약하여 극도로 간결하게 작성하십시오. 
+- [중요 - 시나리오 및 멋쟁이 픽 단축]: 결론의 낙관/중립/비관 3대 시나리오 역시 각 1줄 내외로 핵심만 적고, 멋쟁이 픽 종목 역시 2줄 내외로 팩트와 리스크만 짧게 요약하십시오.
+- 다음 요소를 순서대로 누락 없이 모두 포함하여 전체 HTML 문서 크기가 공백 포함 3,000자 내외가 되도록 하십시오:
   1. SEO JSON-LD
   2. 마스트헤드 (table 태그로 구성, '멋쟁이 인사이트' 문구를 포함한 세련된 구조)
   3. 에디션바 (검정 배경 #0a0a0a, 왼쪽: 오늘 핵심 키워드, 오른쪽: 가장 중요한 수치 골드 #f0c040)
@@ -539,9 +727,9 @@ def generate_daily_report(market_data: dict, news_data: dict) -> str:
      - IV. 오늘 주목 이벤트 — 공시·발표·지표 (DART 공시 및 뉴스 정보 연결)
      - V. 멋쟁이 픽 — 팩트 기반 관심 종목 (A그룹·B그룹·C그룹 분류, 각 종목별 구체적 팩트 근거 및 하락 리스크 동시 서술, 별점 ★★★★★ ~ ★★★☆☆ 표시)
   9. 결론: 멋쟁이의 시각 박스 (배경 #0a0a0a, 낙관/중립/비관 3대 대응 시나리오 반드시 포함)
-  10. 투자 고지 (table 태그, 빨간 테두리 적용)
+  10. 투자 고지 (table 태그 적용)
   11. 출처 표기 푸터 (배경 #f5f4f0, font-size 11px, 모든 언급 수치의 원본 출처 명시)
-- 글의 마지막 </div> 태그까지 확실하게 닫혀야 합니다. 전체 글이 중간에 잘리지 않고 매끄럽게 끝나도록 문단 호흡과 상세도를 설계하여 5000자 이내로 완결 지어 주십시오.
+- 글의 마지막 </div> 태그까지 확실하게 닫혀야 합니다. 전체 글이 중간에 잘리지 않고 매끄럽게 끝나도록 문단 호흡과 상세도를 설계하여 반드시 결론과 고지 조항까지 완결 지어 주십시오.
 
 [트래픽 유입 극대화를 위한 SEO 제목 작성 규칙 (필수)]
 - JSON-LD의 "headline"과 H1 헤드라인(제목)은 검색 포털(네이버, 구글 등)에서 트래픽을 대량으로 유입시킬 수 있는 핵심 검색 키워드를 조합하여 자극적으로 작성하십시오.
@@ -576,8 +764,9 @@ def generate_afternoon_report(market_data: dict, news_data: dict) -> str:
 멋쟁이 인사이트 오후 마감 브리핑을 작성해라.
 
 작성 구조 및 분량 규칙 (완결성 필수):
-- 본문은 시스템 프롬프트의 'HTML 구조'와 '분석 구조' 순서에 맞추어 완결성 있게 작성해야 합니다.
-- 다음 요소를 순서대로 모두 포함하십시오:
+- [중요 - 분량 극단적 단축]: 출력 토큰 제한으로 인해 글이 잘리는 것을 완전히 방지해야 합니다. 각 본문 섹션(I~V)의 본문 단락은 구구절절한 설명을 모두 제거하고, 1~2개 문장으로 사실만 요약하여 극도로 간결하게 작성하십시오.
+- [중요 - 시나리오 및 결론 단축]: 결론의 내일을 위한 전략 3가지 시나리오 역시 각 1줄 내외로 핵심만 짧게 요약하십시오.
+- 다음 요소를 순서대로 누락 없이 모두 포함하여 전체 HTML 문서 크기가 공백 포함 3,000자 내외가 되도록 하십시오:
   1. SEO JSON-LD
   2. 마스트헤드 (table 태그로 구성, '멋쟁이 인사이트' 문구를 포함한 세련된 구조)
   3. 에디션바 (검정 배경 #0a0a0a, 왼쪽: 오늘 핵심 키워드, 오른쪽: 가장 중요한 수치 골드 #f0c040)
@@ -592,9 +781,9 @@ def generate_afternoon_report(market_data: dict, news_data: dict) -> str:
      - IV. 내일을 위한 전략 — 3가지 시나리오 (다음 거래일 대응법)
      - V. 오늘 주요 공시 — 가장 중요한 것 1개 (DART 공시의 구체적 설명)
   9. 결론: 이번 주 흐름에서 오늘의 위치 (멋쟁이의 시각 박스 포함)
-  10. 투자 고지 (table 태그, 빨간 테두리 적용)
+  10. 투자 고지 (table 태그 적용)
   11. 출처 표기 푸터 (배경 #f5f4f0, font-size 11px, 모든 언급 수치의 원본 출처 명시)
-- 글의 마지막 </div> 태그까지 확실하게 닫혀야 합니다. 전체 글이 중간에 잘리지 않고 매끄럽게 끝나도록 문단 호흡과 상세도를 설계하여 5000자 이내로 완결 지어 주십시오.
+- 글의 마지막 </div> 태그까지 확실하게 닫혀야 합니다. 전체 글이 중간에 잘리지 않고 매끄럽게 끝나도록 문단 호흡과 상세도를 설계하여 반드시 결론과 고지 조항까지 완결 지어 주십시오.
 
 [트래픽 유입 극대화를 위한 SEO 제목 작성 규칙 (필수)]
 - JSON-LD의 "headline"과 H1 헤드라인(제목)은 검색 포털(네이버, 구글 등)에서 트래픽을 대량으로 유입시킬 수 있는 핵심 검색 키워드를 조합하여 자극적으로 작성하십시오.
@@ -649,8 +838,9 @@ def generate_weekly_report(market_data: dict, news_data: dict) -> str:
 멋쟁이 인사이트 주간 결산 브리핑을 작성해라.
 
 작성 구조 및 분량 규칙 (완결성 필수):
-- 본문은 시스템 프롬프트의 'HTML 구조'와 '분석 구조' 순서에 맞추어 완결성 있게 작성해야 합니다.
-- 다음 요소를 순서대로 모두 포함하십시오:
+- [중요 - 분량 극단적 단축]: 출력 토큰 제한으로 인해 글이 잘리는 것을 완전히 방지해야 합니다. 각 본문 섹션(I~V)의 본문 단락은 구구절절한 설명을 모두 제거하고, 1~2개 문장으로 사실만 요약하여 극도로 간결하게 작성하십시오.
+- [중요 - 시나리오 및 멋쟁이 픽 단축]: 결론의 다음 주 대응 전술 및 3개 전략 시나리오 역시 각 1줄 내외로 핵심만 적고, 멋쟁이 픽 종목 역시 2줄 내외로 팩트와 리스크만 짧게 요약하십시오.
+- 다음 요소를 순서대로 누락 없이 모두 포함하여 전체 HTML 문서 크기가 공백 포함 3,000자 내외가 되도록 하십시오:
   1. SEO JSON-LD
   2. 마스트헤드 (table 태그로 구성, '멋쟁이 인사이트' 문구를 포함한 세련된 구조)
   3. 에디션바 (검정 배경 #0a0a0a, 왼쪽: 이번 주 핵심 키워드, 오른쪽: 가장 중요한 수치 골드 #f0c040)
@@ -665,9 +855,9 @@ def generate_weekly_report(market_data: dict, news_data: dict) -> str:
      - IV. 다음 주 핵심 이벤트 캘린더 (반드시 날짜와 요일 정확히 매칭)
      - V. 다음 주 멋쟁이 픽 (팩트 기반 관심 종목, 종목별 하락 리스크 필수 기재)
   9. 결론: 멋쟁이의 시각 박스 (배경 #0a0a0a, 다음 주 대응 전술과 3개 전략 시나리오 요약)
-  10. 투자 고지 (table 태그, 빨간 테두리 적용)
+  10. 투자 고지 (table 태그 적용)
   11. 출처 표기 푸터 (배경 #f5f4f0, font-size 11px, 모든 언급 수치의 원본 출처 명시)
-- 글의 마지막 </div> 태그까지 확실하게 닫혀야 합니다. 전체 글이 중간에 잘리지 않고 매끄럽게 끝나도록 문단 호흡과 상세도를 설계하여 5000자 이내로 완결 지어 주십시오.
+- 글의 마지막 </div> 태그까지 확실하게 닫혀야 합니다. 전체 글이 중간에 잘리지 않고 매끄럽게 끝나도록 문단 호흡과 상세도를 설계하여 반드시 결론과 고지 조항까지 완결 지어 주십시오.
 
 [트래픽 유입 극대화를 위한 주간 결산 SEO 제목 작성 규칙 (필수)]
 - JSON-LD의 "headline"과 H1 헤드라인(제목)은 주간 결산에 걸맞게 한 주간의 흐름과 다음 주 전망 키워드를 강력하게 매칭하여 클릭을 유도하도록 작성하십시오.
