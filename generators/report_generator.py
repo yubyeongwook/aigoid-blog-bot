@@ -210,8 +210,15 @@ HTML 구조 — 반드시 이 순서대로
 - 각 종목: 팩트 + 리스크 동시 서술
 - 등급: ★★★★★ ~ ★★★☆☆
 
-11. 투자 고지 (table, 빨간 테두리)
-- 반드시 포함
+11. 투자 고지 (table 태그)
+- 반드시 포함.
+- 디자인: 왼쪽 4px 빨간 실선(#ef4444)과 연한 회색 배경(#f8fafc), 테두리(#e2e8f0)로 둘러싸인 테이블 구조.
+- 제목: 셀의 가장 첫 부분에 "⚠️ 투자 고지 및 면책 조항 (Investment Disclaimer)" (font-size: 15px, color: #ef4444, font-weight: bold, margin-bottom: 12px)을 반드시 한 줄 제목으로 배치할 것.
+- 구조: 단순 텍스트 나열 대신 다음 4가지 항목을 글머리 기호(ul, li)를 사용하여 가독성 있게 정돈된 형태로 작성.
+  * 투자 판단의 참고 자료: 본 리포트에서 제공하는 모든 정보(수치, 전망, 분석 결과 등)는 투자 판단을 돕기 위한 참고용 자료일 뿐이며, 어떠한 경우에도 특정 금융 상품이나 주식 종목의 매수·매도 권유 또는 투자 추천으로 해석될 수 없음을 명시.
+  * 정보의 한계와 검증 필요성: 본 정보는 공시 및 신뢰할 만한 취재원을 바탕으로 작성되었으나 그 완전성이나 정확성을 전적으로 보장할 수 없으므로 실제 투자 실행 전 반드시 추가적인 검증이 필요함을 명시.
+  * 최종 책임의 귀속: 모든 투자의 최종 의사결정과 그 결과에 대한 책임은 전적으로 투자자 본인에게 귀속되며, 본 리포트는 어떠한 법적 책임도 지지 않음을 명시.
+  * 전문가 상담 권고: 투자를 실행하기 전에는 반드시 충분한 시장 확인과 공인된 전문가와의 상담을 거치도록 권고함을 명시.
 
 12. 출처 표기 푸터
 - 배경: #f5f4f0
@@ -383,16 +390,23 @@ def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
         html_content = html_content[:last_open_angle]
 
     # 2. 투자 고지 문구 존재 여부 확인 및 보정
-    has_disclaimer = any(word in html_content for word in ["Disclaimer", "투자 고지", "투자고지", "투자 주의", "투자주의"])
+    has_disclaimer = any(word in html_content for word in ["Disclaimer", "투자 고지", "투자고지", "투자 주의", "투자주의", "투자 판단의 참고 자료"])
     if not has_disclaimer:
         print("⚠️ 경고: AI 생성 결과에 투자 고지(Disclaimer)가 누락되거나 잘렸습니다. 자동으로 보정합니다.")
         disclaimer_html = """
     <!-- 자동 보정된 투자 고지 영역 -->
-    <table style="width: 100%; border: 1px solid #ef4444; border-radius: 8px; margin-top: 40px; padding: 20px; background-color: #fff5f5; border-collapse: separate;">
+    <table style="width: 100%; border: 1px solid #e2e8f0; border-left: 4px solid #ef4444; border-radius: 8px; margin-top: 40px; background-color: #f8fafc; border-collapse: separate; box-shadow: 0 1px 3px rgba(0,0,0,0.05); width: 100%;">
         <tr>
-            <td style="font-size: 13px; color: #333333; line-height: 1.8; text-align: left;">
-                <strong style="color: #ef4444; font-size: 14px; display: block; margin-bottom: 8px; text-align: center;">[투자 고지 및 면책 조항 / Investment Disclaimer]</strong>
-                본 리포트에서 제공하는 모든 정보(수치, 전망, 분석 결과 등)는 투자 판단을 돕기 위한 참고용 자료일 뿐이며, 어떠한 경우에도 특정 금융 상품이나 주식 종목의 매수·매도 권유 또는 투자 추천으로 해석될 수 없습니다. 본 정보는 공시 및 신뢰할 만한 취재원을 바탕으로 작성되었으나 그 완전성이나 정확성을 전적으로 보장할 수 없습니다. 모든 투자의 최종 의사결정과 결과에 대한 책임은 전적으로 투자자 본인에게 귀속됩니다. 투자 실행 전 반드시 충분한 확인과 전문가 상담을 거치시기 바랍니다.
+            <td style="padding: 24px; text-align: left; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                <div style="color: #ef4444; font-size: 15px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.02em;">
+                    ⚠️ 투자 고지 및 면책 조항 (Investment Disclaimer)
+                </div>
+                <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #475569; line-height: 1.8;">
+                    <li style="margin-bottom: 8px; list-style-type: disc;"><strong>투자 판단의 참고 자료:</strong> 본 리포트에서 제공하는 모든 정보(수치, 전망, 분석 결과 등)는 투자 판단을 돕기 위한 참고용 자료일 뿐이며, 어떠한 경우에도 특정 금융 상품이나 주식 종목의 매수·매도 권유 또는 투자 추천으로 해석될 수 없습니다.</li>
+                    <li style="margin-bottom: 8px; list-style-type: disc;"><strong>정보의 한계와 검증 필요성:</strong> 본 정보는 공시 및 신뢰할 만한 취재원을 바탕으로 작성되었으나 그 완전성이나 정확성을 전적으로 보장할 수 없으므로 실제 투자 실행 전 반드시 추가적인 검증이 필요합니다.</li>
+                    <li style="margin-bottom: 8px; list-style-type: disc;"><strong>최종 책임의 귀속:</strong> 모든 투자의 최종 의사결정과 그 결과에 대한 책임은 전적으로 투자자 본인에게 귀속되며, 본 리포트는 어떠한 법적 책임도 지지 않습니다.</li>
+                    <li style="margin: 0; list-style-type: disc;"><strong>전문가 상담 권고:</strong> 투자를 실행하기 전에는 반드시 충분한 시장 확인과 공인된 전문가와의 상담을 거치시기 바랍니다.</li>
+                </ul>
             </td>
         </tr>
     </table>
