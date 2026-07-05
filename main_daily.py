@@ -12,7 +12,38 @@ from collectors.news_collector import collect_all as collect_news
 from generators.report_generator import generate_daily_report
 from publishers.blogger_publisher import publish_post, build_seo_title, auto_labels
 
+def is_market_holiday() -> bool:
+    import datetime, requests
+    utc_now = datetime.datetime.now(datetime.timezone.utc)
+    kst_today = (utc_now + datetime.timedelta(hours=9)).date()
+    
+    # 1. 주말 체크
+    if kst_today.weekday() >= 5:
+        return True
+        
+    # 2. 연말 휴장일 (12월 31일)
+    if kst_today.month == 12 and kst_today.day == 31:
+        return True
+        
+    # 3. 공공 휴일 API 체크
+    try:
+        url = f"https://date.nager.at/api/v3/publicholidays/{kst_today.year}/KR"
+        res = requests.get(url, timeout=10)
+        if res.status_code == 200:
+            holidays = [h.get("date") for h in res.json()]
+            today_str = kst_today.strftime("%Y-%m-%d")
+            if today_str in holidays:
+                return True
+    except Exception as e:
+        print(f"⚠️ 휴일 API 조회 실패, 기본 작동 처리: {e}")
+        
+    return False
+
 def main():
+    if is_market_holiday():
+        print("📢 오늘은 한국 거래소 휴장일(또는 주말)입니다. 작업을 건너뜁니다.")
+        return
+
     print("=" * 60)
     print(f"  멋쟁이 인사이트 — 일일 자동 리포트")
     print(f"  실행 시각: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}")
