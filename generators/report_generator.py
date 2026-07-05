@@ -602,18 +602,10 @@ def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
 # Gemini API 호출
 # ────────────────────────────────
 def call_gemini(prompt: str) -> str:
-    # [우선순위 변경] 1. Anthropic (Claude 3.5 Sonnet)을 기본 모델로 호출 (통통한 통찰력과 고품격 디자인)
-    if ANTHROPIC_API_KEY:
-        try:
-            print("🤖 Claude 3.5 Sonnet 호출 중 (기본 모델)...")
-            return call_anthropic(prompt)
-        except Exception as ae:
-            print(f"⚠️ Claude 3.5 Sonnet 호출 실패 ({ae}) → Gemini로 대체 시도...")
-            
-    # 2. Gemini 2.5 Flash 호출 (백업 1)
+    # 1. Gemini 2.5 Flash 호출 (기본 모델)
     if GEMINI_API_KEY:
         try:
-            print("🤖 Gemini 2.5 Flash 호출 중 (대체)...")
+            print("🤖 Gemini 2.5 Flash 호출 중 (기본 모델)...")
             url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
             body = {
                 "contents": [{"parts": [{"text": SYSTEM_PROMPT + "\n\n" + prompt}]}],
@@ -642,7 +634,7 @@ def call_gemini(prompt: str) -> str:
         except Exception as e:
             print(f"⚠️ Gemini 2.5 Flash 호출 실패 ({e}) → Gemini 1.5 Flash로 대체 시도...")
             
-    # 3. Gemini 1.5 Flash 호출 (백업 2)
+    # 2. Gemini 1.5 Flash 호출 (백업 1)
     if GEMINI_API_KEY:
         try:
             print("🤖 Gemini 1.5 Flash 호출 중 (대체)...")
@@ -672,7 +664,15 @@ def call_gemini(prompt: str) -> str:
             processed_text = fix_heading_line_height(text)
             return ensure_disclaimer_and_closed_tags(processed_text)
         except Exception as fallback_err:
-            raise RuntimeError(f"모든 AI API 호출에 실패했습니다. (Gemini 1.5: {fallback_err})")
+            print(f"⚠️ Gemini 1.5 Flash 호출 실패 ({fallback_err}) → Anthropic으로 대체 시도...")
+            
+    # 3. Anthropic (Claude 3.5 Sonnet) 호출 (백업 2)
+    if ANTHROPIC_API_KEY:
+        try:
+            print("🤖 Claude 3.5 Sonnet 호출 중 (대체)...")
+            return call_anthropic(prompt)
+        except Exception as ae:
+            raise RuntimeError(f"모든 AI API 호출에 실패했습니다. (Gemini 1.5: {fallback_err if 'fallback_err' in locals() else 'N/A'}, Anthropic: {ae})")
             
     raise RuntimeError("호출 가능한 AI API 키가 존재하지 않습니다.")
 
