@@ -674,7 +674,7 @@ def call_anthropic(prompt: str) -> str:
     import anthropic
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     response = client.messages.create(
-        model="claude-3-5-sonnet-latest",
+        model="claude-sonnet-5",
         max_tokens=8000,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": prompt}]
