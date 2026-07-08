@@ -361,6 +361,75 @@ def get_premarket_popular_search_naver():
         print(f"인기 검색어 수집 실패: {e}")
     return result
 
+def get_premarket_active_stocks():
+    print("📈 장전 체결물량 유입 상위 종목 수집...")
+    target_urls = [
+        "https://finance.naver.com/sise/sise_quant.naver?sosok=0", # KOSPI 거래량
+        "https://finance.naver.com/sise/sise_quant.naver?sosok=1", # KOSDAQ 거래량
+        "https://finance.naver.com/sise/sise_low_up.naver?sosok=0", # KOSPI 상승률
+        "https://finance.naver.com/sise/sise_low_up.naver?sosok=1"  # KOSDAQ 상승률
+    ]
+    
+    codes = []
+    seen = set()
+    
+    for url in target_urls:
+        try:
+            res = requests.get(url, headers=HEADERS, timeout=5)
+            res.encoding = "euc-kr"
+            soup = BeautifulSoup(res.text, "html.parser")
+            table = soup.select_one("table.type_2")
+            if table:
+                count = 0
+                for row in table.select("tr"):
+                    a_tag = row.select_one("td a.tltle")
+                    if a_tag:
+                        code = a_tag['href'].split('code=')[-1].strip()
+                        if code not in seen:
+                            seen.add(code)
+                            codes.append(code)
+                        count += 1
+                        if count >= 8:
+                            break
+        except Exception as e:
+            print(f"⚠️ Active stock list fetch failed for {url}: {e}")
+            
+    result = []
+    # 최대 25개 종목만 실시간 API 조회 진행 (레이턴시 및 차단 방지)
+    for code in codes[:25]:
+        try:
+            api_url = f"https://polling.finance.naver.com/api/realtime/domestic/stock/{code}"
+            res = requests.get(api_url, timeout=5)
+            if res.status_code == 200:
+                data = res.json()
+                if "datas" in data and len(data["datas"]) > 0:
+                    item = data["datas"][0]
+                    
+                    volume = item.get("accumulatedTradingVolumeRaw", "0")
+                    over_info = item.get("overMarketPriceInfo")
+                    over_volume = "0"
+                    if over_info:
+                        over_volume = over_info.get("accumulatedTradingVolumeRaw", "0")
+                        
+                    price = item.get("closePriceRaw", "0")
+                    change_pct = item.get("fluctuationsRatioRaw", "0.0")
+                    
+                    result.append({
+                        "code": code,
+                        "name": item.get("stockName", "알 수 없음"),
+                        "price": price,
+                        "change_pct": f"{float(change_pct):+.2f}%" if change_pct else "0.00%",
+                        "volume": int(volume) if volume else 0,
+                        "over_volume": int(over_volume) if over_volume else 0,
+                        "market_type": item.get("stockExchangeType", {}).get("name", "KOSPI")
+                    })
+        except Exception as e:
+            print(f"⚠️ Error fetching realtime data for code {code}: {e}")
+            
+    # 거래량 및 시간외 거래량 중 큰 값 기준으로 내림차순 정렬
+    result.sort(key=lambda x: max(x["volume"], x["over_volume"]), reverse=True)
+    return result
+
 def collect_premarket_data():
     print("📊 장전 동시호가 데이터 수집 시작...")
     today, week_ago, last_trading = get_dates()
@@ -371,7 +440,8 @@ def collect_premarket_data():
         "us_futures": get_us_futures(),
         "index_indicative": get_index_naver(),
         "watchlist_indicative": get_watchlist_naver(),
-        "popular_search_indicative": get_premarket_popular_search_naver()
+        "popular_search_indicative": get_premarket_popular_search_naver(),
+        "active_volume_stocks": get_premarket_active_stocks()
     }
     print("✅ 장전 동시호가 데이터 수집 완료")
     return data
