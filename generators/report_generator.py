@@ -601,83 +601,72 @@ def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
 # ────────────────────────────────
 # Gemini API 호출
 # ────────────────────────────────
-def call_gemini(prompt: str) -> str:
-    # 1. Gemini 2.5 Flash 호출 (기본 모델)
-    if GEMINI_API_KEY:
-        try:
-            print("🤖 Gemini 2.5 Flash 호출 중 (기본 모델)...")
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
-            body = {
-                "contents": [{"parts": [{"text": SYSTEM_PROMPT + "\n\n" + prompt}]}],
-                "generationConfig": {
-                    "maxOutputTokens": 8192,
-                    "temperature": 0.3,
-                    "thinkingConfig": {
-                        "thinkingBudget": 0
-                    }
-                }
+# ────────────────────────────────
+# Gemini 2.5 Flash 호출
+# ────────────────────────────────
+def call_gemini_2_5(prompt: str) -> str:
+    if not GEMINI_API_KEY:
+        raise ValueError("GEMINI_API_KEY가 설정되지 않았습니다.")
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+    body = {
+        "contents": [{"parts": [{"text": SYSTEM_PROMPT + "\n\n" + prompt}]}],
+        "generationConfig": {
+            "maxOutputTokens": 8192,
+            "temperature": 0.3,
+            "thinkingConfig": {
+                "thinkingBudget": 0
             }
-            res = requests.post(url, json=body, timeout=120)
-            data = res.json()
-            if "error" in data:
-                raise RuntimeError(f"Gemini 2.5 API 에러: {data['error'].get('message')}")
-            text = data["candidates"][0]["content"]["parts"][0]["text"]
-            
-            # HTML 블록만 추출
-            if "```html" in text:
-                text = text.split("```html")[1].split("```")[0].strip()
-            elif "```" in text:
-                text = text.split("```")[1].split("```")[0].strip()
-            
-            processed_text = fix_heading_line_height(text)
-            return ensure_disclaimer_and_closed_tags(processed_text)
-        except Exception as e:
-            print(f"⚠️ Gemini 2.5 Flash 호출 실패 ({e}) → Gemini 1.5 Flash로 대체 시도...")
-            
-    # 2. Gemini 1.5 Flash 호출 (백업 1)
-    if GEMINI_API_KEY:
-        try:
-            print("🤖 Gemini 1.5 Flash 호출 중 (대체)...")
-            url_fallback = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}"
-            body_fallback = {
-                "contents": [{"parts": [{"text": SYSTEM_PROMPT + "\n\n" + prompt}]}],
-                "generationConfig": {
-                    "maxOutputTokens": 8192,
-                    "temperature": 0.3,
-                    "thinkingConfig": {
-                        "thinkingBudget": 0
-                    }
-                }
-            }
-            res = requests.post(url_fallback, json=body_fallback, timeout=120)
-            data = res.json()
-            if "error" in data:
-                raise RuntimeError(f"Gemini 1.5 API 에러: {data['error'].get('message')}")
-            text = data["candidates"][0]["content"]["parts"][0]["text"]
-            
-            # HTML 블록만 추출
-            if "```html" in text:
-                text = text.split("```html")[1].split("```")[0].strip()
-            elif "```" in text:
-                text = text.split("```")[1].split("```")[0].strip()
-                
-            processed_text = fix_heading_line_height(text)
-            return ensure_disclaimer_and_closed_tags(processed_text)
-        except Exception as fallback_err:
-            print(f"⚠️ Gemini 1.5 Flash 호출 실패 ({fallback_err}) → Anthropic으로 대체 시도...")
-            
-    # 3. Anthropic (Claude 3.5 Sonnet) 호출 (백업 2)
-    if ANTHROPIC_API_KEY:
-        try:
-            print("🤖 Claude 3.5 Sonnet 호출 중 (대체)...")
-            return call_anthropic(prompt)
-        except Exception as ae:
-            raise RuntimeError(f"모든 AI API 호출에 실패했습니다. (Gemini 1.5: {fallback_err if 'fallback_err' in locals() else 'N/A'}, Anthropic: {ae})")
-            
-    raise RuntimeError("호출 가능한 AI API 키가 존재하지 않습니다.")
+        }
+    }
+    res = requests.post(url, json=body, timeout=120)
+    data = res.json()
+    if "error" in data:
+        raise RuntimeError(f"Gemini 2.5 API 에러: {data['error'].get('message')}")
+    text = data["candidates"][0]["content"]["parts"][0]["text"]
+    
+    # HTML 블록만 추출
+    if "```html" in text:
+        text = text.split("```html")[1].split("```")[0].strip()
+    elif "```" in text:
+        text = text.split("```")[1].split("```")[0].strip()
+    
+    processed_text = fix_heading_line_height(text)
+    return ensure_disclaimer_and_closed_tags(processed_text)
 
 # ────────────────────────────────
-# Anthropic API 호출 (백업)
+# Gemini 1.5 Flash 호출
+# ────────────────────────────────
+def call_gemini_1_5(prompt: str) -> str:
+    if not GEMINI_API_KEY:
+        raise ValueError("GEMINI_API_KEY가 설정되지 않았습니다.")
+    url_fallback = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}"
+    body_fallback = {
+        "contents": [{"parts": [{"text": SYSTEM_PROMPT + "\n\n" + prompt}]}],
+        "generationConfig": {
+            "maxOutputTokens": 8192,
+            "temperature": 0.3,
+            "thinkingConfig": {
+                "thinkingBudget": 0
+            }
+        }
+    }
+    res = requests.post(url_fallback, json=body_fallback, timeout=120)
+    data = res.json()
+    if "error" in data:
+        raise RuntimeError(f"Gemini 1.5 API 에러: {data['error'].get('message')}")
+    text = data["candidates"][0]["content"]["parts"][0]["text"]
+    
+    # HTML 블록만 추출
+    if "```html" in text:
+        text = text.split("```html")[1].split("```")[0].strip()
+    elif "```" in text:
+        text = text.split("```")[1].split("```")[0].strip()
+        
+    processed_text = fix_heading_line_height(text)
+    return ensure_disclaimer_and_closed_tags(processed_text)
+
+# ────────────────────────────────
+# Anthropic API 호출
 # ────────────────────────────────
 def call_anthropic(prompt: str) -> str:
     if not ANTHROPIC_API_KEY:
@@ -685,7 +674,7 @@ def call_anthropic(prompt: str) -> str:
     import anthropic
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-3-5-sonnet-latest",
         max_tokens=8000,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": prompt}]
@@ -698,6 +687,40 @@ def call_anthropic(prompt: str) -> str:
     
     processed_text = fix_heading_line_height(text)
     return ensure_disclaimer_and_closed_tags(processed_text)
+
+# ────────────────────────────────
+# 통합 AI 호출 함수 (선택 모델 우선 실행)
+# ────────────────────────────────
+def call_ai(prompt: str) -> str:
+    primary = os.getenv("PRIMARY_AI", "gemini").strip().lower()
+    
+    gemini_2_5_func = ("Gemini 2.5 Flash", lambda: call_gemini_2_5(prompt))
+    gemini_1_5_func = ("Gemini 1.5 Flash", lambda: call_gemini_1_5(prompt))
+    claude_func = ("Claude 3.5 Sonnet", lambda: call_anthropic(prompt))
+    
+    if primary == "claude":
+        call_sequence = [claude_func, gemini_2_5_func, gemini_1_5_func]
+    else:
+        call_sequence = [gemini_2_5_func, gemini_1_5_func, claude_func]
+        
+    errors = []
+    for name, func in call_sequence:
+        try:
+            print(f"🤖 {name} 호출 중...")
+            result = func()
+            print(f"✅ {name} 생성 성공!")
+            return result
+        except Exception as e:
+            print(f"⚠️ {name} 호출 실패: {e}")
+            errors.append(f"{name}: {e}")
+            
+    raise RuntimeError(f"모든 AI API 호출에 실패했습니다. 상세 오류: {', '.join(errors)}")
+
+# ────────────────────────────────
+# Gemini API 호출 (하위 호환성 유지)
+# ────────────────────────────────
+def call_gemini(prompt: str) -> str:
+    return call_ai(prompt)
 
 # ────────────────────────────────
 # 일일 리포트 생성
