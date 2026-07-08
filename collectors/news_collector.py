@@ -66,6 +66,7 @@ def get_dart_disclosures() -> list:
 def get_macro_news() -> dict:
     queries = {
         "미국증시_마감": "미국 증시 나스닥 마감 반도체 엔비디아 테슬라",
+        "미국증시_특징주": "미국 증시 특징주 급등 테마",
         "연준_금리": "연준 금리 FOMC",
         "이란_호르무즈": "이란 호르무즈 유가",
         "반도체_HBM": "SK하이닉스 삼성전자 HBM",
