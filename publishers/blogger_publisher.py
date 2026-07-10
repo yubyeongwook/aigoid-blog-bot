@@ -33,7 +33,8 @@ def get_access_token() -> str:
 # 블로그 발행
 # ────────────────────────────────
 def publish_post(title: str, html_content: str,
-                 labels: list = None, draft: bool = False) -> dict:
+                 labels: list = None, draft: bool = False,
+                 published_time: str = None) -> dict:
     token = get_access_token()
     if not token:
         return {"error": "토큰 발급 실패"}
@@ -53,6 +54,9 @@ def publish_post(title: str, html_content: str,
         "content": html_content,
         "labels": labels
     }
+
+    if published_time:
+        body["published"] = published_time
 
     params = {"isDraft": "true" if draft else "false"}
 
