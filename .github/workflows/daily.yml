@@ -2,7 +2,7 @@ name: 멋쟁이 인사이트 일일 자동 발행
 
 on:
   schedule:
-    - cron: '0 22 * * 0-4'  # 한국시간 오전 7시 (UTC 22:00 전날)
+    - cron: '42 21 * * 0-4'  # 한국시간 오전 6시 42분 (UTC 21:42 전날)
   workflow_dispatch:          # 수동 실행 버튼
 
 jobs:
@@ -24,6 +24,7 @@ jobs:
 
     - name: 일일 리포트 생성 및 발행
       env:
+        PRIMARY_AI: claude
         ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         KIS_APP_KEY: ${{ secrets.KIS_APP_KEY }}
         KIS_APP_SECRET: ${{ secrets.KIS_APP_SECRET }}
