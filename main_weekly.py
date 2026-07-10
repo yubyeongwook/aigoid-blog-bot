@@ -59,9 +59,9 @@ def main():
     labels.append("주간결산")
 
     print("\n[4/4] Blogger 자동 발행...")
-    # 주간 결산 일요일 09:00:00 KST 발행 타겟팅 (일정/예약)
+    # 주간 결산 일요일 18:00:00 KST 발행 타겟팅 (일정/예약)
     kst_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
-    target_kst = datetime.datetime(kst_now.year, kst_now.month, kst_now.day, 9, 0, 0)
+    target_kst = datetime.datetime(kst_now.year, kst_now.month, kst_now.day, 18, 0, 0)
     published_time = target_kst.isoformat() + "+09:00"
 
     result = publish_post(seo_title, html_content, labels, published_time=published_time)
