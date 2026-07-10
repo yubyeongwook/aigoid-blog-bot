@@ -19,13 +19,11 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: pip 캐시
+    - name: 라이브러리 캐시
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+        key: ${{ runner.os }}-pip
 
     - name: 라이브러리 설치
       run: pip install -r requirements.txt
