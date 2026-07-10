@@ -43,7 +43,11 @@ SYSTEM_PROMPT = """
 HTML 필수 구조 (Blogger div-only):
 1. 마스트헤드 (table 태그·DOCTYPE/html/head 없음)
 2. 수치 대시보드 (table·검정배경·색상구분)
-3. 히어로 이미지 (Unsplash URL·SVG 금지)
+3. 이미지 배치 (글 전체에 반드시 2개 배치):
+   - 첫 번째 이미지(히어로 이미지): 마스트헤드 아래 배치. src는 "GENERATING_IMAGE_1"으로 고정하고, alt 속성에는 글의 핵심 주제를 묘사하는 구체적인 영문 이미지 생성 프롬프트를 작성하십시오.
+     예: <img class="mi-blog-image" src="GENERATING_IMAGE_1" alt="Sleek stock market chart on a dark background showing KOSPI index growth, gold accent line, high contrast" style="width: 100%; border-radius: 6px; margin: 16px 0;" />
+   - 두 번째 이미지(본문 중간 분석 이미지): 본문 중간(예: III. 오늘 상한가·급등 종목 혹은 V. 주요 공시 섹션 주변)에 배치. src는 "GENERATING_IMAGE_2"로 고정하고, alt 속성에는 해당 섹션의 주제를 설명하는 구체적인 영문 프롬프트를 작성하십시오.
+     예: <img class="mi-blog-image" src="GENERATING_IMAGE_2" alt="Futuristic semiconductor chip glow, high-tech engineering detail, dark blue and gold color scheme" style="width: 100%; border-radius: 6px; margin: 16px 0;" />
 4. H1 헤드라인 (SEO 역설형·숫자형)
 5. 본문 섹션 (로마숫자 I·II·III·IV·V)
 6. 멋쟁이의 시각 (검정배경 #0a0a0a·골드 #f0c040)
@@ -57,7 +61,7 @@ HTML 필수 구조 (Blogger div-only):
 - 투자 고지 포함됐는가
 - 마스트헤드 있는가
 - 수치 대시보드 있는가
-- Unsplash 이미지인가 (SVG 금지)
+- 2개의 이미지 태그가 alt 정보와 함께 생성되었는가
 - 멋쟁이의 시각 박스 있는가
 - 종목 픽에 리스크 표기됐는가
 """
@@ -297,10 +301,75 @@ def inline_css_styles(html_content: str) -> str:
     return str(soup)
 
 # ────────────────────────────────
+# AI 이미지 생성 및 업로드 자동화 (Pollinations AI + Catbox)
+# ────────────────────────────────
+def generate_and_upload_image(prompt_text: str) -> str:
+    import requests
+    try:
+        encoded_prompt = requests.utils.quote(prompt_text)
+        url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=576&nologo=true&private=true"
+        print(f"🤖 AI 이미지 생성 시도 중: '{prompt_text[:45]}...'")
+        res = requests.get(url, timeout=35)
+        if res.status_code != 200:
+            print("⚠️ 이미지 생성 API 응답 실패")
+            return ""
+            
+        upload_url = "https://catbox.moe/user/api.php"
+        data = {"reqtype": "fileupload"}
+        files = {"fileToUpload": ("image.png", res.content, "image/png")}
+        print("🤖 Catbox 이미지 호스팅 업로드 중...")
+        upload_res = requests.post(upload_url, data=data, files=files, timeout=30)
+        if upload_res.status_code == 200 and upload_res.text.startswith("https"):
+            url_hosted = upload_res.text.strip()
+            print(f"✅ 이미지 호스팅 성공: {url_hosted}")
+            return url_hosted
+        else:
+            print(f"⚠️ 이미지 호스팅 실패: {upload_res.text}")
+    except Exception as e:
+        print(f"⚠️ 이미지 생성 및 업로드 오류: {e}")
+    return ""
+
+def generate_and_replace_images(html_content: str) -> str:
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html_content, 'html.parser')
+    images = soup.find_all("img")
+    
+    image_count = 0
+    fallbacks = [
+        "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=800&auto=format&fit=crop"
+    ]
+    
+    for img in images:
+        src = img.get("src", "")
+        alt = img.get("alt", "")
+        
+        if ("GENERATING_IMAGE" in src or not src or "unsplash" in src) and alt:
+            if image_count >= 2:
+                break
+            
+            branding_prompt = f"{alt}, financial corporate editorial style, dark background, obsidian black and gold accents, high contrast, clean minimalist visual"
+            hosted_url = generate_and_upload_image(branding_prompt)
+            
+            if hosted_url:
+                img["src"] = hosted_url
+                img["style"] = "width: 100%; max-width: 100%; border-radius: 6px; margin: 16px 0; display: block;"
+                image_count += 1
+            else:
+                print(f"⚠️ 이미지 생성이 실패하여 대체 Unsplash 이미지로 적용합니다.")
+                img["src"] = fallbacks[image_count % len(fallbacks)]
+                img["style"] = "width: 100%; max-width: 100%; border-radius: 6px; margin: 16px 0; display: block;"
+                image_count += 1
+                
+    return str(soup)
+
+# ────────────────────────────────
 # 투자 고지(Disclaimer) 보장 및 닫는 태그 보정
 # ────────────────────────────────
 def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
     html_content = clean_html_content(html_content)
+
+    html_content = generate_and_replace_images(html_content)
 
     last_open_angle = html_content.rfind("<")
     last_close_angle = html_content.rfind(">")
