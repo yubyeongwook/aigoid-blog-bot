@@ -2,7 +2,7 @@ name: 멋쟁이 인사이트 주간 결산 자동 발행
 
 on:
   schedule:
-    - cron: '43 23 * * 6'  # 한국시간 일요일 오전 8시 43분 (UTC 토요일 23:43)
+    - cron: '0 22 * * 6'  # 한국시간 일요일 오전 7시 (UTC 토요일 22:00)
   workflow_dispatch:
 
 jobs:
@@ -18,6 +18,14 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
+
+    - name: pip 캐시
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - name: 라이브러리 설치
       run: pip install -r requirements.txt
