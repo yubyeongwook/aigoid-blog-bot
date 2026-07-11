@@ -17,8 +17,8 @@ def is_market_holiday() -> bool:
     utc_now = datetime.datetime.now(datetime.timezone.utc)
     kst_today = (utc_now + datetime.timedelta(hours=9)).date()
     
-    # 1. 주말 체크
-    if kst_today.weekday() >= 5:
+    # 1. 일요일 체크 (토요일은 미국 금요일 장 마감 분석을 위해 실행해야 함)
+    if kst_today.weekday() == 6:
         return True
         
     # 2. 연말 휴장일 (12월 31일)

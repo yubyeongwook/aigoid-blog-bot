@@ -97,6 +97,8 @@ def fix_heading_line_height(html_content: str) -> str:
 def clean_html_content(html_content: str) -> str:
     import re
     html_content = html_content.replace("**", "")
+    html_content = html_content.replace("text-align: justify;", "text-align: left;")
+    html_content = html_content.replace("text-align:justify;", "text-align:left;")
     
     emoji_pattern = re.compile(
         '['
@@ -144,7 +146,7 @@ def inline_css_styles(html_content: str) -> str:
     styles_map = {
         "mi-container": "max-width: 720px; margin: 0 auto; font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.95; padding: 24px 16px;",
         "mi-section-header": "font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #888; border-bottom: 1.5px solid #f0c040; padding-bottom: 6px; margin: 30px 0 14px; font-weight: bold;",
-        "mi-paragraph": "font-size: 14px; color: #f0f0f0; line-height: 1.95; margin: 0 0 14px; text-align: justify; word-break: keep-all;",
+        "mi-paragraph": "font-size: 14px; color: #f0f0f0; line-height: 1.95; margin: 0 0 14px; text-align: left; word-break: keep-all;",
         
         "mi-card-positive": "border-left: 3px solid #4ade80; background: #111; border: 1px solid #222; padding: 12px 16px; margin: 0 0 8px; border-radius: 0 6px 6px 0;",
         "mi-card-positive-title": "font-size: 13px; font-weight: 700; color: #4ade80; margin: 0 0 4px;",
@@ -203,6 +205,11 @@ def inline_css_styles(html_content: str) -> str:
             m_cells[0]["style"] = "width: 30%; text-align: left; font-family: 'Space Mono', monospace; font-size: 9px; color: #888; line-height: 1.7;"
             m_cells[1]["style"] = "width: 40%; text-align: center; font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: #f0f0f0; line-height: 1.2;"
             m_cells[2]["style"] = "width: 30%; text-align: right; font-family: 'Space Mono', monospace; font-size: 9px; color: #888; line-height: 1.7;"
+        elif len(m_cells) == 2:
+            # 모바일에서 '멋쟁이 인사이트'가 두 줄로 쪼개져서 '트'만 내려가는 것을 방지
+            for tag in masthead.find_all(["div", "span", "td"]):
+                if tag.get_text().strip() in ["멋쟁이 인사이트", "멋쟁이인사이트"]:
+                    tag["style"] = tag.get("style", "") + " white-space: nowrap;"
             
         if len(tables) >= 2:
             dashboard = tables[1]
@@ -237,7 +244,7 @@ def inline_css_styles(html_content: str) -> str:
     divs = soup.find_all("div")
     for d in divs:
         d_text = d.get_text()
-        if "핵심 키워드" in d_text or "키워드" in d_text:
+        if ("핵심 키워드" in d_text or "키워드" in d_text) and not d.find("div") and not d.find("table"):
             existing = d.get("style", "")
             d["style"] = "background-color: #0a0a0a; color: #f0f0f0; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-family: 'Space Mono', monospace; font-size: 10px; " + existing
             for span in d.find_all("span"):
@@ -304,27 +311,66 @@ def inline_css_styles(html_content: str) -> str:
 # AI 이미지 생성 및 업로드 자동화 (Pollinations AI + Catbox)
 # ────────────────────────────────
 def generate_and_upload_image(prompt_text: str) -> str:
-    import requests
+    import requests, base64
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+    
+    # 1. Gemini Imagen 3.0 우선 시도
+    if GEMINI_API_KEY:
+        try:
+            print(f"🤖 Gemini Imagen 3.0 이미지 생성 시도 중: '{prompt_text[:45]}...'")
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:generateImages?key={GEMINI_API_KEY}"
+            body = {
+                "prompt": prompt_text,
+                "numberOfImages": 1,
+                "aspectRatio": "16:9"
+            }
+            res = requests.post(url, json=body, timeout=45)
+            if res.status_code == 200:
+                data = res.json()
+                if "generatedImages" in data and len(data["generatedImages"]) > 0:
+                    b64_data = data["generatedImages"][0]["image"]["imageBytes"]
+                    image_bytes = base64.b64decode(b64_data)
+                    
+                    # Catbox 호스팅 업로드
+                    upload_url = "https://catbox.moe/user/api.php"
+                    upload_data = {"reqtype": "fileupload"}
+                    files = {"fileToUpload": ("image.png", image_bytes, "image/png")}
+                    print("🤖 Catbox 이미지 호스팅 업로드 중 (Gemini Imagen)...")
+                    upload_res = requests.post(upload_url, data=upload_data, files=files, timeout=30)
+                    if upload_res.status_code == 200 and upload_res.text.startswith("https"):
+                        url_hosted = upload_res.text.strip()
+                        print(f"✅ Gemini Imagen 3.0 + Catbox 호스팅 성공: {url_hosted}")
+                        return url_hosted
+                    else:
+                        print(f"⚠️ Catbox 업로드 실패: {upload_res.text}")
+                else:
+                    print("⚠️ Gemini Imagen 응답에 이미지 데이터가 없음")
+            else:
+                print(f"⚠️ Gemini Imagen API 오류 ({res.status_code}): {res.text}")
+        except Exception as e:
+            print(f"⚠️ Gemini Imagen 생성 오류: {e} → Pollinations AI 백업 사용")
+            
+    # 2. Pollinations AI 백업 시도
     try:
         encoded_prompt = requests.utils.quote(prompt_text)
         url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=576&nologo=true&private=true"
-        print(f"🤖 AI 이미지 생성 시도 중: '{prompt_text[:45]}...'")
+        print(f"🤖 Pollinations AI 이미지 생성 백업 시도 중: '{prompt_text[:45]}...'")
         res = requests.get(url, timeout=35)
         if res.status_code != 200:
-            print("⚠️ 이미지 생성 API 응답 실패")
+            print("⚠️ Pollinations 이미지 생성 API 응답 실패")
             return ""
             
         upload_url = "https://catbox.moe/user/api.php"
-        data = {"reqtype": "fileupload"}
+        upload_data = {"reqtype": "fileupload"}
         files = {"fileToUpload": ("image.png", res.content, "image/png")}
-        print("🤖 Catbox 이미지 호스팅 업로드 중...")
-        upload_res = requests.post(upload_url, data=data, files=files, timeout=30)
+        print("🤖 Catbox 이미지 호스팅 업로드 중 (Pollinations)...")
+        upload_res = requests.post(upload_url, data=upload_data, files=files, timeout=30)
         if upload_res.status_code == 200 and upload_res.text.startswith("https"):
             url_hosted = upload_res.text.strip()
-            print(f"✅ 이미지 호스팅 성공: {url_hosted}")
+            print(f"✅ Pollinations AI + Catbox 성공: {url_hosted}")
             return url_hosted
         else:
-            print(f"⚠️ 이미지 호스팅 실패: {upload_res.text}")
+            print(f"⚠️ Catbox 업로드 실패: {upload_res.text}")
     except Exception as e:
         print(f"⚠️ 이미지 생성 및 업로드 오류: {e}")
     return ""
@@ -348,7 +394,7 @@ def generate_and_replace_images(html_content: str) -> str:
             if image_count >= 2:
                 break
             
-            branding_prompt = f"{alt}, financial corporate editorial style, dark background, obsidian black and gold accents, high contrast, clean minimalist visual"
+            branding_prompt = f"{alt}, corporate financial stock photo style, 3d render, dark background, obsidian black and gold accents, high contrast, clean minimalist design, no text, no words, no letters, no language, no cartoon, no illustration, no drawing, no infographic"
             hosted_url = generate_and_upload_image(branding_prompt)
             
             if hosted_url:
