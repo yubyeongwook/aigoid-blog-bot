@@ -144,7 +144,7 @@ def clean_html_content(html_content: str) -> str:
 # ────────────────────────────────
 def inline_css_styles(html_content: str) -> str:
     styles_map = {
-        "mi-container": "max-width: 720px; margin: 0 auto; font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.95; padding: 24px 16px;",
+        "mi-container": "max-width: 720px; margin: 0 auto; font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.95; padding: 24px 16px; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;",
         "mi-section-header": "font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #888; border-bottom: 1.5px solid #f0c040; padding-bottom: 6px; margin: 30px 0 14px; font-weight: bold;",
         "mi-paragraph": "font-size: 14px; color: #f0f0f0; line-height: 1.95; margin: 0 0 14px; text-align: left; word-break: keep-all;",
         
@@ -195,6 +195,12 @@ def inline_css_styles(html_content: str) -> str:
                 el["style"] = style_str + " " + existing_style
             else:
                 el["style"] = style_str
+            
+            # 본문 드래그 및 우클릭 복사 방지 속성 강제 추가
+            if class_name == "mi-container":
+                el["oncontextmenu"] = "return false;"
+                el["onselectstart"] = "return false;"
+                el["ondragstart"] = "return false;"
                 
     # 1.5. 브랜드 아이덴티티(CI) 글꼴 및 레이아웃 강제 동기화 (Playfair Display 900 / Space Mono / Noto Sans KR)
     tables = soup.find_all("table")
