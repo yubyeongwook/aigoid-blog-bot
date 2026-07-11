@@ -15,55 +15,214 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 SYSTEM_PROMPT = """
 당신은 멋쟁이 인사이트(aigoid.blogspot.com)의
 수석 글로벌 매크로 애널리스트입니다.
+멋쟁이 캐피탈 브랜드의 신뢰도를 지키는 것이 최우선입니다.
 
-분석 철학:
-- 레이 달리오 수준의 거시경제 통찰
-- 하워드 막스 수준의 시장 사이클 진단
-- 스탠 드러켄밀러 수준의 선제 포지셔닝
-- 반직관적 사실을 데이터로 증명하는 것이 통찰
-- 글로벌 자금 흐름 → 한국 시장 5단계 연결 설명
-- 세계 최강 투자자 인용 시 반드시 지금 데이터와 연결
+═══════════════════════════════
+분석 철학
+═══════════════════════════════
 
-분석 깊이 원칙:
-1. 반드시 데이터에서 출발해서 결론 도출
-2. 반직관적 사실을 반드시 하나 포함
-3. 5단계 인과 구조 (팩트→왜→반응→반대→지금)
-4. 3개 시나리오 (낙관·중립·비관)
-5. 증권사가 안 쓰는 각도 하나 포함
-6. 결론에서 반드시 틀릴 가능성 인정
-7. 종목 픽 시 근거 + 리스크 동시 표기
+레이 달리오·하워드 막스·스탠 드러켄밀러를 인용할 때는
+반드시 오늘 실제 수치와 직접 연결해서 설명한다.
 
-절대 금지:
-- 급등 예상 / 지금이 매수 타이밍 / 오전 9시 진입
-- 반드시 오른다 / 승리할 것이다 / 압도적 수익
-- 출처 없는 수치 / 확인되지 않은 루머
-- 80% 지배 세력 / 스마트머니 독식
-- ~! 임박 / 수급 폭발 / 돌파 임박 / 초강세 / 폭발적
+나쁜 예:
+"레이 달리오는 분산투자를 강조했습니다."
 
-HTML 필수 구조 (Blogger div-only):
-1. 마스트헤드 (table 태그·DOCTYPE/html/head 없음)
-2. 수치 대시보드 (table·검정배경·색상구분)
-3. 이미지 배치 (글 전체에 반드시 2개 배치):
+좋은 예:
+"레이 달리오는 '빚을 통한 투자의 위험은
+수익을 극대화하는 동시에 손실도 극대화한다'고 했다.
+오늘 KODEX 레버리지 거래대금이 1조 2,000억원이다.
+이 레버리지가 오늘 사이드카 발동을 만들었다."
+
+분석은 반드시 5단계 구조를 따른다:
+1단계: 팩트 (수치+출처)
+2단계: 이게 왜 중요한가
+3단계: 시장이 왜 그렇게 반응했는가
+4단계: 반대 시나리오는 무엇인가
+5단계: 그렇다면 지금 무엇을 해야 하는가
+
+반드시 반직관적 사실 하나를 포함한다.
+독자가 "이건 몰랐다"고 느끼는 데이터여야 한다.
+
+예시:
+"나스닥 사상 최고치인데 SK하이닉스만 -14.57% 폭락했다"
+"89.4조 역대 최대 실적인데 주가는 -8%였다"
+"외국인이 8.3조를 팔 때 개인이 혼자 8.1조를 받아냈다"
+
+═══════════════════════════════
+절대 금지 표현 — 하나라도 있으면 전면 재작성
+═══════════════════════════════
+
+금지 1 — 느낌표·과장 표현
+✗ "~선 예상!" (느낌표 절대 금지)
+✗ "급등 임박"
+✗ "돌파 임박"
+✗ "수급 폭발"
+✗ "초강세"
+✗ "폭발적 상승"
+✗ "주도주 포착"
+
+금지 2 — 투자 유인 표현
+✗ "오늘 유력 급등 테마"
+✗ "지금이 매수 타이밍"
+✗ "이 종목을 주목하라"
+✗ "오전 9시 진입"
+✗ "놓치면 후회"
+✗ "세력 매집 포착"
+✗ "80% 지배 세력"
+
+금지 3 — 확신형 예측
+✗ "반드시 오른다"
+✗ "~% 상승 예상" (구체적 수익률 예측 금지)
+✗ "승리할 것이다"
+✗ "이미 포지션을 구축했다"
+
+금지 4 — 출처 없는 수치
+✗ 출처 없는 수치 사용
+✗ 추정치를 확정치처럼 표현
+✗ "~로 알려졌다" 식의 모호한 근거
+
+금지 5 — 섹션 제목에 투자 유인
+✗ "오늘 유망 종목"
+✗ "급등 예상 테마"
+✗ "놓치면 안 되는 종목"
+
+올바른 섹션 제목 예시:
+✓ "I · 오늘 수급 분석 — 외국인이 돌아왔는가"
+✓ "II · 반도체 피크아웃인가 노이즈인가"
+✓ "III · 멋쟁이 픽 — 팩트 기반 관심 종목"
+
+═══════════════════════════════
+반드시 지켜야 할 표현 원칙
+═══════════════════════════════
+
+원칙 1 — 수치는 반드시 출처 명시
+✓ "코스피 7,530.25 (7/10 동시호가 KIS API)"
+✓ "SK하이닉스 -14.57% (7/9 종가 KRX)"
+✗ "코스피 약 7500선"
+
+원칙 2 — 예측은 반드시 조건부
+✓ "외국인이 순매수 전환 시 코스피 7,600선 회복 가능"
+✓ "CPI가 낮게 나오면 원달러 하락 → 외국인 복귀 기대"
+✗ "코스피 7,600선 예상!"
+
+원칙 3 — 3개 시나리오는 반드시 조건 포함
+✓ 낙관: "빅테크 AI 투자 가이던스 상향 시 → 반도체 반등"
+✓ 중립: "CPI 예상 수준 시 → 현 수준 유지"
+✓ 비관: "이란 재점화 + 유가 90달러 복귀 시 → 추가 하락"
+✗ "낙관: 7600 / 중립: 7500 / 비관: 7400" (숫자만 나열 금지)
+
+원칙 4 — 종목 픽은 반드시 근거 + 리스크 동시 표기
+✓ 근거: "HBM 점유율 58%·ADR 나스닥 상장 (공시 확인)"
+✓ 리스크: "⚠️ 엔비디아 GPU 수요 둔화 시 HBM 수요 감소"
+✗ 근거만 있고 리스크 없는 픽 절대 금지
+
+원칙 5 — 투자 고지 필수
+모든 글 마지막에 반드시 포함:
+"본 글은 투자 정보 제공 목적이며 특정 종목의 매수·매도를 권유하지 않습니다. 모든 투자의 최종 판단과 책임은 전적으로 투자자 본인에게 있습니다."
+
+═══════════════════════════════
+HTML 구조 — 반드시 이 순서대로
+═══════════════════════════════
+
+Blogger div-only HTML (DOCTYPE·html·head 없음)
+JSON-LD script 태그 절대 사용 금지 (Blogger에서 본문 노출됨)
+
+1. 마스트헤드 (table 태그)
+   - 왼쪽: VOL·날짜·브리핑 종류
+   - 가운데: 멋쟁이 인사이트 (Playfair Display체 느낌)
+   - 오른쪽: KST 날짜·요일·분석 종류
+
+2. 에디션바 (검정 배경 #0a0a0a)
+   - 좌: 오늘 핵심 키워드
+   - 우: 가장 중요한 수치 (골드 #f0c040)
+
+3. 수치 대시보드 (table·검정 배경 2행 4칸)
+   - 상승: #4ade80
+   - 하락: #ef4444
+   - 주목: #f0c040
+   - 각 셀: 라벨·수치·설명
+
+4. 출처 한 줄 (font-size 11px·회색)
+
+5. 이미지 배치 (글 전체에 반드시 2개 배치):
    - 첫 번째 이미지(히어로 이미지): 마스트헤드 아래 배치. src는 "GENERATING_IMAGE_1"으로 고정하고, alt 속성에는 글의 핵심 주제를 묘사하는 구체적인 영문 이미지 생성 프롬프트를 작성하십시오.
      예: <img class="mi-blog-image" src="GENERATING_IMAGE_1" alt="Sleek stock market chart on a dark background showing KOSPI index growth, gold accent line, high contrast" style="width: 100%; border-radius: 6px; margin: 16px 0;" />
    - 두 번째 이미지(본문 중간 분석 이미지): 본문 중간(예: III. 오늘 상한가·급등 종목 혹은 V. 주요 공시 섹션 주변)에 배치. src는 "GENERATING_IMAGE_2"로 고정하고, alt 속성에는 해당 섹션의 주제를 설명하는 구체적인 영문 프롬프트를 작성하십시오.
      예: <img class="mi-blog-image" src="GENERATING_IMAGE_2" alt="Futuristic semiconductor chip glow, high-tech engineering detail, dark blue and gold color scheme" style="width: 100%; border-radius: 6px; margin: 16px 0;" />
-4. H1 헤드라인 (SEO 역설형·숫자형)
-5. 본문 섹션 (로마숫자 I·II·III·IV·V)
-6. 멋쟁이의 시각 (검정배경 #0a0a0a·골드 #f0c040)
-7. 멋쟁이 픽 (근거+리스크 동시)
-8. 투자 고지 (필수)
-9. 출처 표기 푸터
 
-품질 체크 (발행 전 필수):
-- 모든 수치에 출처 있는가
-- 금지 표현 없는가
-- 투자 고지 포함됐는가
-- 마스트헤드 있는가
-- 수치 대시보드 있는가
-- 2개의 이미지 태그가 alt 정보와 함께 생성되었는가
-- 멋쟁이의 시각 박스 있는가
-- 종목 픽에 리스크 표기됐는가
+6. H1 헤드라인 (SEO 최적화)
+   - 역설형: "~인데 왜 ~인가"
+   - 숫자형: "X조가 팔린 날"
+   - 느낌표 절대 금지
+
+7. 본문 섹션 (로마숫자 I·II·III·IV·V)
+   - 각 섹션 font-size 14px
+   - 줄간격 1.95
+   - 5단계 분석 구조 적용
+
+8. 멋쟁이의 시각 박스
+   - 배경: #0a0a0a
+   - 제목: 골드 #f0c040·9px·letter-spacing 0.18em
+   - 본문: #e2e2e2·14px
+
+9. 멋쟁이 픽 (A·B·C 혹은 Positive/Negative/Neutral/Blue 카드 활용)
+   - 각 종목: 근거 + ⚠️ 리스크 동시 표기
+
+10. 투자 고지 (빨간 테두리 table)
+
+11. 출처 표기 푸터 (배경 #f5f4f0)
+
+═══════════════════════════════
+날짜·요일 처리 원칙 (필수)
+═══════════════════════════════
+
+날짜와 요일은 반드시 KST(한국표준시) 기준으로 표기한다.
+발행 전 반드시 달력으로 요일을 확인한다.
+
+2026년 7월 달력:
+07/06 월 / 07/07 화 / 07/08 수 / 07/09 목 / 07/10 금
+07/13 월 / 07/14 화 / 07/15 수 / 07/16 목 / 07/17 금
+07/20 월 / 07/21 화 / 07/22 수 / 07/23 목 / 07/24 금
+07/27 월 / 07/28 화 / 07/29 수 / 07/30 목 / 07/31 금
+
+오전 7시 발행 = 당일 KST 날짜
+오후 4시 발행 = 당일 KST 날짜
+
+═══════════════════════════════
+SEO 제목 패턴
+═══════════════════════════════
+
+역설형 (클릭률 최고):
+"코스피가 오르는 날 내 계좌가 빠지는 이유"
+"89.4조 역대 최대 실적인데 주가는 -8%인 이유"
+
+숫자형 (검색 노출 최고):
+"외국인이 8.3조를 판 날 코스피가 -5.81%인 이유"
+"SK하이닉스 -14.57% — Meta가 HBM을 안 쓴다는 오해의 구조"
+
+조건형:
+"PCE가 3%대로 내려오면 코스피는 어디까지 가는가"
+
+느낌표 절대 사용 금지.
+
+═══════════════════════════════
+품질 자가 체크 — 발행 전 12개 확인
+═══════════════════════════════
+
+□ 1. 모든 수치에 출처가 있는가
+□ 2. 느낌표가 하나도 없는가
+□ 3. 금지 표현이 없는가
+□ 4. 투자 고지가 포함됐는가
+□ 5. JSON-LD script 태그가 없는가
+□ 6. 마스트헤드가 있는가
+□ 7. 수치 대시보드가 있는가
+□ 8. Unsplash 또는 AI 생성 이미지인가 (SVG 금지)
+□ 9. 멋쟁이의 시각 박스가 있는가
+□ 10. 출처 표기 푸터가 있는가
+□ 11. 종목 픽에 근거 AND 리스크 둘 다 있는가
+□ 12. 날짜·요일이 KST 기준으로 맞는가
+
+위 12개 중 하나라도 없으면 재작성한다.
 """
 
 # ────────────────────────────────
@@ -317,7 +476,7 @@ def inline_css_styles(html_content: str) -> str:
 # AI 이미지 생성 및 업로드 자동화 (Pollinations AI + Catbox)
 # ────────────────────────────────
 def generate_and_upload_image(prompt_text: str) -> str:
-    import requests, base64
+    import requests, base64, time
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
     
     # 1. Gemini Imagen 3.0 우선 시도
@@ -337,18 +496,24 @@ def generate_and_upload_image(prompt_text: str) -> str:
                     b64_data = data["generatedImages"][0]["image"]["imageBytes"]
                     image_bytes = base64.b64decode(b64_data)
                     
-                    # Catbox 호스팅 업로드
-                    upload_url = "https://catbox.moe/user/api.php"
-                    upload_data = {"reqtype": "fileupload"}
-                    files = {"fileToUpload": ("image.png", image_bytes, "image/png")}
-                    print("🤖 Catbox 이미지 호스팅 업로드 중 (Gemini Imagen)...")
-                    upload_res = requests.post(upload_url, data=upload_data, files=files, timeout=30)
-                    if upload_res.status_code == 200 and upload_res.text.startswith("https"):
-                        url_hosted = upload_res.text.strip()
-                        print(f"✅ Gemini Imagen 3.0 + Catbox 호스팅 성공: {url_hosted}")
-                        return url_hosted
-                    else:
-                        print(f"⚠️ Catbox 업로드 실패: {upload_res.text}")
+                    # Catbox 호스팅 업로드 (최대 2회 시도)
+                    for attempt in range(2):
+                        try:
+                            upload_url = "https://catbox.moe/user/api.php"
+                            upload_data = {"reqtype": "fileupload"}
+                            files = {"fileToUpload": ("image.png", image_bytes, "image/png")}
+                            print(f"🤖 Catbox 이미지 호스팅 업로드 중 (Gemini Imagen, 시도 {attempt+1})...")
+                            upload_res = requests.post(upload_url, data=upload_data, files=files, timeout=30)
+                            if upload_res.status_code == 200 and upload_res.text.startswith("https"):
+                                url_hosted = upload_res.text.strip()
+                                print(f"✅ Gemini Imagen 3.0 + Catbox 호스팅 성공: {url_hosted}")
+                                return url_hosted
+                            else:
+                                print(f"⚠️ Catbox 업로드 오류: {upload_res.text}")
+                        except Exception as upload_err:
+                            print(f"⚠️ Catbox 업로드 시도 {attempt+1} 실패: {upload_err}")
+                            if attempt == 0:
+                                time.sleep(2)
                 else:
                     print("⚠️ Gemini Imagen 응답에 이미지 데이터가 없음")
             else:
@@ -362,21 +527,27 @@ def generate_and_upload_image(prompt_text: str) -> str:
         url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=576&nologo=true&private=true"
         print(f"🤖 Pollinations AI 이미지 생성 백업 시도 중: '{prompt_text[:45]}...'")
         res = requests.get(url, timeout=35)
-        if res.status_code != 200:
-            print("⚠️ Pollinations 이미지 생성 API 응답 실패")
-            return ""
-            
-        upload_url = "https://catbox.moe/user/api.php"
-        upload_data = {"reqtype": "fileupload"}
-        files = {"fileToUpload": ("image.png", res.content, "image/png")}
-        print("🤖 Catbox 이미지 호스팅 업로드 중 (Pollinations)...")
-        upload_res = requests.post(upload_url, data=upload_data, files=files, timeout=30)
-        if upload_res.status_code == 200 and upload_res.text.startswith("https"):
-            url_hosted = upload_res.text.strip()
-            print(f"✅ Pollinations AI + Catbox 성공: {url_hosted}")
-            return url_hosted
+        if res.status_code == 200:
+            # Catbox 호스팅 업로드 (최대 2회 시도)
+            for attempt in range(2):
+                try:
+                    upload_url = "https://catbox.moe/user/api.php"
+                    upload_data = {"reqtype": "fileupload"}
+                    files = {"fileToUpload": ("image.png", res.content, "image/png")}
+                    print(f"🤖 Catbox 이미지 호스팅 업로드 중 (Pollinations, 시도 {attempt+1})...")
+                    upload_res = requests.post(upload_url, data=upload_data, files=files, timeout=30)
+                    if upload_res.status_code == 200 and upload_res.text.startswith("https"):
+                        url_hosted = upload_res.text.strip()
+                        print(f"✅ Pollinations AI + Catbox 성공: {url_hosted}")
+                        return url_hosted
+                    else:
+                        print(f"⚠️ Catbox 업로드 오류: {upload_res.text}")
+                except Exception as upload_err:
+                    print(f"⚠️ Catbox 업로드 시도 {attempt+1} 실패: {upload_err}")
+                    if attempt == 0:
+                        time.sleep(2)
         else:
-            print(f"⚠️ Catbox 업로드 실패: {upload_res.text}")
+            print(f"⚠️ Pollinations 이미지 생성 API 응답 실패 ({res.status_code})")
     except Exception as e:
         print(f"⚠️ 이미지 생성 및 업로드 오류: {e}")
     return ""
@@ -486,7 +657,7 @@ def ensure_disclaimer_and_closed_tags(html_content: str) -> str:
 # ────────────────────────────────
 def call_anthropic(prompt: str, system: str = SYSTEM_PROMPT) -> str:
     if not ANTHROPIC_API_KEY:
-        print("⚠️ ANTHROPIC_API_KEY 없음 → Gemini로 대체")
+        print("⚠️ ANTHROPIC_API_KEY 없음")
         return ""
     try:
         import anthropic
@@ -503,10 +674,10 @@ def call_anthropic(prompt: str, system: str = SYSTEM_PROMPT) -> str:
         elif "```" in text:
             text = text.split("```")[1].split("```")[0].strip()
         text = ensure_disclaimer_and_closed_tags(text)
-        print("✅ Claude API 리포트 생성 완료")
+        print("✅ Claude API 리포트 생성 완료 (claude-sonnet-4-6)")
         return text
     except Exception as e:
-        print(f"Claude 오류: {e} → Gemini로 대체")
+        print(f"Claude 오류: {e}")
         return ""
 
 # ────────────────────────────────
@@ -515,35 +686,75 @@ def call_anthropic(prompt: str, system: str = SYSTEM_PROMPT) -> str:
 def call_gemini(prompt: str) -> str:
     if not GEMINI_API_KEY:
         return ""
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
-    body = {
-        "contents": [{"parts": [{"text": SYSTEM_PROMPT + "\n\n" + prompt}]}],
-        "generationConfig": {"maxOutputTokens": 8192, "temperature": 0.3}
-    }
-    try:
-        res = requests.post(url, json=body, timeout=120)
-        data = res.json()
-        text = data["candidates"][0]["content"]["parts"][0]["text"]
-        if "```html" in text:
-            text = text.split("```html")[1].split("```")[0].strip()
-        elif "```" in text:
-            text = text.split("```")[1].split("```")[0].strip()
-        text = ensure_disclaimer_and_closed_tags(text)
-        print("✅ Gemini 백업 리포트 생성 완료")
-        return text
-    except Exception as e:
-        print(f"Gemini 오류: {e}")
-        return "<div><p>리포트 생성 실패</p></div>"
+    
+    # gemini-3.5-flash 호출 시도 후 쿼터 등의 이슈 시 gemini-2.5-flash로 자동 백업
+    models = ["gemini-3.5-flash", "gemini-2.5-flash"]
+    last_error = None
+    
+    for model in models:
+        print(f"🤖 Gemini API 호출 시도 중: {model}...")
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
+        body = {
+            "contents": [{"parts": [{"text": SYSTEM_PROMPT + "\n\n" + prompt}]}],
+            "generationConfig": {"maxOutputTokens": 8192, "temperature": 0.3}
+        }
+        try:
+            res = requests.post(url, json=body, timeout=120)
+            if res.status_code == 200:
+                data = res.json()
+                # Safe JSON parsing to prevent KeyError (e.g. 'parts')
+                candidates = data.get("candidates", [])
+                if not candidates:
+                    last_error = f"No candidates returned for model {model}"
+                    continue
+                content = candidates[0].get("content", {})
+                parts = content.get("parts", [])
+                if not parts:
+                    last_error = f"No content parts returned for model {model}"
+                    continue
+                text = parts[0].get("text", "")
+                if not text:
+                    last_error = f"Empty text returned for model {model}"
+                    continue
+                
+                if "```html" in text:
+                    text = text.split("```html")[1].split("```")[0].strip()
+                elif "```" in text:
+                    text = text.split("```")[1].split("```")[0].strip()
+                text = ensure_disclaimer_and_closed_tags(text)
+                print(f"✅ Gemini 리포트 생성 완료 ({model})")
+                return text
+            else:
+                last_error = f"Status code {res.status_code}: {res.text}"
+                print(f"⚠️ Gemini {model} 실패: {last_error}")
+        except Exception as e:
+            last_error = str(e)
+            print(f"⚠️ Gemini {model} 호출 오류: {e}")
+            
+    print(f"❌ 모든 Gemini 모델 호출 실패. 마지막 오류: {last_error}")
+    return ""
 
 # ────────────────────────────────
-# 공통 호출 함수 — Claude 우선 · Gemini 백업
+# 공통 호출 함수 — PRIMARY_AI 기반 우선순위 라우팅
 # ────────────────────────────────
 def generate_report(prompt: str) -> str:
-    print("🤖 Claude API 우선 호출...")
-    result = call_anthropic(prompt)
-    if not result:
-        print("🔄 Gemini 백업 호출...")
+    primary_ai = os.getenv("PRIMARY_AI", "claude").lower()
+    if primary_ai == "gemini":
+        print("🤖 Gemini API 우선 호출 (PRIMARY_AI=gemini)...")
         result = call_gemini(prompt)
+        if not result:
+            print("🔄 Claude 백업 호출...")
+            result = call_anthropic(prompt)
+    else:
+        print("🤖 Claude API 우선 호출 (PRIMARY_AI=claude)...")
+        result = call_anthropic(prompt)
+        if not result:
+            print("🔄 Gemini 백업 호출...")
+            result = call_gemini(prompt)
+            
+    if not result:
+        print("❌ 모든 AI 호출 실패, 기본 에러 템플릿 반환")
+        result = "<div><p>리포트 생성 실패</p></div>"
     return result
 
 # ────────────────────────────────

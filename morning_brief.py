@@ -43,7 +43,7 @@ from datetime import datetime, timezone, timedelta
 
 ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2023-06-01"
-MODEL_SONNET = "claude-sonnet-5"         # Stage2: 핵심 분석 (3축 정렬/고확신 후보 선정)
+MODEL_SONNET = "claude-sonnet-4-6"         # Stage2: 핵심 분석 (3축 정렬/고확신 후보 선정)
 MODEL_HAIKU = "claude-haiku-4-5-20251001"  # Stage1/3: 정리·포맷팅 (저비용)
 
 WEEKDAYS_KR = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"]
