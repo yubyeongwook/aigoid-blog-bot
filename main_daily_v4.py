@@ -1,0 +1,108 @@
+import sys, os, json, datetime, re
+sys.path.append(os.path.dirname(__file__))
+
+from collectors.market_collector import collect_all as collect_market
+from collectors.news_collector import collect_all as collect_news
+from agents.macro_agent import analyze as macro_analyze
+from agents.supply_agent import analyze as supply_analyze
+from agents.earnings_agent import analyze as earnings_analyze
+from agents.technical_agent import analyze as technical_analyze
+from agents.dart_nlp_agent import analyze as dart_nlp_analyze
+from agents.foreign_tracker_agent import analyze as foreign_analyze
+from agents.sentiment_agent import analyze as sentiment_analyze
+from agents.synthesis_agent_v3 import synthesize_and_write
+from backtesting.backtest_agent import analyze as backtest_analyze
+from social.card_news_generator import generate as generate_social, save_social_content
+from notifications.kakao_notify import send_kakao_message, send_telegram_message
+from trackers.pick_tracker import update_performance, generate_performance_html, save_picks, calculate_stats
+from publishers.blogger_publisher import publish_post, auto_labels
+
+def extract_picks_from_html(html):
+    picks = []
+    matches = re.findall(r'([가-힣a-zA-Z·]+)\s*\((\d{6})\)', html)
+    for name, ticker in matches[:8]:
+        picks.append({"name":name,"ticker":ticker,"type":"단타","entry_price":0,"stop_loss":0,"target_1":0,"status":"진행중"})
+    return picks[:8]
+
+def main():
+    today = datetime.datetime.now()
+    weekday = ["월","화","수","목","금","토","일"][today.weekday()]
+    print("="*60)
+    print(f"  멋쟁이 인사이트 v4 — 완전 고도화")
+    print(f"  {today.strftime('%Y년 %m월 %d일')} {weekday}요일 KST")
+    print("="*60)
+
+    print("\n[0/9] 전일 픽 성과 업데이트...")
+    try:
+        update_performance()
+        performance_html = generate_performance_html()
+        stats = calculate_stats()
+    except Exception as e:
+        print(f"픽 추적 오류: {e}")
+        performance_html = ""
+        stats = {}
+
+    print("\n[1/9] 시장 데이터 수집...")
+    market_data = collect_market()
+    print("\n[2/9] 뉴스·공시 수집...")
+    news_data = collect_news()
+    print("\n[3/9] 글로벌 매크로 분석...")
+    macro_result = macro_analyze(market_data, news_data)
+    print("\n[4/9] 수급 + 외국인 종목 추적...")
+    supply_result = supply_analyze(market_data, news_data)
+    foreign_result = foreign_analyze(market_data)
+    print("\n[5/9] 실적 + 공시 NLP 분석...")
+    earnings_result = earnings_analyze(market_data, news_data)
+    dart_result = dart_nlp_analyze(market_data)
+    print("\n[6/9] 기술적 분석 + 감성 지수...")
+    technical_result = technical_analyze(market_data, news_data)
+    sentiment_result = sentiment_analyze(market_data, news_data)
+    print("\n[7/9] 백테스팅 검증...")
+    backtest_result = backtest_analyze(technical_result, supply_result, macro_result, market_data)
+    reliability = backtest_result.get("signal_reliability", {})
+    print(f"   신호 신뢰도: {reliability.get('score',0)}점 ({reliability.get('grade','-')}등급)")
+
+    print("\n[8/9] 통합 판단 + 블로그 생성...")
+    html_content = synthesize_and_write(
+        macro=macro_result, supply=supply_result,
+        earnings=earnings_result, technical=technical_result,
+        dart_nlp=dart_result, foreign_tracker=foreign_result,
+        sentiment=sentiment_result,
+        market_data={**market_data, "backtest": backtest_result},
+        performance_html=performance_html,
+        report_type="daily_v4"
+    )
+
+    picks = extract_picks_from_html(html_content)
+    if picks:
+        save_picks(picks, today.strftime("%Y-%m-%d"))
+
+    seo_title = f"{today.strftime('%m월 %d일')} {weekday}요일 멋쟁이 인사이트 — 9개 전문가 통합 분석·백테스팅 검증"
+    labels = auto_labels(html_content)
+    labels.extend(["멋쟁이픽","단타픽","수급분석","공시분석","백테스팅"])
+    result = publish_post(seo_title, html_content, labels)
+    blog_url = result.get("url", "https://aigoid.blogspot.com")
+
+    print("\n[9/9] 소셜 콘텐츠 + 알림...")
+    key_insight = macro_result.get("key_insight", "오늘의 핵심 인사이트")
+    try:
+        social_content = generate_social(html_content, picks, key_insight, blog_url)
+        save_social_content(social_content, today.strftime("%Y%m%d"))
+    except Exception as e:
+        print(f"소셜 생성 오류: {e}")
+    try:
+        send_kakao_message(picks, blog_url, stats)
+        send_telegram_message(picks, blog_url, stats)
+    except Exception as e:
+        print(f"알림 오류: {e}")
+
+    print("\n"+"="*60)
+    if "url" in result:
+        print(f"  ✅ 발행 완료: {blog_url}")
+        print(f"  📊 누적 승률: {stats.get('win_rate',0)}%")
+    else:
+        print(f"  ⚠️ 결과: {result}")
+    print("="*60)
+
+if __name__ == "__main__":
+    main()

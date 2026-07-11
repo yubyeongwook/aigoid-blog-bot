@@ -1,0 +1,45 @@
+name: 멋쟁이 인사이트 v4 완전 고도화
+
+on:
+  schedule:
+    - cron: '10 21 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  daily_v4:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: pip 캐시
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+    - name: 라이브러리 설치
+      run: pip install -r requirements.txt
+    - name: v4 실행
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        KIS_APP_KEY: ${{ secrets.KIS_APP_KEY }}
+        KIS_APP_SECRET: ${{ secrets.KIS_APP_SECRET }}
+        DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        BLOG_ID: ${{ secrets.BLOG_ID }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        KAKAO_ACCESS_TOKEN: ${{ secrets.KAKAO_ACCESS_TOKEN }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: python main_daily_v4.py
+    - name: 자동 커밋
+      run: |
+        git config user.name "멋쟁이봇"
+        git config user.email "aigoid1203@gmail.com"
+        git add trackers/ social_content/ || true
+        git commit -m "자동: $(date +'%Y-%m-%d') 픽성과+소셜" || true
+        git push || true
