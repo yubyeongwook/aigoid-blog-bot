@@ -7,6 +7,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 from pykrx import stock
 import requests, pandas as pd, datetime, os, json
+import yfinance as yf
+import FinanceDataReader as fdr
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 load_dotenv()
@@ -505,6 +507,79 @@ def get_us_etfs():
     return etfs
 
 # ────────────────────────────────
+# 장중 15% 이상 급등한 종목 수집 (FDR + yfinance)
+# ────────────────────────────────
+def get_intraday_surging_stocks():
+    print("📈 장중 15% 이상 급등 종목 수집 중 (yfinance)...")
+    try:
+        df_krx = fdr.StockListing('KRX')
+        df_krx = df_krx[df_krx['MarketId'].isin(['STK', 'KSQ'])]
+        df_krx = df_krx.dropna(subset=['Marcap'])
+        # 상위 500개 종목으로 제한 (시총 기준)
+        df_krx = df_krx.sort_values(by='Marcap', ascending=False).head(500)
+        
+        tickers = []
+        ticker_to_name = {}
+        for idx, row in df_krx.iterrows():
+            code = row['Code']
+            name = row['Name']
+            suffix = ".KS" if row['MarketId'] == 'STK' else ".KQ"
+            yf_ticker = f"{code}{suffix}"
+            tickers.append(yf_ticker)
+            ticker_to_name[yf_ticker] = name
+            
+        # 5일 데이터 조회 (안전하게 5일치를 가져와 당일과 전일 비교)
+        df = yf.download(" ".join(tickers), period="5d", group_by="ticker", progress=False)
+        
+        dates = df.index.tolist()
+        if len(dates) < 2:
+            return []
+            
+        today_idx = -1
+        prev_idx = -2
+        
+        results = []
+        available_tickers = df.columns.levels[0] if isinstance(df.columns, pd.MultiIndex) else [df.name]
+        
+        for ticker in available_tickers:
+            try:
+                ticker_data = df[ticker] if isinstance(df.columns, pd.MultiIndex) else df
+                close_today = ticker_data['Close'].iloc[today_idx]
+                prev_close = ticker_data['Close'].iloc[prev_idx]
+                high_today = ticker_data['High'].iloc[today_idx]
+                volume_today = ticker_data['Volume'].iloc[today_idx]
+                prev_volume = ticker_data['Volume'].iloc[prev_idx]
+                
+                if pd.isna(close_today) or pd.isna(prev_close) or pd.isna(high_today) or prev_close == 0:
+                    continue
+                    
+                high_rate = (high_today - prev_close) / prev_close * 100
+                close_rate = (close_today - prev_close) / prev_close * 100
+                volume_ratio = volume_today / prev_volume if prev_volume > 0 else 0
+                
+                if high_rate >= 15.0:
+                    name = ticker_to_name.get(ticker, ticker)
+                    pull_back = high_rate - close_rate
+                    results.append({
+                        "ticker": ticker.split(".")[0],
+                        "name": name,
+                        "high_rate": round(high_rate, 2),
+                        "close_rate": round(close_rate, 2),
+                        "pull_back_rate": round(pull_back, 2),
+                        "volume_today": int(volume_today),
+                        "volume_ratio": round(volume_ratio, 2)
+                    })
+            except Exception:
+                pass
+                
+        # 고가 등락률 기준 내림차순 정렬 후 상위 30개만 반환
+        results = sorted(results, key=lambda x: x['high_rate'], reverse=True)[:30]
+        return results
+    except Exception as e:
+        print(f"⚠️ 급등 종목 수집 오류: {e}")
+        return []
+
+# ────────────────────────────────
 # 전체 수집
 # ────────────────────────────────
 def collect_all():
@@ -519,7 +594,8 @@ def collect_all():
         "investor": get_investor_naver(),
         "upper_limit": get_upper_limit_naver(),
         "watchlist": get_watchlist_naver(),
-        "us_etfs": get_us_etfs()
+        "us_etfs": get_us_etfs(),
+        "surging_stocks": get_intraday_surging_stocks()
     }
     print("✅ 시장 데이터 수집 완료")
     return data

@@ -79,15 +79,41 @@ def get_macro_news() -> dict:
     return result
 
 # ────────────────────────────────
+# 급등 종목 관련 뉴스 검색
+# ────────────────────────────────
+def get_news_for_surging_stocks(stocks: list, max_stocks: int = 5) -> dict:
+    if not stocks:
+        return {}
+    
+    print(f"📰 급등 종목 뉴스 수집 시작 (상위 {max_stocks}개)...")
+    # 수급/거래량 급증(volume_ratio)이 큰 순서대로 정렬하여 상위 종목 분석 우선
+    sorted_stocks = sorted(stocks, key=lambda x: x.get('volume_ratio', 0), reverse=True)[:max_stocks]
+    
+    news_data = {}
+    for s in sorted_stocks:
+        name = s['name']
+        query = f"{name} 급등"
+        items = get_naver_news(query, display=2)
+        if not items or (isinstance(items, list) and len(items) > 0 and "error" in items[0]):
+            items = get_naver_news(name, display=2)
+        news_data[name] = items
+    return news_data
+
+# ────────────────────────────────
 # 전체 수집
 # ────────────────────────────────
-def collect_all() -> dict:
+def collect_all(surging_stocks: list = None) -> dict:
     print("📰 뉴스·공시 수집 시작...")
     data = {
         "timestamp": datetime.datetime.now().isoformat(),
         "macro_news": get_macro_news(),
         "dart_disclosures": get_dart_disclosures()
     }
+    if surging_stocks:
+        data["surging_stocks_news"] = get_news_for_surging_stocks(surging_stocks)
+    else:
+        data["surging_stocks_news"] = {}
+        
     print("✅ 뉴스·공시 수집 완료")
     return data
 

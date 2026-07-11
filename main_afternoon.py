@@ -54,7 +54,8 @@ def main():
     market_data = collect_market()
 
     print("\n[2/4] 뉴스·공시 수집...")
-    news_data = collect_news()
+    surging_stocks = market_data.get("surging_stocks", [])
+    news_data = collect_news(surging_stocks=surging_stocks)
 
     # 2. 리포트 생성
     print("\n[3/4] AI 리포트 생성...")
