@@ -86,7 +86,8 @@ def send_telegram_message(picks: list, blog_url: str, performance: dict = None) 
 
 [📊 전체 분석 보기]({blog_url})
 
-_⚠️ 투자 책임은 본인에게 있습니다_"""
+_⚠️ 투자 책임은 본인에게 있습니다_
+_본 정보는 투자 참고용이며 특정 종목의 매수·매도를 권유하지 않습니다._"""
 
     try:
         url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
