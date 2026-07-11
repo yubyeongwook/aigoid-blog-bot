@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    permissions:
+      contents: write
+
     steps:
     - name: 저장소 체크아웃
       uses: actions/checkout@v4
@@ -43,3 +46,12 @@ jobs:
         GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       run: python main_daily.py
+
+    - name: Commit and push morning picks
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add scratch/morning_picks.json || true
+        git commit -m "Save morning picks data [skip ci]" || echo "No changes to commit"
+        git push || true
+

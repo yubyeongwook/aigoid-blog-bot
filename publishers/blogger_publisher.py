@@ -128,8 +128,7 @@ def get_latest_morning_brief() -> dict:
         for post in posts:
             title = post.get("title", "")
             content = post.get("content", "")
-            # 제목이나 본문에 오전 매크로 브리핑 키워드가 있는 글 찾기
-            if "오전" in title or "글로벌 매크로 브리핑" in title or "오전 글로벌 매크로 브리핑" in content:
+            if "멋쟁이 인사이트" in title or "오전" in title or "글로벌 매크로 브리핑" in title or "통합 분석" in title or "오전 글로벌 매크로 브리핑" in content:
                 from bs4 import BeautifulSoup
                 soup = BeautifulSoup(content, 'html.parser')
                 text = soup.get_text(separator=' ').strip()
