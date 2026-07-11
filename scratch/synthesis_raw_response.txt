@@ -1,0 +1,173 @@
+```html
+<div style="max-width: 780px; margin: 0 auto; padding: 24px; box-sizing: border-box; font-family: 'Noto Sans KR', -apple-system, sans-serif !important; background-color: #ffffff; overflow-wrap: break-word;">
+
+  <!-- 마스트헤드 -->
+  <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <span style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 13px; font-weight: 700; color: #b45309; letter-spacing: 0.08em; text-transform: uppercase;">멋쟁이 인사이트 — 헤지펀드 리포트</span>
+      <span style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 13px; color: #94a3b8;">2026년 07월 11일 (토) · KST</span>
+    </div>
+  </div>
+
+  <!-- 수치 대시보드 -->
+  <div style="background-color: #0f172a; border-radius: 14px; padding: 20px; margin: 24px 0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); box-sizing: border-box;">
+    <div style="margin-bottom: 12px;">
+      <span style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; font-weight: 500; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Market Dashboard · 2026.07.11</span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      <div style="min-width: 120px;">
+        <div style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; font-weight: 500; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">데이터 상태</div>
+        <div style="font-family: 'Outfit', 'Space Mono', monospace !important; font-size: 18px; font-weight: 700; color: #ffffff; margin-top: 4px;">집계 중</div>
+        <div style="font-size: 12px; font-weight: 600; color: #fbbf24;">데이터 미수신</div>
+      </div>
+      <div style="min-width: 120px;">
+        <div style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; font-weight: 500; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">분석 기준일</div>
+        <div style="font-family: 'Outfit', 'Space Mono', monospace !important; font-size: 18px; font-weight: 700; color: #ffffff; margin-top: 4px;">2026.07.11</div>
+        <div style="font-size: 12px; font-weight: 600; color: #94a3b8;">주간 마감 후 점검</div>
+      </div>
+      <div style="min-width: 120px;">
+        <div style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; font-weight: 500; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">리포트 등급</div>
+        <div style="font-family: 'Outfit', 'Space Mono', monospace !important; font-size: 18px; font-weight: 700; color: #ffffff; margin-top: 4px;">전략급</div>
+        <div style="font-size: 12px; font-weight: 600; color: #34d399;">주간 심층 분석</div>
+      </div>
+      <div style="min-width: 120px;">
+        <div style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; font-weight: 500; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">불확실성 레벨</div>
+        <div style="font-family: 'Outfit', 'Space Mono', monospace !important; font-size: 18px; font-weight: 700; color: #ffffff; margin-top: 4px;">ELEVATED</div>
+        <div style="font-size: 12px; font-weight: 600; color: #f87171;">데이터 공백 구간</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 히어로 이미지 -->
+  <div style="margin: 28px 0; border-radius: 14px; overflow: hidden;">
+    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=780&q=80" alt="글로벌 금융시장 거래 화면" style="width: 100%; display: block; border-radius: 14px; object-fit: cover; max-height: 380px;" />
+    <div style="margin-top: 8px;">
+      <span style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 12px; color: #94a3b8;">Photo by Maxim Hopman on Unsplash</span>
+    </div>
+  </div>
+
+  <!-- H1 역설형 헤드라인 -->
+  <h1 style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 26px !important; font-weight: 800 !important; color: #0f172a !important; line-height: 1.4 !important; margin: 32px 0 20px 0; letter-spacing: -0.02em; word-break: keep-all;">
+    데이터가 침묵할 때, 전략가는 더 크게 말한다 — 불완전한 정보 속 의사결정의 기술
+  </h1>
+
+  <p style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; line-height: 1.9 !important; color: #334155 !important; margin: 0 0 20px 0; letter-spacing: -0.015em; word-break: keep-all; text-align: justify;">
+    시장은 완전한 정보를 기다려 주지 않는다. 오늘 리포트는 실시간 시장 데이터가 완전히 집계되지 않은 상황에서 작성됐다. 그러나 이것이 오히려 핵심 논제다. 데이터가 희박할수록 군중은 혼돈에 빠지고, 훈련된 전략가는 구조적 맥락에서 엣지(edge)를 찾는다. 이번 리포트는 현재 이용 가능한 매크로 프레임워크, 수급 신호, 그리고 기술적 원칙을 중심으로 2026년 7월 둘째 주 시장 환경을 해부한다.
+  </p>
+
+  <!-- 섹션 I -->
+  <h2 style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 19px !important; font-weight: 700 !important; color: #1e293b !important; margin: 48px 0 16px 0; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; letter-spacing: -0.015em;">
+    I. 매크로 프레임워크 — 2026년 7월의 구조적 문맥
+  </h2>
+
+  <p style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; line-height: 1.9 !important; color: #334155 !important; margin: 0 0 20px 0; letter-spacing: -0.015em; word-break: keep-all; text-align: justify;">
+    2026년 중반 글로벌 매크로 환경은 세 가지 축을 중심으로 재편되고 있다. 첫째, 미국 연방준비제도(Fed)의 통화정책 전환 사이클이 후반부에 진입했다는 시장 컨센서스다. 2024~2025년에 걸친 긴축 사이클의 잔재가 크레딧 스프레드와 장기 금리에 여전히 반영되어 있으나, 실질금리의 완만한 하락이 위험자산 밸류에이션 재평가를 지지하고 있다.
+  </p>
+
+  <p style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; line-height: 1.9 !important; color: #334155 !important; margin: 0 0 20px 0; letter-spacing: -0.015em; word-break: keep-all; text-align: justify;">
+    둘째, 지정학적 재편이다. 미-중 기술 패권 경쟁은 반도체·AI 인프라·방산 섹터의 구조적 수혜를 지속시키는 배경이다. 특히 한국 시장의 경우 메모리 반도체 업사이클과 방산 수출 확대가 맞물리며 외국인 수급의 관심축이 이동 중이다. 셋째, 달러 사이클이다. 달러 약세 기조가 유지된다면 이머징 마켓 전반, 특히 한국과 대만 같은 고베타 수출 경제권에 우호적 환경이 조성된다.
+  </p>
+
+  <div style="background-color: #f8fafc; border-left: 4px solid #b45309; padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0;">
+    <p style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 15px !important; line-height: 1.85 !important; color: #334155 !important; margin: 0; font-style: italic; letter-spacing: -0.015em;">
+      "매크로 인사이트의 본질은 현재 데이터를 넘어 다음 분기의 구조적 힘을 읽는 것이다. 금리, 달러, 지정학의 삼각축이 정렬되는 방향에 포지션을 구축하라."
+    </p>
+    <p style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 12px !important; color: #94a3b8 !important; margin: 8px 0 0 0;">— 멋쟁이 인사이트 매크로 전문가 (2026.07.11)</p>
+  </div>
+
+  <!-- 섹션 II -->
+  <h2 style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 19px !important; font-weight: 700 !important; color: #1e293b !important; margin: 48px 0 16px 0; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; letter-spacing: -0.015em;">
+    II. 수급 신호 해석 — 스마트머니의 발자국을 읽는 법
+  </h2>
+
+  <p style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; line-height: 1.9 !important; color: #334155 !important; margin: 0 0 20px 0; letter-spacing: -0.015em; word-break: keep-all; text-align: justify;">
+    실시간 수급 데이터가 완전히 집계되지 않은 상황에서, 전략가가 할 수 있는 가장 중요한 작업은 '수급 신호의 구조적 패턴'을 파악하는 것이다. 스마트머니는 정보의 비대칭이 존재하는 구간에서 조용히 포지션을 구축한다. 공개 데이터로 이를 추적하는 방법은 세 가지다.
+  </p>
+
+  <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 24px 0; box-sizing: border-box;">
+    <div style="flex: 1; min-width: 220px; border-radius: 12px; padding: 20px; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif !important; background-color: #f8fafc; border: 1px solid #e2e8f0;">
+      <span style="font-size: 16px; font-weight: 700; color: #0f172a; display: block; margin-bottom: 12px;">외국인 순매수 흐름</span>
+      <p style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 14px !important; line-height: 1.75 !important; color: #334155 !important; margin: 0;">코스피 외국인 누적 순매수/매도 방향성은 달러-원 환율과 역상관 관계를 갖는다. 달러 약세 구간에서 외국인 순매수가 집중되는 섹터를 선별적으로 추적해야 한다.</p>
+    </div>
+    <div style="flex: 1; min-width: 220px; border-radius: 12px; padding: 20px; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif !important; background-color: #f8fafc; border: 1px solid #e2e8f0;">
+      <span style="font-size: 16px; font-weight: 700; color: #0f172a; display: block; margin-bottom: 12px;">기관 프로그램 매매</span>
+      <p style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 14px !important; line-height: 1.75 !important; color: #334155 !important; margin: 0;">차익거래 잔고와 비차익 프로그램 매매의 괴리가 확대될 때, 시장은 단기 과열 또는 과매도 구간에 있다. 이 신호는 역방향 트레이드의 기초가 된다.</p>
+    </div>
+    <div style="flex: 1; min-width: 220px; border-radius: 12px; padding: 20px; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif !important; background-color: #fffafb; border: 1px solid #fee2e2;">
+      <span style="font-size: 16px; font-weight: 700; color: #0f172a; display: block; margin-bottom: 12px;">신용잔고 경보</span>
+      <p style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 14px !important; line-height: 1.75 !important; color: #334155 !important; margin: 0;">신용잔고가 역사적 고점 근방에 있는 종목은 수급 리스크의 잠재적 진원지다. 반대매매 연쇄 가능성을 항상 포트폴리오 리스크 모델에 반영해야 한다.</p>
+    </div>
+  </div>
+
+  <p style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; line-height: 1.9 !important; color: #334155 !important; margin: 0 0 20px 0; letter-spacing: -0.015em; word-break: keep-all; text-align: justify;">
+    수급 전문가의 핵심 신호는 단순한 매수/매도 집계를 넘어선다. 거래량의 '질적 변화'가 중요하다. 상승 구간에서 거래량이 수반되지 않는다면 추세의 지속성에 의구심을 가져야 하고, 하락 구간에서 거래량이 감소한다면 낙폭 과대 반등의 가능성을 열어두어야 한다.
+  </p>
+
+  <!-- 섹션 III -->
+  <h2 style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 19px !important; font-weight: 700 !important; color: #1e293b !important; margin: 48px 0 16px 0; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; letter-spacing: -0.015em;">
+    III. 실적·공시 환경 — 어닝 시즌 전략의 원칙
+  </h2>
+
+  <p style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; line-height: 1.9 !important; color: #334155 !important; margin: 0 0 20px 0; letter-spacing: -0.015em; word-break: keep-all; text-align: justify;">
+    2분기 어닝 시즌이 가시권에 들어왔다. 7월은 주요 대형주의 잠정실적 공시가 집중되는 시기다. 현재 공시 전문가 분석에서 특정 히든 젬(hidden gem) 종목이 식별되지 않은 것은, 역설적으로 '시장 전반의 실적 가시성'이 아직 충분히 확보되지 않았음을 의미한다.
+  </p>
+
+  <p style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; line-height: 1.9 !important; color: #334155 !important; margin: 0 0 20px 0; letter-spacing: -0.015em; word-break: keep-all; text-align: justify;">
+    이 구간에서 전략가가 주목해야 할 것은 세 가지 실적 패턴이다. 첫째, 컨센서스 대비 어닝 서프라이즈(EPS Beat) 가능성이 높은 섹터다. 원가 하락(원자재 가격 안정)과 환율 효과(원화 약세)가 동시에 작용한 수출 중심 제조업이 해당 카테고리다. 둘째, 가이던스 상향 조정 가능성이다. 단순히 과거 실적이 좋은 것보다 미래 실적 기대치를 높이는 기업이 주가에 미치는 영향이 훨씬 크다. 셋째, 공시 전 내부자 거래 패턴이다. 임원 및 대주주의 자사주 취득은 실적 자신감의 간접 신호다.
+  </p>
+
+  <h3 style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; font-weight: 700 !important; color: #334155 !important; margin: 28px 0 12px 0;">
+    주목해야 할 섹터별 실적 체크포인트
+  </h3>
+
+  <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 24px 0; box-sizing: border-box;">
+    <div style="flex: 1; min-width: 220px; border-radius: 12px; padding: 20px; box-sizing: border-box; background-color: #f8fafc; border: 1px solid #e2e8f0;">
+      <span style="font-size: 15px; font-weight: 700; color: #0f172a; display: block; margin-bottom: 10px;">반도체·IT</span>
+      <p style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 14px !important; line-height: 1.75 !important; color: #334155 !important; margin: 0;">HBM 출하 확대와 AI 서버향 수요가 2분기 ASP(평균판매가격) 상승을 견인했는지 확인. DDR5 전환율과 낸드 가격 회복 속도가 핵심 변수다.</p>
+    </div>
+    <div style="flex: 1; min-width: 220px; border-radius: 12px; padding: 20px; box-sizing: border-box; background-color: #f8fafc; border: 1px solid #e2e8f0;">
+      <span style="font-size: 15px; font-weight: 700; color: #0f172a; display: block; margin-bottom: 10px;">방산·우주</span>
+      <p style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 14px !important; line-height: 1.75 !important; color: #334155 !important; margin: 0;">유럽 재무장 계약 수주 잔고와 수출 인도 일정이 매출 인식 시점에 영향을 준다. 수주 잔고의 신뢰성 있는 전환 가능성을 검증해야 한다.</p>
+    </div>
+    <div style="flex: 1; min-width: 220px; border-radius: 12px; padding: 20px; box-sizing: border-box; background-color: #fffafb; border: 1px solid #fee2e2;">
+      <span style="font-size: 15px; font-weight: 700; color: #0f172a; display: block; margin-bottom: 10px;">금융·보험</span>
+      <p style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 14px !important; line-height: 1.75 !important; color: #334155 !important; margin: 0;">순이자마진(NIM) 압축 우려와 연체율 상승이 동시에 작용 중. 배당 안정성이 유지되는지, 자본비율이 규제 기준 이상인지 점검 필수.</p>
+    </div>
+  </div>
+
+  <!-- 섹션 IV -->
+  <h2 style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 19px !important; font-weight: 700 !important; color: #1e293b !important; margin: 48px 0 16px 0; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; letter-spacing: -0.015em;">
+    IV. 기술적 분석 원칙 — 모멘텀 공백기의 차트 독해
+  </h2>
+
+  <p style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; line-height: 1.9 !important; color: #334155 !important; margin: 0 0 20px 0; letter-spacing: -0.015em; word-break: keep-all; text-align: justify;">
+    기술적 전문가의 모멘텀 스톡 리스트가 현재 비어 있다는 사실은 중요한 기술적 신호다. 이는 크게 두 가지로 해석 가능하다. 첫 번째는 시장 전반의 모멘텀이 소진된 국면일 가능성이다. 상승 모멘텀을 가진 종목의 수가 줄어드는 것은 지수 추세의 내부 약화를 의미하는 브레드스(breadth) 열화 신호다. 두 번째는 데이터 갱신 주기의 문제로, 주말 집계 공백에서 발생하는 일시적 현상일 수 있다.
+  </p>
+
+  <p style="font-family: 'Noto Sans KR', -apple-system, sans-serif !important; font-size: 16px !important; line-height: 1.9 !important; color: #334155 !important; margin: 0 0 20px 0; letter-spacing: -0.015em; word-break: keep-all; text-align: justify;">
+    어떤 해석이든 이 국면에서 유효한 기술적 전략은 명확하다. 추세 추종보다는 지지·저항 레벨 기반의 구간 트레이딩이 더 높은 승률을 제공한다. 이동평균선의 배열 상태(정배열·역배열), 거래량 프로파일(Volume Profile)에서의 가격 분포, 그리고 RSI·MACD 다이버전스가 기술적 판단의 3대 기둥이 된다.
+  </p>
+
+  <div style="background-color: #0f172a; border-radius: 14px; padding: 20px; margin: 24px 0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); box-sizing: border-box;">
+    <div style="margin-bottom: 16px;">
+      <span style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; font-weight: 500; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">기술적 체크리스트 — 진입 전 필수 확인</span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+      <div style="min-width: 140px;">
+        <div style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">추세 확인</div>
+        <div style="font-family: 'Outfit', monospace !important; font-size: 15px; font-weight: 700; color: #ffffff;">20/60/120MA</div>
+        <div style="font-size: 12px; color: #fbbf24;">배열 방향 필수 확인</div>
+      </div>
+      <div style="min-width: 140px;">
+        <div style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">과매수/과매도</div>
+        <div style="font-family: 'Outfit', monospace !important; font-size: 15px; font-weight: 700; color: #ffffff;">RSI 14</div>
+        <div style="font-size: 12px; color: #34d399;">30이하 매수 / 70이상 경계</div>
+      </div>
+      <div style="min-width: 140px;">
+        <div style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">모멘텀 전환</div>
+        <div style="font-family: 'Outfit', monospace !important; font-size: 15px; font-weight: 700; color: #ffffff;">MACD 시그널</div>
+        <div style="font-size: 12px; color: #34d399;">골든크로스 확인</div>
+      </div>
+      <div style="min-width: 140px;">
+        <div style="font-family: 'Noto Sans KR', sans-serif !important; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">거래량 신뢰도</div>
+        <div style="font-family: 'Outfit', monospace !important; font-size: 15px; font-weight: 700; color
