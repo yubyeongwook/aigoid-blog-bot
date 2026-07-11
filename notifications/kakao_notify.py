@@ -57,6 +57,7 @@ def send_kakao_message(picks: list, blog_url: str, performance: dict = None) -> 
 def send_telegram_message(picks: list, blog_url: str, performance: dict = None) -> bool:
     bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "")
     chat_id = os.getenv("TELEGRAM_CHAT_ID", "")
+    channel_id = os.getenv("TELEGRAM_CHANNEL_ID", "")
     if not bot_token or not chat_id:
         print("텔레그램 설정 없음")
         return False
@@ -99,6 +100,22 @@ _본 정보는 투자 참고용이며 특정 종목의 매수·매도를 권유�
         }, timeout=10)
         if res.status_code == 200:
             print("✅ 텔레그램 알림 전송 완료")
+            
+            if channel_id:
+                try:
+                    requests.post(
+                        f"https://api.telegram.org/bot{bot_token}/sendMessage",
+                        json={
+                            "chat_id": channel_id,
+                            "text": text,
+                            "parse_mode": "Markdown"
+                        },
+                        timeout=10
+                    )
+                    print("✅ 텔레그램 채널 전송 완료")
+                except Exception as e:
+                    print(f"채널 전송 오류: {e}")
+            
             return True
         print(f"텔레그램 오류: {res.text}")
         return False
