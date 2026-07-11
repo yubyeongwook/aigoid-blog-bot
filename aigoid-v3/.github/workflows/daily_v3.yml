@@ -1,0 +1,53 @@
+name: 멋쟁이 인사이트 v3 — 6개 에이전트 오전 브리핑
+
+on:
+  schedule:
+    - cron: '10 21 * * 1-5'  # KST 06:10 → 07:00 목표
+  workflow_dispatch:
+
+jobs:
+  daily_v3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+    - name: 저장소 체크아웃
+      uses: actions/checkout@v4
+
+    - name: Python 설정
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: pip 캐시
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: ${{ runner.os }}-pip-
+
+    - name: 라이브러리 설치
+      run: pip install -r requirements.txt
+
+    - name: v3 브리핑 생성 및 발행
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        KIS_APP_KEY: ${{ secrets.KIS_APP_KEY }}
+        KIS_APP_SECRET: ${{ secrets.KIS_APP_SECRET }}
+        DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+        NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+        BLOG_ID: ${{ secrets.BLOG_ID }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+      run: python main_daily_v3.py
+
+    - name: 픽 성과 데이터 커밋
+      run: |
+        git config user.name "멋쟁이봇"
+        git config user.email "aigoid1203@gmail.com"
+        git add trackers/picks_history.json || true
+        git commit -m "픽 성과 업데이트 $(date +'%Y-%m-%d')" || true
+        git push || true
