@@ -1,39 +1,38 @@
-name: 멋쟁이 인사이트 개장 직전 자동 발행
+name: 멋쟁이 인사이트 v4 — 오전 8시 50분 동시호가
 
 on:
   schedule:
-    - cron: '40 23 * * 0-4'  # 한국시간 오전 8시 40분 (UTC 23:40 전날)
-  workflow_dispatch:          # 수동 실행 버튼
+    - cron: '40 23 * * 1-5'
+  workflow_dispatch:
 
 jobs:
-  premarket_report:
+  premarket_v4:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 20
     steps:
-    - name: 저장소 체크아웃
-      uses: actions/checkout@v4
-
-    - name: Python 3.10 설정
-      uses: actions/setup-python@v5
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: '3.10'
-
+    - name: pip 캐시
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
     - name: 라이브러리 설치
       run: pip install -r requirements.txt
-
-    - name: 개장 직전 동시호가 속보 생성 및 발행
+    - name: 동시호가 브리핑 실행
       env:
-        PRIMARY_AI: claude
         ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         KIS_APP_KEY: ${{ secrets.KIS_APP_KEY }}
         KIS_APP_SECRET: ${{ secrets.KIS_APP_SECRET }}
         DART_API_KEY: ${{ secrets.DART_API_KEY }}
-        NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
-        NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
         BLOG_ID: ${{ secrets.BLOG_ID }}
         GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      run: python main_premarket.py
+        KAKAO_ACCESS_TOKEN: ${{ secrets.KAKAO_ACCESS_TOKEN }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: python main_premarket_v4.py

@@ -1,57 +1,45 @@
-name: 멋쟁이 인사이트 일일 자동 발행
+name: 멋쟁이 인사이트 v4 — 오전 7시 브리핑
 
 on:
   schedule:
-    - cron: '10 21 * * 1-5'  # 한국시간 오전 6시 10분 (UTC 21:10 전날 월-금)
-  workflow_dispatch:          # 수동 실행 버튼
+    - cron: '10 21 * * 1-5'
+  workflow_dispatch:
 
 jobs:
-  daily_report:
+  daily_v4:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    permissions:
-      contents: write
-
+    timeout-minutes: 25
     steps:
-    - name: 저장소 체크아웃
-      uses: actions/checkout@v4
-
-    - name: Python 3.10 설정
-      uses: actions/setup-python@v5
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: '3.10'
-
     - name: pip 캐시
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-
     - name: 라이브러리 설치
       run: pip install -r requirements.txt
-
-    - name: 일일 리포트 생성 및 발행
+    - name: v4 오전 브리핑 실행
       env:
-        PRIMARY_AI: claude
         ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         KIS_APP_KEY: ${{ secrets.KIS_APP_KEY }}
         KIS_APP_SECRET: ${{ secrets.KIS_APP_SECRET }}
         DART_API_KEY: ${{ secrets.DART_API_KEY }}
-        NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
-        NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
         BLOG_ID: ${{ secrets.BLOG_ID }}
         GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      run: python main_daily.py
-
-    - name: Commit and push morning picks
+        KAKAO_ACCESS_TOKEN: ${{ secrets.KAKAO_ACCESS_TOKEN }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: python main_daily_v4.py
+    - name: 자동 커밋
       run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add scratch/morning_picks.json || true
-        git commit -m "Save morning picks data [skip ci]" || echo "No changes to commit"
+        git config user.name "멋쟁이봇"
+        git config user.email "aigoid1203@gmail.com"
+        git add trackers/ social_content/ || true
+        git commit -m "자동: $(date +'%Y-%m-%d') 픽성과+소셜" || true
         git push || true
-
