@@ -17,6 +17,12 @@ from notifications.kakao_notify import send_kakao_message, send_telegram_message
 from trackers.pick_tracker import update_performance, generate_performance_html, save_picks, calculate_stats
 from publishers.blogger_publisher import publish_post, auto_labels
 
+# 쇼츠 에이전트 및 유튜브 퍼블리셔 연동 임포트
+from agents.shorts_director_agent import generate_shorts_script
+from agents.shorts_video_agent import collect_shorts_assets
+from agents.shorts_editor_agent import build_shorts_video
+from publishers.youtube_publisher import upload_shorts_to_youtube
+
 def extract_picks_from_html(html):
     picks = []
     matches = re.findall(r'([가-힣a-zA-Z·]+)\s*\((\d{6})\)', html)
@@ -28,11 +34,11 @@ def main():
     today = datetime.datetime.now()
     weekday = ["월","화","수","목","금","토","일"][today.weekday()]
     print("="*60)
-    print(f"  멋쟁이 인사이트 v4 — 완전 고도화")
+    print(f"  멋쟁이 인사이트 v4 — 완전 고도화 (유튜브 쇼츠 에디션)")
     print(f"  {today.strftime('%Y년 %m월 %d일')} {weekday}요일 KST")
     print("="*60)
 
-    print("\n[0/9] 전일 픽 성과 업데이트...")
+    print("\n[0/10] 전일 픽 성과 업데이트...")
     try:
         update_performance()
         performance_html = generate_performance_html()
@@ -42,27 +48,27 @@ def main():
         performance_html = ""
         stats = {}
 
-    print("\n[1/9] 시장 데이터 수집...")
+    print("\n[1/10] 시장 데이터 수집...")
     market_data = collect_market()
-    print("\n[2/9] 뉴스·공시 수집...")
+    print("\n[2/10] 뉴스·공시 수집...")
     news_data = collect_news()
-    print("\n[3/9] 글로벌 매크로 분석...")
+    print("\n[3/10] 글로벌 매크로 분석...")
     macro_result = macro_analyze(market_data, news_data)
-    print("\n[4/9] 수급 + 외국인 종목 추적...")
+    print("\n[4/10] 수급 + 외국인 종목 추적...")
     supply_result = supply_analyze(market_data, news_data)
     foreign_result = foreign_analyze(market_data)
-    print("\n[5/9] 실적 + 공시 NLP 분석...")
+    print("\n[5/10] 실적 + 공시 NLP 분석...")
     earnings_result = earnings_analyze(market_data, news_data)
     dart_result = dart_nlp_analyze(market_data)
-    print("\n[6/9] 기술적 분석 + 감성 지수...")
+    print("\n[6/10] 기술적 분석 + 감성 지수...")
     technical_result = technical_analyze(market_data, news_data)
     sentiment_result = sentiment_analyze(market_data, news_data)
-    print("\n[7/9] 백테스팅 검증...")
+    print("\n[7/10] 백테스팅 검증...")
     backtest_result = backtest_analyze(technical_result, supply_result, macro_result, market_data)
     reliability = backtest_result.get("signal_reliability", {})
     print(f"   신호 신뢰도: {reliability.get('score',0)}점 ({reliability.get('grade','-')}등급)")
 
-    print("\n[8/9] 통합 판단 + 블로그 생성...")
+    print("\n[8/10] 통합 판단 + 블로그 생성...")
     html_content = synthesize_and_write(
         macro=macro_result, supply=supply_result,
         earnings=earnings_result, technical=technical_result,
@@ -83,7 +89,7 @@ def main():
     result = publish_post(seo_title, html_content, labels)
     blog_url = result.get("url", "https://aigoid.blogspot.com")
 
-    print("\n[9/9] 소셜 콘텐츠 + 알림...")
+    print("\n[9/10] 소셜 콘텐츠 + 알림...")
     key_insight = macro_result.get("key_insight", "오늘의 핵심 인사이트")
     try:
         social_content = generate_social(html_content, picks, key_insight, blog_url)
@@ -95,6 +101,34 @@ def main():
         send_telegram_message(picks, blog_url, stats)
     except Exception as e:
         print(f"알림 오류: {e}")
+
+    print("\n[10/10] 유튜브 쇼츠 자동 제작 및 발행...")
+    try:
+        # 1) 편집장 기획서(script.json) 빌드
+        shorts_script = generate_shorts_script(html_content, picks)
+        
+        # 2) 비디오 에셋 이미지 수집 및 차트 캡처
+        ready_script = collect_shorts_assets(shorts_script, picks)
+        
+        # 3) 오디오 및 자막 결합 렌더링
+        video_output = "temp_shorts/final_shorts.mp4"
+        success = build_shorts_video(ready_script, video_output)
+        
+        # 4) 유튜브 업로드
+        if success:
+            upload_success = upload_shorts_to_youtube(
+                video_path=video_output,
+                title=ready_script.get("title", f"{today.strftime('%m월 %d일')} 오늘의 특징 종목"),
+                description=f"오늘의 주식 시장 급등 특징주 분석 브리핑!\n상세 분석 리포트 보기 👉 {blog_url}\n#Shorts #주식 #멋쟁이인사이트"
+            )
+            # 임시 동영상 파일 정리
+            if os.path.exists(video_output):
+                try:
+                    os.remove(video_output)
+                except Exception:
+                    pass
+    except Exception as e:
+        print(f"유튜브 쇼츠 생성 파이프라인 에러: {e}")
 
     print("\n"+"="*60)
     if "url" in result:

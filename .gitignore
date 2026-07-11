@@ -7,3 +7,5 @@ data/
 *.log
 .DS_Store
 blogger_credentials.json
+temp_shorts/
+
