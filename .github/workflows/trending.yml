@@ -3,8 +3,6 @@ name: 트렌드 키워드 자동 발행
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'    # KST 12:00
-    - cron: '0 6 * * *'    # KST 15:00
     - cron: '0 11 * * *'   # KST 20:00
 
 jobs:
