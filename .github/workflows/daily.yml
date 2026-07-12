@@ -39,7 +39,6 @@ jobs:
         NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
         META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
         INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
       run: python main_daily_v4.py
     - name: 자동 커밋
