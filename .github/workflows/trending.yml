@@ -1,0 +1,28 @@
+name: 트렌드 키워드 자동 발행
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'    # KST 12:00
+    - cron: '0 6 * * *'    # KST 15:00
+    - cron: '0 11 * * *'   # KST 20:00
+
+jobs:
+  trending:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 트렌드 키워드 블로그 자동 발행
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          BLOG_ID: ${{ secrets.BLOG_ID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        run: python trending_keywords.py
