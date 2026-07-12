@@ -94,6 +94,44 @@ def main():
     try:
         social_content = generate_social(html_content, picks, key_insight, blog_url)
         save_social_content(social_content, today.strftime("%Y%m%d"))
+        
+        # 인스타그램 자동 업로드 연동
+        if isinstance(social_content, dict) and "instagram_card" in social_content:
+            print("📸 인스타그램 카드뉴스 자동 업로드 시작...")
+            try:
+                from instagram_post import post_to_instagram
+                card = social_content["instagram_card"]
+                card_title = card.get("title", "오늘의 주식 시장 요약")
+                
+                # 슬라이드 텍스트 포맷팅
+                slides = card.get("slides", [])
+                slides_text = ""
+                for s in slides:
+                    slide_num = s.get("slide_num", "")
+                    headline = s.get("headline", "")
+                    sub_text = s.get("sub_text", "")
+                    slides_text += f"{slide_num}. {headline}\n   - {sub_text}\n"
+                
+                # 해시태그 합치기
+                hashtags_list = card.get("hashtags", ["#주식", "#투자", "#멋쟁이인사이트"])
+                hashtags = " ".join(hashtags_list)
+                
+                # 피드 캡션 생성
+                caption = f"📊 {card_title}\n\n{slides_text}\n자세한 리포트는 프로필 링크의 블로그에서 확인하세요!\n\n{hashtags}"
+                
+                # 백테스트 신뢰도 점수를 별표로 표기
+                score = reliability.get("score", 5) if isinstance(reliability.get("score"), int) else 5
+                stars_str = "★" * score
+                
+                insta_res = post_to_instagram(
+                    title=card_title,
+                    content=slides_text,
+                    caption=caption,
+                    stars=stars_str
+                )
+                print(f"인스타그램 업로드 결과: {insta_res}")
+            except Exception as ie:
+                print(f"인스타그램 업로드 중 오류 발생: {ie}")
     except Exception as e:
         print(f"소셜 생성 오류: {e}")
     try:
