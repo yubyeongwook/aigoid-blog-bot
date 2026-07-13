@@ -28,7 +28,8 @@ def main():
         "client_id": client_id,
         "redirect_uri": redirect_uri,
         "response_type": "code",
-        "scope": "https://www.googleapis.com/auth/blogger",
+        # Blogger API 및 YouTube 동영상 업로드(v4.5 쇼츠) 권한을 동시에 획득합니다.
+        "scope": "https://www.googleapis.com/auth/blogger https://www.googleapis.com/auth/youtube.upload",
         "access_type": "offline",
         "prompt": "consent"
     }
