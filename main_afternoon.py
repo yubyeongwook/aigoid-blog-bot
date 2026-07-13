@@ -241,6 +241,49 @@ def main():
     if "url" in result:
         print(f"  ✅ 발행 완료!")
         print(f"  URL: {result['url']}")
+        
+        # 6. 인스타그램 자동 업로드 연동
+        blog_url = result["url"]
+        print("\n[추가] 인스타그램 마감 카드뉴스 업로드...")
+        try:
+            from social.card_news_generator import generate as generate_social, save_social_content
+            from instagram_post import post_to_instagram
+            
+            social_content = generate_social(html_content, [], seo_title, blog_url)
+            save_social_content(social_content, today.strftime("%Y%m%d") + "_afternoon")
+            
+            if isinstance(social_content, dict) and "instagram_card" in social_content:
+                card = social_content["instagram_card"]
+                card_title = card.get("title", f"{today.strftime('%m/%d')} 장마감 브리핑")
+                
+                # 슬라이드 텍스트 포맷팅
+                slides = card.get("slides", [])
+                slides_text = ""
+                for s in slides:
+                    slide_num = s.get("slide_num", "")
+                    headline = s.get("headline", "")
+                    sub_text = s.get("sub_text", "")
+                    slides_text += f"{slide_num}. {headline}\n   - {sub_text}\n"
+                
+                # 해시태그 합치기
+                hashtags_list = card.get("hashtags", ["#주식", "#코스피", "#마감시황", "#멋쟁이인사이트"])
+                hashtags = " ".join(hashtags_list)
+                
+                caption = f"📊 {card_title}\n\n{slides_text}\n자세한 리포트는 프로필 링크의 블로그에서 확인하세요!\n\n{hashtags}"
+                
+                print("📸 인스타그램 마감 카드뉴스 자동 업로드 시작...")
+                inst_result = post_to_instagram(
+                    title=card_title,
+                    content=card.get("content_summary", card_title),
+                    caption=caption,
+                    stars=""
+                )
+                if inst_result.get("success"):
+                    print(f"  ✅ 인스타그램 업로드 완료: {inst_result.get('post_url')}")
+                else:
+                    print(f"  ⚠️ 인스타그램 업로드 실패: {inst_result.get('error')}")
+        except Exception as e:
+            print(f"인스타그램 업로드 중 오류 발생: {e}")
     else:
         print(f"  ⚠️ 발행 결과: {result}")
     print("=" * 60)
