@@ -72,7 +72,7 @@ AFTERNOON_SYSTEM = """
 
 [HTML 구조 지침]
 1. 최상위 랩핑 div 시작:
-   <div id="meotjaengi-insight-container" style="width: 100%; max-width: 720px; margin: 0 auto; padding: 15px; box-sizing: border-box; background-color: #ffffff;">
+   <div id="meotjaengi-insight-container" style="width: 100%; max-width: 720px; margin: 0; padding: 15px; box-sizing: border-box; background-color: #ffffff;">
 2. <style> 블록 포함.
 3. 마스트헤드 테이블 (오후 마감 정보)
 4. 수치 대시보드 (차콜 배경 #0f172a 카드: 코스피/코스닥 종가, 외국인/기관 매매동향)
