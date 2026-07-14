@@ -60,13 +60,23 @@ SYNTHESIS_SYSTEM_PART1 = """
   width: 100% !important;
   border-collapse: collapse !important;
   margin: 20px 0 !important;
+  table-layout: auto !important;
 }
-#meotjaengi-insight-container td, 
 #meotjaengi-insight-container th {
-  padding: 12px 14px !important;
-  font-size: 14px !important;
+  background-color: #f1f5f9 !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 10px 12px !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+#meotjaengi-insight-container td {
+  padding: 10px 12px !important;
   color: #334155 !important;
-  border-bottom: 1px solid #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
 }
 </style>
 

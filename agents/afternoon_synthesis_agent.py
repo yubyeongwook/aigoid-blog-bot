@@ -60,13 +60,23 @@ AFTERNOON_SYSTEM = """
   width: 100% !important;
   border-collapse: collapse !important;
   margin: 20px 0 !important;
+  table-layout: auto !important;
 }
-#meotjaengi-insight-container td, 
 #meotjaengi-insight-container th {
-  padding: 12px 14px !important;
-  font-size: 14px !important;
+  background-color: #f1f5f9 !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 10px 12px !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+#meotjaengi-insight-container td {
+  padding: 10px 12px !important;
   color: #334155 !important;
-  border-bottom: 1px solid #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
 }
 </style>
 
@@ -74,10 +84,16 @@ AFTERNOON_SYSTEM = """
 1. 최상위 랩핑 div 시작:
    <div id="meotjaengi-insight-container" style="width: 100%; max-width: 720px; margin: 0; padding: 15px; box-sizing: border-box; background-color: #ffffff;">
 2. <style> 블록 포함.
-3. 마스트헤드 테이블 (오후 마감 정보)
-4. 수치 대시보드 (차콜 배경 #0f172a 카드: 코스피/코스닥 종가, 외국인/기관 매매동향)
-5. H1 메인 헤드라인 (오늘의 마감 요약과 시장을 뒤흔든 핵심 인과관계를 설명하는 제목)
-6. 아래 섹션들을 상세히 서술하십시오:
+3. 모든 표(table)는 모바일 화면에서 가로로 터치 스크롤할 수 있도록 반드시 다음과 같이 overflow-x wrapper div로 감싸십시오:
+   <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 20px 0;">
+     <table style="width: 100%; min-width: 600px; border-collapse: collapse;">
+       ...
+     </table>
+   </div>
+4. 마스트헤드 테이블 (오후 마감 정보)
+5. 수치 대시보드 (차콜 배경 #0f172a 카드: 코스피/코스닥 종가, 외국인/기관 매매동향)
+6. H1 메인 헤드라인 (오늘의 마감 요약과 시장을 뒤흔든 핵심 인과관계를 설명하는 제목)
+7. 아래 섹션들을 상세히 서술하십시오:
    - I. 오늘 한국 시장 마감 요약 및 수급 해부 (외국인·기관·개인이 한 행동의 구조적 원인과 흐름 분석)
    - II. 오늘 급등주 및 위꼬리 종목 상세 분석 (surging_stocks의 고가 대비 밀림률(pull_back_rate) 분석을 통한 세력 이탈 여부 점검)
    - III. 오전 추천 픽(Picks) 적중률 검증 (제공된 evaluated_picks 데이터를 표로 깔끔하게 정리하고, 각 픽의 성공/실패 원인을 구체적 시장 흐름과 엮어서 논리적으로 피드백)
@@ -86,7 +102,7 @@ AFTERNOON_SYSTEM = """
    - VI. 멋쟁이의 마감 요약 노트
    - 투자 고지 (Disclaimer)
    - 출처 표기 푸터
-7. 최상위 컨테이너 닫는 </div> 태그.
+8. 최상위 컨테이너 닫는 </div> 태그.
 """
 
 def generate_afternoon_report(market_data, news_data, morning_brief_data, evaluated_picks) -> str:
