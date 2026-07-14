@@ -1,5 +1,6 @@
 import sys, os, json, datetime, re
 sys.path.append(os.path.dirname(__file__))
+import agents.patch_anthropic
 
 from collectors.market_collector import collect_all as collect_market
 from collectors.news_collector import collect_all as collect_news

@@ -319,7 +319,49 @@ def call_claude(
     max_tokens: int,
     tools: list | None = None,
 ) -> tuple[str, dict]:
-    """Claude Messages API를 호출하고 (텍스트, usage)를 반환합니다."""
+    """Claude Messages API를 호출하고 (텍스트, usage)를 반환하며, PRIMARY_AI=gemini 이거나 Claude 오류 시 Gemini로 백업 작동합니다."""
+    primary_ai = os.getenv("PRIMARY_AI", "claude").lower()
+    
+    def run_gemini():
+        gemini_key = os.getenv("GEMINI_API_KEY", "")
+        if not gemini_key:
+            raise RuntimeError("GEMINI_API_KEY not found in environment")
+        
+        gemini_model = "gemini-3.5-flash"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{gemini_model}:generateContent?key={gemini_key}"
+        
+        combined_text = f"{system_prompt}\n\n{user_content}".strip()
+        body = {
+            "contents": [{"parts": [{"text": combined_text}]}],
+            "generationConfig": {"maxOutputTokens": 8192, "temperature": 0.3}
+        }
+        
+        # tools(web search)가 지정되어 있는 경우 Gemini Google Search Grounding 적용
+        if tools:
+            body["tools"] = [{"googleSearch": {}}]
+            
+        print(f"[Gemini] 호출 시도 ({gemini_model})...")
+        headers = {"Content-Type": "application/json"}
+        res_data = http_post_json(url, headers, body)
+        
+        candidates = res_data.get("candidates", [])
+        if not candidates:
+            raise RuntimeError(f"Gemini returned empty response: {res_data}")
+        content = candidates[0].get("content", {})
+        parts = content.get("parts", [])
+        if not parts:
+            raise RuntimeError(f"Gemini content parts empty: {res_data}")
+        text = parts[0].get("text", "")
+        print(f"[Gemini] 호출 성공 ({gemini_model})")
+        return text, {}
+
+    if primary_ai == "gemini":
+        try:
+            return run_gemini()
+        except Exception as e:
+            print(f"⚠️ [Gemini] 실패: {e}. Claude로 백업 시도...")
+
+    # Claude 호출
     payload = {
         "model": model,
         "max_tokens": max_tokens,
@@ -334,14 +376,20 @@ def call_claude(
         "anthropic-version": ANTHROPIC_VERSION,
         "content-type": "application/json",
     }
-    data = http_post_json(ANTHROPIC_API_URL, headers, payload)
-
-    text_parts = [b["text"] for b in data.get("content", []) if b.get("type") == "text"]
-    full_text = "\n".join(text_parts).strip()
-    if not full_text:
-        raise RuntimeError(f"Claude 응답에서 텍스트를 찾지 못했습니다: {data}")
-
-    return full_text, data.get("usage", {})
+    
+    try:
+        data = http_post_json(ANTHROPIC_API_URL, headers, payload)
+        text_parts = [b["text"] for b in data.get("content", []) if b.get("type") == "text"]
+        full_text = "\n".join(text_parts).strip()
+        if not full_text:
+            raise RuntimeError(f"Claude 응답에서 텍스트를 찾지 못했습니다: {data}")
+        return full_text, data.get("usage", {})
+    except Exception as e:
+        print(f"⚠️ [Claude] 실패: {e}")
+        if primary_ai != "gemini":
+            print("🔄 Gemini 백업 호출 시도...")
+            return run_gemini()
+        raise e
 
 
 def stage0_deep_research(

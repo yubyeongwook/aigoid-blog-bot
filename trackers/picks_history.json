@@ -49,5 +49,65 @@
       }
     ],
     "updated_at": "2026-07-11T20:57:01.179359"
+  },
+  "2026-07-12": {
+    "date": "2026-07-12",
+    "picks": [
+      {
+        "name": "피에스케이",
+        "ticker": "319660",
+        "type": "단타",
+        "entry_price": 0,
+        "stop_loss": 0,
+        "target_1": 0,
+        "status": "진행중"
+      },
+      {
+        "name": "원익IPS",
+        "ticker": "240810",
+        "type": "단타",
+        "entry_price": 0,
+        "stop_loss": 0,
+        "target_1": 0,
+        "status": "진행중"
+      },
+      {
+        "name": "이수페타시스",
+        "ticker": "007660",
+        "type": "단타",
+        "entry_price": 0,
+        "stop_loss": 0,
+        "target_1": 0,
+        "status": "진행중"
+      },
+      {
+        "name": "테크윙",
+        "ticker": "089030",
+        "type": "단타",
+        "entry_price": 0,
+        "stop_loss": 0,
+        "target_1": 0,
+        "status": "진행중"
+      },
+      {
+        "name": "후성",
+        "ticker": "093370",
+        "type": "단타",
+        "entry_price": 0,
+        "stop_loss": 0,
+        "target_1": 0,
+        "status": "진행중"
+      },
+      {
+        "name": "KB금융",
+        "ticker": "105560",
+        "type": "단타",
+        "entry_price": 0,
+        "stop_loss": 0,
+        "target_1": 0,
+        "status": "진행중"
+      }
+    ],
+    "updated_at": "2026-07-12T22:13:13.830620"
   }
 }

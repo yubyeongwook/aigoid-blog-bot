@@ -17,6 +17,8 @@ jobs:
       - name: 트렌드 키워드 블로그 자동 발행
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PRIMARY_AI: gemini
           NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
           BLOG_ID: ${{ secrets.BLOG_ID }}
