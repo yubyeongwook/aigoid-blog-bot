@@ -24,15 +24,113 @@ from agents.shorts_video_agent import collect_shorts_assets
 from agents.shorts_editor_agent import build_shorts_video
 from publishers.youtube_publisher import upload_shorts_to_youtube
 
+def parse_price(val_str):
+    val_str = val_str.replace(",", "").replace("원", "").replace(" ", "").strip()
+    if "만" in val_str:
+        parts = val_str.split("만")
+        try:
+            base = float(parts[0])
+            sub = float(parts[1]) if len(parts) > 1 and parts[1] else 0.0
+            return int(base * 10000 + sub)
+        except ValueError:
+            pass
+    try:
+        return int(float(val_str))
+    except ValueError:
+        return 0
+
+def extract_picks_from_json_comment(html: str) -> list:
+    """HTML 맨 끝 <!-- PICKS_JSON: [...] --> 주석에서 픽 추출 (Claude가 직접 작성한 구조화 데이터)"""
+    import re, json
+    m = re.search(r'<!--\s*PICKS_JSON:\s*(\[.*?\])\s*-->', html, re.DOTALL)
+    if not m:
+        return []
+    try:
+        picks = json.loads(m.group(1))
+        for p in picks:
+            p.setdefault("status", "진행중")
+        print(f"✅ PICKS_JSON 파싱 성공: {len(picks)}개 종목")
+        return picks
+    except Exception as e:
+        print(f"⚠️ PICKS_JSON 파싱 실패: {e}")
+        return []
+
 def extract_picks_from_html(html):
+
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html, "html.parser")
     picks = []
-    matches = re.findall(r'([가-힣a-zA-Z·]+)\s*\((\d{6})\)', html)
-    for name, ticker in matches[:8]:
-        picks.append({"name":name,"ticker":ticker,"type":"단타","entry_price":0,"stop_loss":0,"target_1":0,"status":"진행중"})
+    
+    # 1. 3칸 그리드 구조의 픽 카드를 찾아 파싱 시도
+    cards = []
+    for div in soup.find_all("div"):
+        if div.get("style") and "grid-template-columns" in div.get("style"):
+            if "진입가" in div.text:
+                card_body = div.parent
+                if card_body:
+                    cards.append((card_body, div))
+                    
+    for card_body, grid_div in cards:
+        name_ticker_p = card_body.find("p", style=lambda s: s and "font-weight:700" in s and "15px" in s)
+        if not name_ticker_p:
+            name_ticker_p = card_body.find("p")
+            
+        if not name_ticker_p:
+            continue
+            
+        match = re.search(r'([가-힣a-zA-Z0-9·\s]+)\s*\((\d{6})\)', name_ticker_p.text)
+        if not match:
+            continue
+            
+        name = match.group(1).strip()
+        ticker = match.group(2).strip()
+        
+        cols = grid_div.find_all("div", recursive=False)
+        entry_price = 0
+        stop_loss = 0
+        target_1 = 0
+        
+        for col in cols:
+            text = col.text.replace(" ", "").replace("\n", "")
+            if "진입가" in text:
+                price_text = text.replace("진입가", "")
+                entry_price = parse_price(price_text)
+            elif "손절선" in text or "손절가" in text:
+                price_text = text.replace("손절선", "").replace("손절가", "")
+                stop_loss = parse_price(price_text)
+            elif "목표가" in text:
+                price_text = text.replace("목표가", "")
+                target_1 = parse_price(price_text)
+                
+        picks.append({
+            "name": name,
+            "ticker": ticker,
+            "type": "단타",
+            "entry_price": entry_price,
+            "stop_loss": stop_loss,
+            "target_1": target_1,
+            "status": "진행중"
+        })
+        
+    # 2. BS4 파싱이 실패했거나 추천 종목을 감지하지 못한 경우 단순 정규식 Fallback
+    if not picks:
+        matches = re.findall(r'([가-힣a-zA-Z·]+)\s*\((\d{6})\)', html)
+        for name, ticker in matches[:8]:
+            picks.append({
+                "name": name,
+                "ticker": ticker,
+                "type": "단타",
+                "entry_price": 0,
+                "stop_loss": 0,
+                "target_1": 0,
+                "status": "진행중"
+            })
+            
     return picks[:8]
 
 def main():
-    today = datetime.datetime.now()
+    kst_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
+    today = kst_now
     weekday = ["월","화","수","목","금","토","일"][today.weekday()]
     print("="*60)
     print(f"  멋쟁이 인사이트 v4 — 완전 고도화 (유튜브 쇼츠 에디션)")
@@ -80,9 +178,14 @@ def main():
         report_type="daily_v4"
     )
 
-    picks = extract_picks_from_html(html_content)
+    # JSON 주석에서 먼저 추출 (Claude가 직접 작성한 구조화 데이터, 가장 정확)
+    picks = extract_picks_from_json_comment(html_content)
+    if not picks:
+        print("⚠️ PICKS_JSON 없음 → HTML 파싱 fallback")
+        picks = extract_picks_from_html(html_content)
     if picks:
         save_picks(picks, today.strftime("%Y-%m-%d"))
+
 
     seo_title = f"{today.strftime('%m월 %d일')} {weekday}요일 멋쟁이 인사이트 — 9개 전문가 통합 분석·백테스팅 검증"
     labels = auto_labels(html_content)

@@ -151,6 +151,11 @@ def synthesize_and_write(
 9. 외국인 연속 매수 종목을 최우선 픽 후보로
 
 div-only HTML 전체 출력.
+
+★★★ 필수: HTML 맨 마지막 줄에 반드시 아래 형식의 JSON 주석을 추가할 것 (A·B·C 픽만, 피할 종목 제외):
+<!-- PICKS_JSON: [{{"name": "종목명", "ticker": "6자리숫자", "type": "단타|스윙|중기", "entry_price": 숫자, "stop_loss": 숫자, "target_1": 숫자}}, ...] -->
+예시: <!-- PICKS_JSON: [{{"name": "삼성전자", "ticker": "005930", "type": "단타", "entry_price": 78000, "stop_loss": 75000, "target_1": 83000}}] -->
+이 줄이 없으면 텔레그램 알림이 작동하지 않음. 반드시 포함할 것.
 """
 
     try:
