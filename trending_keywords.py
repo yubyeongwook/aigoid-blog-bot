@@ -154,7 +154,7 @@ def generate_trend_blog(api_key: str, keyword: str, current_date_str: str) -> tu
         
         start, end = text.find("{"), text.rfind("}")
         if start != -1 and end != -1:
-            parsed = json.loads(text[start:end+1])
+            parsed = json.loads(text[start:end+1], strict=False)
             print(f"[Gemini] 트렌드 블로그 생성 성공 ({keyword})")
             return clean_and_add_image(parsed["title"], parsed["content_html"])
         raise RuntimeError("Failed to parse JSON from Gemini response")
@@ -178,7 +178,7 @@ def generate_trend_blog(api_key: str, keyword: str, current_date_str: str) -> tu
 
         start, end = text.find("{"), text.rfind("}")
         if start != -1 and end != -1:
-            data = json.loads(text[start:end+1])
+            data = json.loads(text[start:end+1], strict=False)
             print(f"[Claude] 트렌드 블로그 생성 성공 ({keyword})")
             return clean_and_add_image(data["title"], data["content_html"])
         else:
