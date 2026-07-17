@@ -580,11 +580,62 @@ def get_intraday_surging_stocks():
         return []
 
 # ────────────────────────────────
+# 글로벌 매크로 데이터 수집 (yfinance)
+# 나스닥·S&P500·다우·DXY 달러인덱스·미 10년 국채금리·WTI 유가·금
+# ────────────────────────────────
+def get_global_macro():
+    """
+    글로벌 매크로 핵심 지표 수집:
+    - 미국 주요 지수: 나스닥(^IXIC), S&P500(^GSPC), 다우(^DJI), SOXX(반도체ETF)
+    - 달러: DXY 달러인덱스(DX-Y.NYB), 원달러 환율(KRW=X)
+    - 금리: 미국 10년 국채(^TNX), 2년 국채(^IRX)
+    - 원자재: WTI 원유(CL=F), 금(GC=F)
+    """
+    result = {}
+    tickers = {
+        "nasdaq": "^IXIC",
+        "sp500": "^GSPC",
+        "dow": "^DJI",
+        "soxx": "SOXX",          # 필라델피아 반도체 ETF
+        "dxy": "DX-Y.NYB",       # 달러 인덱스
+        "usd_krw": "KRW=X",      # 원달러 환율
+        "us10y": "^TNX",          # 미 10년 국채금리
+        "us2y": "^IRX",           # 미 2년 국채금리
+        "wti": "CL=F",            # WTI 원유
+        "gold": "GC=F",           # 금
+        "vix": "^VIX",            # 공포지수
+    }
+    try:
+        for key, sym in tickers.items():
+            try:
+                t = yf.Ticker(sym)
+                hist = t.history(period="2d")
+                if hist.empty:
+                    result[key] = {"error": "no data"}
+                    continue
+                close = round(float(hist["Close"].iloc[-1]), 4)
+                prev  = round(float(hist["Close"].iloc[-2]), 4) if len(hist) >= 2 else close
+                chg_pct = round((close - prev) / prev * 100, 2) if prev != 0 else 0
+                result[key] = {
+                    "close": close,
+                    "prev_close": prev,
+                    "change_pct": chg_pct
+                }
+            except Exception as e:
+                result[key] = {"error": str(e)}
+    except Exception as e:
+        result["error"] = str(e)
+    return result
+
+# ────────────────────────────────
 # 전체 수집
 # ────────────────────────────────
 def collect_all():
     print("📊 시장 데이터 수집 시작...")
     today, week_ago, last_trading = get_dates()
+
+    print("  [글로벌] 해외 매크로 지표 수집 중...")
+    global_macro = get_global_macro()
     
     data = {
         "timestamp": datetime.datetime.now().isoformat(),
@@ -595,7 +646,8 @@ def collect_all():
         "upper_limit": get_upper_limit_naver(),
         "watchlist": get_watchlist_naver(),
         "us_etfs": get_us_etfs(),
-        "surging_stocks": get_intraday_surging_stocks()
+        "surging_stocks": get_intraday_surging_stocks(),
+        "global_macro": global_macro,   # ← 신규: 글로벌 매크로 데이터
     }
     print("✅ 시장 데이터 수집 완료")
     return data
