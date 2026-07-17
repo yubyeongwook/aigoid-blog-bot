@@ -255,12 +255,30 @@ def generate_trend_blog(api_key: str, keyword: str, current_date_str: str) -> tu
         )
         text = "\n".join(b.text for b in resp.content if getattr(b, "type", "") == "text").strip()
 
-        start, end = text.find("{"), text.rfind("}")
-        if start != -1 and end != -1:
-            data = json.loads(text[start:end+1], strict=False)
+        # Robust JSON extraction
+        json_str = None
+        if "```json" in text:
+            try:
+                json_str = text.split("```json")[1].split("```")[0].strip()
+            except Exception:
+                pass
+        elif "```" in text:
+            try:
+                json_str = text.split("```")[1].split("```")[0].strip()
+            except Exception:
+                pass
+                
+        if not json_str:
+            start, end = text.find("{"), text.rfind("}")
+            if start != -1 and end != -1:
+                json_str = text[start:end+1]
+                
+        if json_str:
+            data = json.loads(json_str, strict=False)
             print(f"[Claude] 트렌드 블로그 생성 성공 ({keyword})")
             return clean_and_add_image(data["title"], data["content_html"])
         else:
+            print(f"⚠️ [Claude] 파싱 실패 원본 텍스트: {text}")
             raise RuntimeError("JSON markers not found in Claude response")
     except Exception as e:
         print(f"⚠️ [Claude] 트렌드 블로그 생성 실패 ({keyword}): {e}")
