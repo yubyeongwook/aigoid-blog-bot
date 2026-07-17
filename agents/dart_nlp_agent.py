@@ -5,7 +5,9 @@ DART 공시 본문 자동 읽기 + 숨겨진 의미 추출
 import os, json, requests
 from anthropic import Anthropic
 from dotenv import load_dotenv
+from agents.json_utils import extract_json
 load_dotenv()
+
 
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY",""))
 DART_API_KEY = os.getenv("DART_API_KEY","")
@@ -115,8 +117,8 @@ def analyze(market_data: dict = None) -> dict:
             system=DART_NLP_SYSTEM,
             messages=[{"role": "user", "content": f"오늘 주요 공시 목록:\n{disc_text}"}]
         )
-        text = resp.content[0].text.replace("```json","").replace("```","").strip()
-        return json.loads(text)
+        text = resp.content[0].text
+        return extract_json(text)
     except Exception as e:
         print(f"공시 NLP 오류: {e}")
         return {"disclosures": [], "error": str(e)}

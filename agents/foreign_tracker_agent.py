@@ -5,6 +5,7 @@ foreign_tracker_agent.py — 외국인 종목별 실시간 추적
 import os, json, requests, datetime
 from anthropic import Anthropic
 from dotenv import load_dotenv
+from agents.json_utils import extract_json
 load_dotenv()
 
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY",""))
@@ -160,8 +161,8 @@ def analyze(market_data: dict = None) -> dict:
 JSON으로만 출력.
 """}]
         )
-        text = resp.content[0].text.replace("```json","").replace("```","").strip()
-        return json.loads(text)
+        text = resp.content[0].text
+        return extract_json(text)
     except Exception as e:
         print(f"외국인 추적 오류: {e}")
         return {"smart_money_summary": "분석 오류", "error": str(e)}

@@ -6,6 +6,8 @@ import os, json, requests
 from bs4 import BeautifulSoup
 from anthropic import Anthropic
 from dotenv import load_dotenv
+from agents.json_utils import extract_json
+
 load_dotenv()
 
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY",""))
@@ -113,8 +115,8 @@ JSON으로만 출력.
             system=SENTIMENT_SYSTEM,
             messages=[{"role": "user", "content": prompt}]
         )
-        text = resp.content[0].text.replace("```json","").replace("```","").strip()
-        return json.loads(text)
+        text = resp.content[0].text
+        return extract_json(text)
     except Exception as e:
         print(f"감성 에이전트 오류: {e}")
         return {"fear_greed_index": {"score": 50, "level": "중립"}, "error": str(e)}

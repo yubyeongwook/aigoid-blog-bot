@@ -75,9 +75,8 @@ def send_telegram_message(
     if macro_result:
         insight = macro_result.get("key_insight", "")
         if insight:
-            # 150자 이내로 자르기
-            insight = insight[:150] + ("…" if len(insight) > 150 else "")
-            macro_line = f"\n\n💡 *오늘의 매크로 핵심*\n{insight}"
+            insight = insight[:160] + ("…" if len(insight) > 160 else "")
+            macro_line = f"\n\n🔍 *멋쟁이 시각*\n{insight}"
 
     # ─── 2. 오늘 주요 뉴스 헤드라인 (최대 4개) ────────────────
     news_lines = ""

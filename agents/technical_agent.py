@@ -24,13 +24,7 @@ JSON Schema:
 
 """
 
-def extract_json(text: str) -> dict:
-    text = text.strip()
-    start = text.find("{")
-    end = text.rfind("}")
-    if start != -1 and end != -1:
-        text = text[start:end+1]
-    return json.loads(text)
+from agents.json_utils import extract_json
 
 def analyze(market_data: dict, news_data: dict) -> dict:
     print("📉 기술적 에이전트 분석 중...")
