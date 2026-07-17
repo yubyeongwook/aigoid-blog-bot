@@ -3,7 +3,8 @@ synthesis_agent_v3.py — 통합 판단 에이전트 v3
 6개 전문가 분석 + 픽 성과 추적 통합
 모바일 친화적 · 픽 섹션 최상단 · 손절선 필수
 """
-import os, json, datetime, hashlib, urllib.parse
+import os, json, datetime, hashlib, urllib.parse, re
+
 from anthropic import Anthropic
 from dotenv import load_dotenv
 load_dotenv()
@@ -234,8 +235,58 @@ div-only HTML 전체 출력.
         else:
             text = text.replace("{{PERFORMANCE_HTML}}", "")
 
+        # ─────────────────────────────────────────────────────
+        # 이미지 강제 주입 (Claude가 임의 URL 사용 방지)
+        # ─────────────────────────────────────────────────────
+        img1_html = (
+            f'<img src="{img1_url}" '
+            f'style="width:100%;height:220px;object-fit:cover;border-radius:10px;'
+            f'margin:14px 0 20px;display:block;" '
+            f'alt="멋쟁이 인사이트 시장 분석 — 서울 금융가" loading="lazy">'
+        )
+        img2_html = (
+            f'<img src="{img2_url}" '
+            f'style="width:100%;height:200px;object-fit:cover;border-radius:10px;'
+            f'margin:14px 0 20px;display:block;" '
+            f'alt="멋쟁이 인사이트 차트 분석" loading="lazy">'
+        )
+
+        # 1) GENERATING_IMAGE 플레이스홀더 치환
+        text = re.sub(r'src=["\']GENERATING_IMAGE_1["\']', f'src="{img1_url}"', text)
+        text = re.sub(r'src=["\']GENERATING_IMAGE_2["\']', f'src="{img2_url}"', text)
+
+        # 2) Unsplash/기타 임의 이미지 URL을 Pollinations URL로 교체
+        #    (히어로 이미지: 첫 번째 img 태그)
+        from bs4 import BeautifulSoup as _BS
+        import re as _re
+        soup = _BS(text, "html.parser")
+        all_imgs = soup.find_all("img")
+        if all_imgs:
+            # 첫 번째 이미지를 img1_url로 강제 교체
+            all_imgs[0]["src"] = img1_url
+            all_imgs[0]["style"] = "width:100%;height:220px;object-fit:cover;border-radius:10px;margin:14px 0 20px;display:block;"
+            all_imgs[0]["loading"] = "lazy"
+            # 두 번째 이미지가 있으면 img2_url로 강제 교체
+            if len(all_imgs) >= 2:
+                all_imgs[1]["src"] = img2_url
+                all_imgs[1]["style"] = "width:100%;height:200px;object-fit:cover;border-radius:10px;margin:14px 0 20px;display:block;"
+                all_imgs[1]["loading"] = "lazy"
+            text = str(soup)
+        else:
+            # 이미지 태그 자체가 없으면 강제 삽입
+            # 히어로: H1 태그 앞에 삽입
+            if "<h1" in text:
+                text = text.replace("<h1", img1_html + "\n<h1", 1)
+            # 분석 이미지: III 섹션 앞에 삽입
+            if "III." in text or "Ⅲ." in text:
+                text = _re.sub(r'(III\.|Ⅲ\.)', img2_html + r'\n\1', text, count=1)
+            elif "</h1>" in text:
+                text = text.replace("</h1>", "</h1>\n" + img2_html, 1)
+
+        print(f"🖼️ 이미지 주입 완료: {img1_url[:50]}...")
         print("✅ 통합 판단 v3 완료")
         return text
     except Exception as e:
         print(f"통합 에이전트 v3 오류: {e}")
         return f"<div><p>오류: {e}</p></div>"
+
