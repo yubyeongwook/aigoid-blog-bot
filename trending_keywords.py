@@ -109,12 +109,12 @@ def generate_trend_image(keyword: str) -> str:
     return ""
 
 
-def generate_trend_blog(api_key: str, keyword: str) -> tuple[str, str] | None:
+def generate_trend_blog(api_key: str, keyword: str, current_date_str: str) -> tuple[str, str] | None:
     primary_ai = os.getenv("PRIMARY_AI", "claude").lower()
     
     def clean_and_add_image(title: str, content_html: str) -> tuple[str, str]:
-        # Strip out any <cite> tags
-        clean_html = re.sub(r"<cite[^>]*>[^<]*</cite>", "", content_html)
+        # Strip out any <cite> tags but preserve the text inside them
+        clean_html = re.sub(r"<cite[^>]*>(.*?)</cite>", r"\1", content_html, flags=re.DOTALL)
         # Generate image
         img_url = generate_trend_image(keyword)
         if img_url:
@@ -130,7 +130,7 @@ def generate_trend_blog(api_key: str, keyword: str) -> tuple[str, str] | None:
         gemini_model = "gemini-3.5-flash"
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{gemini_model}:generateContent?key={gemini_key}"
         
-        combined_text = f"{TREND_BLOG_PROMPT}\n\n오늘 실시간 트렌드 키워드 '{keyword}'에 대한 블로그 글을 작성해줘."
+        combined_text = f"{TREND_BLOG_PROMPT}\n\n오늘 날짜는 {current_date_str}입니다. 오늘 실시간 트렌드 키워드 '{keyword}'에 대한 블로그 글을 작성해줘."
         body = {
             "contents": [{"parts": [{"text": combined_text}]}],
             "tools": [{"googleSearch": {}}],
@@ -172,7 +172,7 @@ def generate_trend_blog(api_key: str, keyword: str) -> tuple[str, str] | None:
             max_tokens=3000,
             system=TREND_BLOG_PROMPT,
             tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 2}],
-            messages=[{"role": "user", "content": f"오늘 실시간 트렌드 키워드 '{keyword}'에 대한 블로그 글을 작성해줘."}],
+            messages=[{"role": "user", "content": f"오늘 날짜는 {current_date_str}입니다. 오늘 실시간 트렌드 키워드 '{keyword}'에 대한 블로그 글을 작성해줘."}],
         )
         text = "\n".join(b.text for b in resp.content if getattr(b, "type", "") == "text").strip()
 
@@ -240,9 +240,12 @@ def main():
     keywords = get_trending_keywords(naver_id, naver_secret)
     print(f"오늘의 트렌드 키워드: {keywords}")
 
+    kst = timezone(timedelta(hours=9))
+    current_date_str = datetime.now(kst).strftime("%Y년 %m월 %d일")
+
     results = []
     for keyword in keywords[:3]:  # 상위 3개 키워드만 (비용 절약)
-        result = generate_trend_blog(api_key, keyword)
+        result = generate_trend_blog(api_key, keyword, current_date_str)
         if result:
             title, content = result
             url = post_to_blogger(blog_id, google_token, title, content)
