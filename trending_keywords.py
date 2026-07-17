@@ -5,10 +5,14 @@
 
 import os
 import json
+import re
+import requests
 import urllib.request
 import urllib.error
 import urllib.parse
 from datetime import datetime, timezone, timedelta
+import anthropic
+import agents.patch_anthropic
 
 
 NAVER_DATALAB_URL = "https://openapi.naver.com/v1/datalab/search"
@@ -78,9 +82,46 @@ TREND_BLOG_PROMPT = """당신은 '멋쟁이 인사이트 SMART MONEY INTELLIGENC
 """
 
 
+def generate_trend_image(keyword: str) -> str:
+    print(f"[Image] Generating trend image for keyword: {keyword}...")
+    prompt = f"{keyword} stock trading corporate financial style, dark background, obsidian black and gold accents, high contrast, clean minimalist design, no text, no words, no letters"
+    try:
+        encoded_prompt = urllib.parse.quote(prompt)
+        url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=576&nologo=true&private=true"
+        
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=40) as resp:
+            img_bytes = resp.read()
+            
+        upload_url = "https://catbox.moe/user/api.php"
+        upload_data = {"reqtype": "fileupload"}
+        files = {"fileToUpload": ("image.png", img_bytes, "image/png")}
+        print("🤖 Catbox 이미지 호스팅 업로드 중 (Trending)...")
+        upload_res = requests.post(upload_url, data=upload_data, files=files, timeout=30)
+        if upload_res.status_code == 200 and upload_res.text.startswith("https"):
+            url_hosted = upload_res.text.strip()
+            print(f"✅ Trending Image + Catbox 성공: {url_hosted}")
+            return url_hosted
+        else:
+            print(f"⚠️ Catbox 업로드 실패: {upload_res.text}")
+    except Exception as e:
+        print(f"⚠️ 이미지 생성 및 업로드 오류: {e}")
+    return ""
+
+
 def generate_trend_blog(api_key: str, keyword: str) -> tuple[str, str] | None:
     primary_ai = os.getenv("PRIMARY_AI", "claude").lower()
     
+    def clean_and_add_image(title: str, content_html: str) -> tuple[str, str]:
+        # Strip out any <cite> tags
+        clean_html = re.sub(r"<cite[^>]*>[^<]*</cite>", "", content_html)
+        # Generate image
+        img_url = generate_trend_image(keyword)
+        if img_url:
+            img_tag = f'<img src="{img_url}" alt="{keyword}" style="width: 100%; max-width: 100%; border-radius: 6px; margin: 16px 0; display: block;" />\n'
+            clean_html = img_tag + clean_html
+        return title, clean_html
+
     def run_gemini():
         gemini_key = os.getenv("GEMINI_API_KEY", "")
         if not gemini_key:
@@ -111,12 +152,11 @@ def generate_trend_blog(api_key: str, keyword: str) -> tuple[str, str] | None:
             raise RuntimeError("Gemini content parts empty")
         text = parts[0].get("text", "").strip()
         
-        # JSON parsing
         start, end = text.find("{"), text.rfind("}")
         if start != -1 and end != -1:
             parsed = json.loads(text[start:end+1])
             print(f"[Gemini] 트렌드 블로그 생성 성공 ({keyword})")
-            return parsed["title"], parsed["content_html"]
+            return clean_and_add_image(parsed["title"], parsed["content_html"])
         raise RuntimeError("Failed to parse JSON from Gemini response")
 
     if primary_ai == "gemini":
@@ -125,33 +165,24 @@ def generate_trend_blog(api_key: str, keyword: str) -> tuple[str, str] | None:
         except Exception as e:
             print(f"⚠️ [Gemini] 트렌드 블로그 생성 실패 ({keyword}): {e}. Claude로 백업 시도...")
 
-    payload = {
-        "model": "claude-sonnet-4-6",
-        "max_tokens": 3000,
-        "system": TREND_BLOG_PROMPT,
-        "tools": [{"type": "web_search_20250305", "name": "web_search", "max_uses": 2}],
-        "messages": [{"role": "user", "content": f"오늘 실시간 트렌드 키워드 '{keyword}'에 대한 블로그 글을 작성해줘."}],
-    }
-    headers = {
-        "x-api-key": api_key,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-    }
     try:
-        data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(ANTHROPIC_API_URL, data=data, headers=headers, method="POST")
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            result = json.loads(resp.read().decode("utf-8"))
+        client = anthropic.Anthropic(api_key=api_key)
+        resp = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=3000,
+            system=TREND_BLOG_PROMPT,
+            tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 2}],
+            messages=[{"role": "user", "content": f"오늘 실시간 트렌드 키워드 '{keyword}'에 대한 블로그 글을 작성해줘."}],
+        )
+        text = "\n".join(b.text for b in resp.content if getattr(b, "type", "") == "text").strip()
 
-        text = "\n".join(
-            b["text"] for b in result.get("content", []) if b.get("type") == "text"
-        ).strip()
-
-        # JSON 파싱
         start, end = text.find("{"), text.rfind("}")
         if start != -1 and end != -1:
             data = json.loads(text[start:end+1])
-            return data["title"], data["content_html"]
+            print(f"[Claude] 트렌드 블로그 생성 성공 ({keyword})")
+            return clean_and_add_image(data["title"], data["content_html"])
+        else:
+            raise RuntimeError("JSON markers not found in Claude response")
     except Exception as e:
         print(f"⚠️ [Claude] 트렌드 블로그 생성 실패 ({keyword}): {e}")
         if primary_ai != "gemini":

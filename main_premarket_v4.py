@@ -14,7 +14,8 @@ from trackers.pick_tracker import generate_performance_html, calculate_stats
 from publishers.blogger_publisher import publish_post, auto_labels
 
 def main():
-    today = datetime.datetime.now()
+    kst_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
+    today = kst_now
     weekday = ["월","화","수","목","금","토","일"][today.weekday()]
 
     print("="*60)

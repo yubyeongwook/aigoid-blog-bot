@@ -7,11 +7,19 @@ import os
 import sys
 import requests
 from datetime import datetime, timezone, timedelta
-
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+
+
 BOT_TOKEN      = os.getenv("TELEGRAM_BOT_TOKEN", "")
+
 ALLOWED_CHAT_ID = int(os.getenv("TELEGRAM_CHAT_ID", "5003319374"))
 GH_PAT         = os.getenv("GH_DISPATCH_TOKEN", "")   # workflow 권한 있는 PAT
 REPO           = os.getenv("GITHUB_REPOSITORY", "yubyeongwook/aigoid-blog-bot")
@@ -93,9 +101,17 @@ def main():
 
     for u in updates:
         message = u.get("message", {})
+        if not message:
+            continue
         chat_id  = message.get("chat", {}).get("id")
-        text     = message.get("text", "").strip().split()[0]  # 첫 단어만 (파라미터 무시)
+        if not chat_id:
+            continue
+        msg_text = str(message.get("text") or "").strip()
+        if not msg_text:
+            continue
+        text     = msg_text.split()[0]  # 첫 단어만 (파라미터 무시)
         date     = message.get("date", 0)
+
 
         # 시간 필터
         msg_time = datetime.fromtimestamp(date, tz=timezone.utc)

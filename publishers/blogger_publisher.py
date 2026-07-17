@@ -76,7 +76,7 @@ def publish_post(title: str, html_content: str,
 # SEO 제목 자동 설계
 # ────────────────────────────────
 def build_seo_title(base_title: str, report_type: str) -> str:
-    today = datetime.datetime.now()
+    today = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
     date_str = today.strftime("%Y년 %m월 %d일")
 
     prefixes = {

@@ -3,10 +3,39 @@ synthesis_agent_v3.py — 통합 판단 에이전트 v3
 6개 전문가 분석 + 픽 성과 추적 통합
 모바일 친화적 · 픽 섹션 최상단 · 손절선 필수
 """
-import os, json, datetime
+import os, json, datetime, hashlib, urllib.parse
 from anthropic import Anthropic
 from dotenv import load_dotenv
 load_dotenv()
+
+
+def get_blog_image_urls(date_str: str, market_theme: str = "") -> tuple:
+    """Pollinations AI로 블로그용 이미지 2장 URL 생성 (무료, API 키 불필요)
+    날짜 기반 시드 사용 → 같은 날 같은 이미지 유지
+    """
+    seed1 = int(hashlib.md5(f"{date_str}_hero".encode()).hexdigest()[:8], 16) % 99999 + 1
+    seed2 = int(hashlib.md5(f"{date_str}_chart".encode()).hexdigest()[:8], 16) % 99999 + 1
+
+    theme = market_theme[:80] if market_theme else "Seoul Korea financial district"
+    p1 = urllib.parse.quote(
+        f"Seoul Korea stock exchange financial district modern professional cityscape {theme} "
+        f"cinematic lighting 4K photography"
+    )
+    img1 = (
+        f"https://image.pollinations.ai/prompt/{p1}"
+        f"?width=720&height=380&nologo=true&seed={seed1}"
+    )
+
+    p2 = urllib.parse.quote(
+        "stock market candlestick chart analysis dark blue background professional "
+        "trading screen data visualization Korea KOSPI financial"
+    )
+    img2 = (
+        f"https://image.pollinations.ai/prompt/{p2}"
+        f"?width=720&height=340&nologo=true&seed={seed2}"
+    )
+
+    return img1, img2
 
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY",""))
 
@@ -108,6 +137,15 @@ def synthesize_and_write(
     weekday = ["월","화","수","목","금","토","일"][today.weekday()]
     date_str = today.strftime("%Y년 %m월 %d일")
 
+    # 이미지 URL 생성
+    market_theme = ""
+    if market_data:
+        kospi = market_data.get("kospi", {}).get("close", "")
+        market_theme = f"KOSPI {kospi} Korean stock market" if kospi else ""
+    img1_url, img2_url = get_blog_image_urls(today.strftime("%Y%m%d"), market_theme)
+    print(f"🖼️ 이미지1: {img1_url[:60]}...")
+    print(f"🖼️ 이미지2: {img2_url[:60]}...")
+
     print("🧠 통합 판단 v3 에이전트 작동 중...")
 
     prompt = f"""
@@ -138,6 +176,17 @@ def synthesize_and_write(
 {json.dumps(market_data or {}, ensure_ascii=False, indent=2)}
 
 위 6개 전문가 분석을 종합해서 블로그를 작성하라.
+
+=== 블로그 이미지 (반드시 사용) ===
+히어로 이미지 URL: {img1_url}
+분석 이미지 URL:   {img2_url}
+
+이미지 삽입 위치:
+- 히어로 이미지: 마스트헤드 div 바로 아래
+- 분석 이미지: 섹션 III 또는 IV 시작 직전
+삽입 형식 (반드시 이대로):
+<img src="URL" style="width:100%;height:220px;object-fit:cover;border-radius:10px;margin:14px 0 20px;display:block" alt="멋쟁이 인사이트 시장 분석" loading="lazy">
+
 
 반드시 지킬 것:
 1. 픽은 4박자(매크로+수급+실적+기술적) 맞는 종목 우선

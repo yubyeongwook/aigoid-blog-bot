@@ -17,14 +17,15 @@ KIS_APP_SECRET = os.getenv("KIS_APP_SECRET", "")
 # ────────────────────────────────
 def save_picks(picks: list, date_str: str = None):
     if not date_str:
-        date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        kst_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
+        date_str = kst_now.strftime("%Y-%m-%d")
 
     history = load_history()
 
     history[date_str] = {
         "date": date_str,
         "picks": picks,
-        "updated_at": datetime.datetime.now().isoformat()
+        "updated_at": (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)).isoformat()
     }
 
     with open(TRACKER_FILE, "w", encoding="utf-8") as f:
@@ -72,7 +73,8 @@ def get_current_price(ticker: str) -> float:
 # ────────────────────────────────
 def update_performance():
     history = load_history()
-    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    kst_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
+    today = kst_now.strftime("%Y-%m-%d")
     updated = 0
 
     for date_str, data in history.items():
@@ -189,6 +191,8 @@ def generate_performance_html() -> str:
   <td style="padding:7px 10px;"><span style="background:{status_color};color:#000;font-size:10px;padding:2px 6px;border-radius:2px;font-weight:700;">{status}</span></td>
 </tr>"""
 
+    kst_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
+    html_date = kst_now.strftime("%Y.%m.%d")
     html = f"""
 <div style="background:#0a0a0a;border:1px solid #222;margin:0 0 24px;font-family:Apple SD Gothic Neo,sans-serif;">
   <div style="padding:14px 20px;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between;align-items:center;">
@@ -196,7 +200,7 @@ def generate_performance_html() -> str:
       <span style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#f0f0f0;">멋쟁이 픽 누적 성과</span>
       <span style="font-size:10px;color:#555;margin-left:10px;font-family:monospace;">LIVE TRACK RECORD</span>
     </div>
-    <span style="font-size:10px;color:#555;font-family:monospace;">업데이트: {datetime.datetime.now().strftime("%Y.%m.%d")}</span>
+    <span style="font-size:10px;color:#555;font-family:monospace;">업데이트: {html_date}</span>
   </div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1a1a1a;">
     <div style="background:#0a0a0a;padding:16px;text-align:center;">
