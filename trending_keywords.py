@@ -133,8 +133,19 @@ def generate_trend_blog(api_key: str, keyword: str, current_date_str: str) -> tu
   h1 {{ font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.4; margin: 20px 0 8px; }}
   h2 {{ font-size: 17px; font-weight: 700; color: #1e293b; margin: 28px 0 12px; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0; }}
   p {{ margin-bottom: 12px; }}
-  .section-card {{ background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }}
+  .section-card {{ background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; border: 1px solid #e2e8f0 !important; box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important; }}
   .disclaimer {{ font-size: 11.5px; color: #94a3b8; background: #f1f5f9; border-radius: 8px; padding: 14px 16px; margin-top: 28px; line-height: 1.7; }}
+  
+  /* Hide theme post title */
+  .post:has(.container) .post-title {{
+    display: none !important;
+  }}
+  /* Make the theme's post wrapper transparent and remove shadow */
+  .post-outer-container:has(.container) {{
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }}
 </style>
 
 <div class="container">
