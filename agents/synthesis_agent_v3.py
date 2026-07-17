@@ -3,11 +3,12 @@ synthesis_agent_v3.py — 통합 판단 에이전트 v3
 6개 전문가 분석 + 픽 성과 추적 통합
 모바일 친화적 · 픽 섹션 최상단 · 손절선 필수
 """
-import os, json, datetime, hashlib, urllib.parse, re
+import os, json, datetime, hashlib, urllib.parse, re, requests
 
 from anthropic import Anthropic
 from dotenv import load_dotenv
 load_dotenv()
+
 
 
 def get_blog_image_urls(date_str: str, market_theme: str = "") -> tuple:
@@ -101,38 +102,35 @@ SYNTHESIS_V3_SYSTEM = """
 </div>
 
 ═══════════════════════════════
-HTML 최종 작성 구조 및 순서
+HTML 최종 작성 구조 및 순서 (오전 7시 개장 전 브리핑 맞춤형)
 ═══════════════════════════════
 1. 마스트헤드 (VOL / 날짜 / 브리핑 종류 등 정보가 정리된 흰색 배경 table)
 2. [성과 트래커 HTML 삽입 지점] ← 여기에 반드시 {{PERFORMANCE_HTML}} 플레이스홀더를 위치시킬 것
-3. 수치 대시보드 (검정색 배경의 핵심 지표 대시보드 - 본문 전체에서 1개만 허용)
+3. 수치 대시보드 (검정색 배경의 핵심 지표 대시보드 - 미국 나스닥, S&P500, SOXX, DXY 달러, 원달러 환율, 미10년 금리, 유가 등 글로벌 매크로 중심 구성)
 4. 히어로 이미지 (Unsplash 금융/주식 이미지 링크, 모바일에 맞추어 높이 220px 설정)
 5. H1 역설형/수치형 헤드라인 (정확한 팩트 지표를 대조하여 독자의 관심을 끄는 세련된 제목)
-6. ★ 멋쟁이 픽 (최상단 배치 · 카드형 양식 준수)
-   - A. 단타 1~3일
-   - B. 스윙 1~2주
+6. ★ 오늘 아침 멋쟁이 픽 (당일 시초가~단기 공략 후보군 배치 · 카드형 양식 준수)
+   - A. 단타 1~3일 (오늘 개장 초 매수 공략주)
+   - B. 스윙 1~2주 (매크로 하방 확보 종목)
    - C. 중기 1~3개월
-   - D. 역발상 (수급 빈집, 극단적 악재 공시 오해 해소 등)
-   - E. 피할 종목 (리스크가 지나치게 크거나 밸류가 깨진 종목군과 이유)
-7. I. 글로벌 매크로 분석 — **반드시 market_data의 `global_macro` 실제 수치를 인용하여 작성**
-   - 나스닥·S&P500·SOXX 반도체ETF 전일 종가 및 등락률 → 오늘 한국 반도체주 선행 영향
-   - DXY 달러인덱스 및 원달러 환율 → 외국인 수급 방향 예측
-   - 미 10년 국채금리(^TNX) → 성장주 밸류에이션 영향
-   - WTI 유가 및 VIX 공포지수 → 글로벌 리스크 온/오프 판단
-   - 이 글로벌 지표들이 오늘 한국 시장 개장에 어떤 영향을 미치는지를 구체적 수치와 함께 인과관계로 서술
-8. II. 수급의 진짜 의미 (수급 수석의 매집 패턴 분석 반영)
-9. III. 공시 숨겨진 의미 (공시 NLP 수석의 딥러닝 해석 반영)
-10. IV. 감성 지수와 역발상 (시장 심리 수석의 센티먼트 점수 반영)
-11. V. 3대 시나리오와 대응 프로토콜 (조건부 시나리오 및 구체적 이탈 조건 제시)
-12. 멋쟁이의 시각 (이 섹션은 블로그의 핵심 차별화 요소 — 반드시 아래 지침 준수)
-    - 검정색 박스(#0a0a0a), 골드 텍스트(#f0c040)로 시각적으로 구분
-    - 외부 인사(레이 달리오, 워런 버핏 등) 인용 **절대 금지** — 멋쟁이 인사이트의 독자적 판단만
-    - 오늘 시장에서 멋쟁이가 직접 읽은 신호 1~2개를 1인칭 관점으로 압축
-    - 반직관적이거나 시장 통념에 반하는 멋쟁이만의 시각을 담을 것
-    - 예시 어조: "멋쟁이가 보기엔...", "오늘 시장이 놓친 것은...", "멋쟁이는 이 숫자에서 다른 것을 봤다..."
-    - 길이: 3~5문장, 구체적 수치 최소 1개 포함, 투자자에게 실질적 관점 제공
-13. 투자 고지 (Disclaimer)
-14. 출처 표기
+   - D. 역발상
+   - E. 피할 종목 (오늘 미국장 급락에 의해 직격탄을 맞거나 개장 시 피해야 할 종목군과 이유)
+7. I. 글로벌 마감 바이트 (미국 시장 요약)
+   - 전일 미국 3대 지수(나스닥·S&P500·SOXX 반도체 ETF) 마감 수치 인용 분석
+   - 미국 반도체/빅테크주 급등락 현황과 원인 분석
+8. II. 오늘 한국 시장 개장 영향 (KOSPI/KOSDAQ 갭상승·갭하락 시나리오)
+   - DXY 달러인덱스 및 원달러 환율 추이 기반 외국인 수급 방향 예측
+   - 미국 반도체주 변동에 따른 삼성전자·SK하이닉스 시초가 개장 영향 예상
+9. III. 오늘 장중 대응 프로토콜
+   - 오늘 장중에 집중 추적해야 할 주요 가격선/지지선 및 외국인 수급 분기점
+   - 시장 공포 수준(VIX 지수, 변동성 등)을 감안한 투자 강도 제안
+10. IV. 3대 조건부 시나리오 (글로벌 변수 기반)
+    - 낙관: 미국 야간선물 반등 및 외인 선물 매수 유입 시 지수 회복 경로
+    - 중립: 환율 강보합 및 수급 눈치보기 국면 시 박스권 횡보 경로
+    - 비관: 환율 추가 급등 및 외인 패닉 셀링 지속 시 지수 추가 붕괴 경로
+11. 멋쟁이의 시각 (검정색 박스에 금빛 텍스트 포인트로 수석이사의 최종 에센스 코멘트 작성 - 외부 인용 절대 배제하고 1인칭 브랜드 시각 기술)
+12. 투자 고지 (Disclaimer)
+13. 출처 표기
 """
 
 
@@ -222,14 +220,59 @@ div-only HTML 전체 출력.
 이 줄이 없으면 텔레그램 알림이 작동하지 않음. 반드시 포함할 것.
 """
 
+    text = ""
     try:
-        resp = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=16000,
-            system=SYNTHESIS_V3_SYSTEM,
-            messages=[{"role": "user", "content": prompt}]
-        )
-        text = resp.content[0].text
+        try:
+            print("🤖 [우선순위 1] Claude Sonnet 4.6으로 통합 분석서 생성 중...")
+            resp = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=16000,
+                system=SYNTHESIS_V3_SYSTEM,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            text = resp.content[0].text
+            print("✅ Claude Sonnet 4.6 생성 성공")
+        except Exception as claude_err:
+            print(f"⚠️ Claude Sonnet 4.6 호출 실패 ({claude_err}) → Gemini 백업 시스템 작동...")
+            
+            gemini_key = os.getenv("GEMINI_API_KEY", "")
+            if not gemini_key:
+                print("❌ GEMINI_API_KEY가 없습니다. 폴백 불가.")
+                raise claude_err
+                
+            # 백업 모델: gemini-2.5-pro 우선 시도 후 gemini-2.5-flash
+            backup_models = ["gemini-2.5-pro", "gemini-2.5-flash"]
+            gemini_success = False
+            
+            for model in backup_models:
+                print(f"🤖 Gemini 백업 호출 시도 중: {model}...")
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={gemini_key}"
+                body = {
+                    "contents": [{"parts": [{"text": SYNTHESIS_V3_SYSTEM + "\n\n" + prompt}]}],
+                    "generationConfig": {"maxOutputTokens": 8192, "temperature": 0.3}
+                }
+                try:
+                    res = requests.post(url, json=body, timeout=180)
+                    if res.status_code == 200:
+                        data = res.json()
+                        candidates = data.get("candidates", [])
+                        if candidates:
+                            content = candidates[0].get("content", {})
+                            parts = content.get("parts", [])
+                            if parts:
+                                text = parts[0].get("text", "")
+                                if text:
+                                    print(f"✅ Gemini 백업 생성 완료 ({model})")
+                                    gemini_success = True
+                                    break
+                    print(f"❌ Gemini {model} 응답 실패: HTTP {res.status_code} — {res.text[:150]}")
+                except Exception as gem_err:
+                    print(f"❌ Gemini {model} 연결 예외 발생: {gem_err}")
+                    
+            if not gemini_success:
+                print("❌ 모든 백업 AI 호출이 실패했습니다.")
+                raise claude_err
+
         if "```html" in text:
             text = text.split("```html")[1].split("```")[0].strip()
         elif "```" in text:
@@ -257,7 +300,7 @@ div-only HTML 전체 출력.
             f'alt="멋쟁이 인사이트 차트 분석" loading="lazy">'
         )
 
-        # 1) GENERATING_IMAGE 플레이스홀더 치환
+        # 1) GENERATING_IMAGE 플레이스홀절 치환
         text = re.sub(r'src=["\']GENERATING_IMAGE_1["\']', f'src="{img1_url}"', text)
         text = re.sub(r'src=["\']GENERATING_IMAGE_2["\']', f'src="{img2_url}"', text)
 
@@ -295,4 +338,5 @@ div-only HTML 전체 출력.
     except Exception as e:
         print(f"통합 에이전트 v3 오류: {e}")
         return f"<div><p>오류: {e}</p></div>"
+
 
