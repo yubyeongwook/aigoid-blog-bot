@@ -240,9 +240,14 @@ def main():
         print(f"소셜 생성 오류: {e}")
     try:
         send_kakao_message(picks, blog_url, stats)
-        send_telegram_message(picks, blog_url, stats)
+        send_telegram_message(
+            picks, blog_url, stats,
+            news_data=news_data,
+            macro_result=macro_result,
+        )
     except Exception as e:
         print(f"알림 오류: {e}")
+
 
     print("\n[10/10] 유튜브 쇼츠 자동 제작 및 발행...")
     try:
