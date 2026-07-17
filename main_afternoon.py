@@ -228,12 +228,23 @@ def main():
 
     # 5. 발행
     print("\n[4/4] Blogger 자동 발행...")
+    
+    # 발행 직전 최종 수치/가격 이중 안전장치 검증 및 자동 보정
+    from utils.fact_validator import validate_and_correct
+    html_content, validation_logs = validate_and_correct(html_content, market_data)
+    if validation_logs:
+        print("\n🚨 [수치 오기 및 환각 자동 교정 시스템 작동]")
+        for log in validation_logs:
+            print(f"  {log}")
+        print("  ✅ 모든 수치 오류 교정 완료 후 발행을 승인합니다.\n")
+
     # 정각 17:00:00 KST 발행 타겟팅 (일정/소급)
     kst_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
     target_kst = datetime.datetime(kst_now.year, kst_now.month, kst_now.day, 17, 0, 0)
     published_time = target_kst.isoformat() + "+09:00"
 
     result = publish_post(seo_title, html_content, labels, published_time=published_time)
+
 
     print("\n" + "=" * 60)
     if "url" in result:

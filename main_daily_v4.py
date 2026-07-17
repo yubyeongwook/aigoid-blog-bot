@@ -187,11 +187,21 @@ def main():
         save_picks(picks, today.strftime("%Y-%m-%d"))
 
 
+    # 발행 직전 최종 수치/가격 이중 안전장치 검증 및 자동 보정
+    from utils.fact_validator import validate_and_correct
+    html_content, validation_logs = validate_and_correct(html_content, market_data)
+    if validation_logs:
+        print("\n🚨 [수치 오기 및 환각 자동 교정 시스템 작동]")
+        for log in validation_logs:
+            print(f"  {log}")
+        print("  ✅ 모든 수치 오류 교정 완료 후 발행을 승인합니다.\n")
+
     seo_title = f"{today.strftime('%m월 %d일')} {weekday}요일 멋쟁이 인사이트 — 9개 전문가 통합 분석·백테스팅 검증"
     labels = auto_labels(html_content)
     labels.extend(["멋쟁이픽","단타픽","수급분석","공시분석","백테스팅"])
     result = publish_post(seo_title, html_content, labels)
     blog_url = result.get("url", "https://aigoid.blogspot.com")
+
 
     print("\n[9/10] 소셜 콘텐츠 + 알림...")
     key_insight = macro_result.get("key_insight", "오늘의 핵심 인사이트")
