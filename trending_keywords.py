@@ -122,12 +122,84 @@ def generate_trend_blog(api_key: str, keyword: str, current_date_str: str) -> tu
     def clean_and_add_image(title: str, content_html: str) -> tuple[str, str]:
         # Strip out any <cite> tags but preserve the text inside them
         clean_html = re.sub(r"<cite[^>]*>(.*?)</cite>", r"\1", content_html, flags=re.DOTALL)
-        # Generate image
+        
+        # Get image
         img_url = generate_trend_image(keyword)
+        
+        # Premium CSS and layout wrap
+        wrapped_html = f"""<style>
+  body {{ font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; background: #f8fafc; color: #334155; line-height: 1.95; font-size: 14.5px; letter-spacing: -0.015em; }}
+  .container {{ max-width: 780px; margin: 0 auto; padding: 0 16px 40px; }}
+  h1 {{ font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.4; margin: 20px 0 8px; }}
+  h2 {{ font-size: 17px; font-weight: 700; color: #1e293b; margin: 28px 0 12px; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0; }}
+  p {{ margin-bottom: 12px; }}
+  .section-card {{ background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }}
+  .disclaimer {{ font-size: 11.5px; color: #94a3b8; background: #f1f5f9; border-radius: 8px; padding: 14px 16px; margin-top: 28px; line-height: 1.7; }}
+</style>
+
+<div class="container">
+  <!-- ═══ 마스트헤드 ═══ -->
+  <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;margin:16px 0 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-size:11px;color:#64748b;font-weight:600;letter-spacing:0.05em;">멋쟁이 인사이트 TREND BRIEF</div>
+      <div style="font-size:18px;font-weight:800;color:#0f172a;">VOL.TREND-{current_date_str.replace("년 ", ".").replace("월 ", ".").replace("일", "").replace(" ", "")}</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:11px;color:#64748b;">{current_date_str}</div>
+      <div style="font-size:11px;font-weight:700;color:#1e40af;">실시간 키워드: {keyword}</div>
+    </div>
+  </div>
+"""
+
         if img_url:
-            img_tag = f'<img src="{img_url}" alt="{keyword}" style="width: 100%; max-width: 100%; border-radius: 6px; margin: 16px 0; display: block;" />\n'
-            clean_html = img_tag + clean_html
-        return title, clean_html
+            wrapped_html += f"""
+  <!-- ═══ 히어로 이미지 ═══ -->
+  <img src="{img_url}" style="width:100%;height:220px;object-fit:cover;border-radius:10px;margin:14px 0 20px;display:block" alt="{keyword} 분석" loading="lazy">
+"""
+
+        # Prepend H1 Title inside the body container
+        wrapped_html += f"""
+  <!-- ═══ H1 헤드라인 ═══ -->
+  <h1 style="font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.4; margin: 20px 0 8px;">{title}</h1>
+  <p style="font-size:13px;color:#64748b;margin-bottom:20px;">멋쟁이 인사이트 실시간 트렌드 분석 보고서</p>
+"""
+
+        # Wrap content in a section card per H2 block
+        sections = re.split(r'(<h2>.*?</h2>)', clean_html)
+        content_wrapped = ""
+        current_section = ""
+        for part in sections:
+            if not part.strip():
+                continue
+            if part.startswith("<h2>"):
+                if current_section:
+                    content_wrapped += f'<div class="section-card">\n{current_section}\n</div>\n'
+                current_section = part
+            else:
+                current_section += part
+        if current_section:
+            content_wrapped += f'<div class="section-card">\n{current_section}\n</div>\n'
+
+        wrapped_html += content_wrapped
+
+        # Add Disclaimer and Sources at the bottom
+        wrapped_html += f"""
+  <!-- ═══ 투자 고지 ═══ -->
+  <div class="disclaimer">
+    <p style="font-weight:700;color:#475569;margin-bottom:6px;">투자 고지 (Investment Disclaimer)</p>
+    <p>본 보고서는 멋쟁이 인사이트의 분석팀이 실시간 트렌드 키워드를 바탕으로 작성한 정보 제공 목적의 콘텐츠입니다. 특정 종목의 매수·매도를 권유하거나 투자 수익을 보장하지 않습니다. 모든 투자 결정은 독자 본인의 판단과 책임하에 이루어져야 하며, 본 보고서의 내용은 투자자의 개별적인 투자 목표, 재무 상황 및 필요에 맞지 않을 수 있습니다.</p>
+  </div>
+  
+  <!-- ═══ 출처 표기 ═══ -->
+  <div style="margin-top:20px;font-size:11px;color:#94a3b8;line-height:1.8;">
+    <p style="font-weight:700;color:#64748b;">출처 (Sources)</p>
+    <p>· 네이버 DataLab 실시간 검색어 트렌드 분석 데이터<br/>
+    · Anthropic Claude Web Search 실시간 리서치<br/>
+    · 멋쟁이 인사이트 트렌드 분석팀</p>
+  </div>
+</div>
+"""
+        return title, wrapped_html
 
     def run_gemini():
         gemini_key = os.getenv("GEMINI_API_KEY", "")
