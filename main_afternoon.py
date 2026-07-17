@@ -134,12 +134,9 @@ def evaluate_morning_picks() -> list:
                     close = round(float(hist["Close"].iloc[-1]), 2)
                     prev_close = t.info.get("previousClose", close)
                     
-                    if ticker.isdigit():
-                        high = round(high / 10, 2)
-                        close = round(close / 10, 2)
-                        prev_close = round(prev_close / 10, 2)
-
+                    # No division by 10 to keep simulated values consistent with market_data
                     rate = round((close - prev_close) / prev_close * 100, 2)
+
                     
                     if high >= target_val and target_val > 0:
                         status = "목표가 달성 (성공)"
