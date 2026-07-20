@@ -143,6 +143,41 @@ def get_latest_morning_brief() -> dict:
         print(f"오전 브리핑 조회 실패: {e}")
     return {}
 
+# ────────────────────────────────
+# 최신 오후 마감 브리핑 내용 조회
+# ────────────────────────────────
+def get_latest_afternoon_report() -> dict:
+    token = get_access_token()
+    if not token:
+        return {}
+
+    url = f"https://www.googleapis.com/blogger/v3/blogs/{BLOG_ID}/posts?maxResults=10&status=live"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    try:
+        res = requests.get(url, headers=headers, timeout=15)
+        posts = res.json().get("items", [])
+        for post in posts:
+            title = post.get("title", "")
+            content = post.get("content", "")
+            labels = post.get("labels", [])
+            if "마감분석" in labels or "마감" in title or "마감 브리핑" in title:
+                from bs4 import BeautifulSoup
+                soup = BeautifulSoup(content, 'html.parser')
+                text = soup.get_text(separator=' ').strip()
+                text = " ".join(text.split())
+                return {
+                    "title": title,
+                    "published": post.get("published"),
+                    "text_summary": text[:2500]
+                }
+    except Exception as e:
+        print(f"오후 마감 브리핑 조회 실패: {e}")
+    return {}
+
+
 if __name__ == "__main__":
     print("blogger_publisher.py 로드 완료")
     token = get_access_token()

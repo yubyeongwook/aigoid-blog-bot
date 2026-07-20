@@ -16,7 +16,7 @@ from backtesting.backtest_agent import analyze as backtest_analyze
 from social.card_news_generator import generate as generate_social, save_social_content
 from notifications.kakao_notify import send_kakao_message, send_telegram_message
 from trackers.pick_tracker import update_performance, generate_performance_html, save_picks, calculate_stats
-from publishers.blogger_publisher import publish_post, auto_labels
+from publishers.blogger_publisher import publish_post, auto_labels, get_latest_afternoon_report
 
 # 쇼츠 에이전트 및 유튜브 퍼블리셔 연동 임포트
 from agents.shorts_director_agent import generate_shorts_script
@@ -168,21 +168,28 @@ def main():
     print(f"   신호 신뢰도: {reliability.get('score',0)}점 ({reliability.get('grade','-')}등급)")
 
     print("\n[8/10] 통합 판단 + 블로그 생성...")
+    # 전일 오후 마감 브리핑 조회 및 연계
+    afternoon_report = get_latest_afternoon_report()
+    if afternoon_report:
+        print(f"   전일 마감 브리핑 로드 완료: {afternoon_report.get('title')}")
+    else:
+        print("   전일 마감 브리핑을 찾을 수 없습니다.")
+
     html_content = synthesize_and_write(
         macro=macro_result, supply=supply_result,
         earnings=earnings_result, technical=technical_result,
         dart_nlp=dart_result, foreign_tracker=foreign_result,
         sentiment=sentiment_result,
-        market_data={**market_data, "backtest": backtest_result},
+        market_data={**market_data, "backtest": backtest_result, "prev_afternoon_report": afternoon_report},
         performance_html=performance_html,
         report_type="daily_v4"
     )
 
     # JSON 주석에서 먼저 추출 (Claude가 직접 작성한 구조화 데이터, 가장 정확)
     picks = extract_picks_from_json_comment(html_content)
+    # 대표님 지시에 따라 오전 브리핑에서 종목/단타 추천을 배제하므로 HTML 파싱 fallback은 작동하지 않습니다.
     if not picks:
-        print("⚠️ PICKS_JSON 없음 → HTML 파싱 fallback")
-        picks = extract_picks_from_html(html_content)
+        picks = []
     if picks:
         save_picks(picks, today.strftime("%Y-%m-%d"))
 

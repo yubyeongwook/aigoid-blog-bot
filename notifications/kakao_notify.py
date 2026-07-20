@@ -7,26 +7,31 @@ def send_kakao_message(picks: list, blog_url: str, performance: dict = None) -> 
         print("KAKAO_ACCESS_TOKEN 없음")
         return False
 
-    pick_lines = ""
-    for i, p in enumerate(picks[:3]):
-        emoji = ["🎯", "📈", "💡"][i] if i < 3 else "•"
-        ptype = p.get("type", "")
-        name = p.get("name", "")
-        entry = p.get("entry_price", 0)
-        stop = p.get("stop_loss", 0)
-        target = p.get("target_1", 0)
-        pick_lines += f"\n{emoji} {ptype}: {name}"
-        if entry:
-            pick_lines += f"\n   진입 {entry:,} / 손절 {stop:,} / 목표 {target:,}"
+    title = "멋쟁이 인사이트 — 오늘의 분석"
+    pick_section = ""
+    if picks:
+        title = "멋쟁이 인사이트 — 오늘의 픽"
+        pick_lines = ""
+        for i, p in enumerate(picks[:3]):
+            emoji = ["🎯", "📈", "💡"][i] if i < 3 else "•"
+            ptype = p.get("type", "")
+            name = p.get("name", "")
+            entry = p.get("entry_price", 0)
+            stop = p.get("stop_loss", 0)
+            target = p.get("target_1", 0)
+            pick_lines += f"\n{emoji} {ptype}: {name}"
+            if entry:
+                pick_lines += f"\n   진입 {entry:,} / 손절 {stop:,} / 목표 {target:,}"
+        pick_section = f"\n{'='*30}{pick_lines}"
 
     perf_line = ""
-    if performance:
+    if performance and picks:  # Only show performance stats if there are active picks
         wr = performance.get("win_rate", 0)
         avg = performance.get("avg_return", 0)
         perf_line = f"\n\n📊 누적 승률 {wr}% | 평균 수익 +{avg}%"
 
-    text = f"""멋쟁이 인사이트 — 오늘의 픽
-{'='*30}{pick_lines}{perf_line}
+    text = f"""{title}
+━━━━━━━━━━━━━━━━━━{pick_section}{perf_line}
 
 🔗 전체 분석: {blog_url}
 
@@ -106,21 +111,24 @@ def send_telegram_message(
                 news_lines += f"\n• {h}"
 
     # ─── 3. 오늘의 픽 ─────────────────────────────────────────
-    pick_lines = ""
-    for i, p in enumerate(picks[:4]):
-        emoji = ["🎯", "📈", "💡", "🔄"][i] if i < 4 else "•"
-        name = p.get("name", "")
-        ptype = p.get("type", "")
-        entry = p.get("entry_price", 0)
-        stop = p.get("stop_loss", 0)
-        target = p.get("target_1", 0)
-        pick_lines += f"\n{emoji} *{ptype}*: {name}"
-        if entry:
-            pick_lines += f"\n   진입 `{entry:,}` | 손절 `{stop:,}` | 목표 `{target:,}`"
+    pick_section = ""
+    if picks:
+        pick_lines = ""
+        for i, p in enumerate(picks[:4]):
+            emoji = ["🎯", "📈", "💡", "🔄"][i] if i < 4 else "•"
+            name = p.get("name", "")
+            ptype = p.get("type", "")
+            entry = p.get("entry_price", 0)
+            stop = p.get("stop_loss", 0)
+            target = p.get("target_1", 0)
+            pick_lines += f"\n{emoji} *{ptype}*: {name}"
+            if entry:
+                pick_lines += f"\n   진입 `{entry:,}` | 손절 `{stop:,}` | 목표 `{target:,}`"
+        pick_section = f"\n\n🎯 *오늘의 픽*{pick_lines}"
 
     # ─── 4. 누적 성과 ─────────────────────────────────────────
     perf_line = ""
-    if performance and performance.get("total", 0) > 0:
+    if performance and performance.get("total", 0) > 0 and picks:
         wr = performance.get("win_rate", 0)
         avg = performance.get("avg_return", 0)
         total = performance.get("total", 0)
@@ -133,7 +141,7 @@ def send_telegram_message(
         f"━━━━━━━━━━━━━━━━━━"
         f"{macro_line}"
         f"{news_lines}"
-        f"\n\n🎯 *오늘의 픽*{pick_lines}"
+        f"{pick_section}"
         f"{perf_line}"
         f"\n\n[📊 전체 분석 보기]({blog_url})"
         f"\n\n_⚠️ 투자 책임은 본인에게 있습니다_"

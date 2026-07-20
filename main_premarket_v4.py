@@ -2,16 +2,10 @@ import sys, os, json, datetime, re
 sys.path.append(os.path.dirname(__file__))
 import agents.patch_anthropic
 
-from collectors.market_collector import collect_all as collect_market
+from collectors.market_collector import collect_premarket_data as collect_market
 from collectors.news_collector import collect_all as collect_news
-from agents.macro_agent import analyze as macro_analyze
-from agents.supply_agent import analyze as supply_analyze
-from agents.technical_agent import analyze as technical_analyze
-from agents.foreign_tracker_agent import analyze as foreign_analyze
-from agents.sentiment_agent import analyze as sentiment_analyze
-from agents.synthesis_agent_v3 import synthesize_and_write
-from trackers.pick_tracker import generate_performance_html, calculate_stats
-from publishers.blogger_publisher import publish_post, auto_labels
+from agents.premarket_synthesis_agent import generate_premarket_report
+from publishers.blogger_publisher import publish_post, auto_labels, get_latest_morning_brief
 
 def main():
     kst_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
@@ -23,34 +17,23 @@ def main():
     print(f"  {today.strftime('%Y년 %m월 %d일')} {weekday}요일 KST")
     print("="*60)
 
-    print("\n[1/5] 실시간 시장 데이터 수집...")
+    print("\n[1/5] 실시간 시장 데이터 수집 (장전 동시호가)...")
     market_data = collect_market()
 
     print("\n[2/5] 뉴스·공시 수집...")
     news_data = collect_news()
 
-    print("\n[3/5] 수급 + 외국인 + 감성 분석...")
-    supply_result = supply_analyze(market_data, news_data)
-    technical_result = technical_analyze(market_data, news_data)
-    foreign_result = foreign_analyze(market_data)
-    sentiment_result = sentiment_analyze(market_data, news_data)
-    macro_result = macro_analyze(market_data, news_data) if hasattr(__import__('agents.macro_agent', fromlist=['analyze']), 'analyze') else {}
+    print("\n[3/5] 동시호가 브리핑 생성 (속도 최적화)...")
+    # 오늘 오전 7시 종합 브리핑 조회 및 연계
+    morning_brief = get_latest_morning_brief()
+    if morning_brief:
+        print(f"   오늘 오전 브리핑 로드 완료: {morning_brief.get('title')}")
+    else:
+        print("   오늘 오전 브리핑을 찾을 수 없습니다.")
 
-    performance_html = generate_performance_html()
-    stats = calculate_stats()
-
-    print("\n[4/5] 동시호가 브리핑 생성...")
-    html_content = synthesize_and_write(
-        macro=macro_result,
-        supply=supply_result,
-        earnings={},
-        technical=technical_result,
-        dart_nlp={},
-        foreign_tracker=foreign_result,
-        sentiment=sentiment_result,
-        market_data=market_data,
-        performance_html=performance_html,
-        report_type="premarket_850"
+    html_content = generate_premarket_report(
+        premarket_data={**market_data, "morning_brief": morning_brief},
+        news_data=news_data
     )
 
     print("\n[5/5] 발행...")
@@ -67,6 +50,20 @@ def main():
     print("\n"+"="*60)
     if "url" in result:
         print(f"  ✅ 동시호가 브리핑 발행 완료: {result['url']}")
+        
+        # 텔레그램 채널 알림 자동 발송
+        print("\n[추가] 텔레그램 채널 알림 발송...")
+        try:
+            from notifications.kakao_notify import send_telegram_message
+            send_telegram_message(
+                picks=[],
+                blog_url=blog_url,
+                performance=None,
+                news_data=news_data,
+                macro_result={"key_insight": "9시 개장 직전 동시호가 브리핑입니다. 미 증시 여파 및 국내 개장 수급 흐름을 확인하십시오."}
+            )
+        except Exception as e:
+            print(f"텔레그램 알림 발송 중 오류 발생: {e}")
     else:
         print(f"  ⚠️ 결과: {result}")
     print("="*60)
@@ -77,9 +74,10 @@ def main():
         from social.card_news_generator import generate as generate_social, save_social_content
         from instagram_post import post_to_instagram
         
-        key_insight = macro_result.get("key_insight", "오늘 개장 전 동시호가 브리핑")
+        key_insight = "9시 개장 직전 동시호가 브리핑입니다. 미 증시 여파 및 국내 개장 수급 흐름을 확인하십시오."
         social_content = generate_social(html_content, [], key_insight, blog_url)
         save_social_content(social_content, today.strftime("%Y%m%d") + "_premarket")
+
         
         if isinstance(social_content, dict) and "instagram_card" in social_content:
             card = social_content["instagram_card"]
