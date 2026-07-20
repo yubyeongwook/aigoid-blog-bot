@@ -59,8 +59,8 @@ class AnthropicFallback:
                 print("⚠️ ANTHROPIC_API_KEY 실패 및 GEMINI_API_KEY가 누락되었습니다. 예외를 전파합니다.")
                 raise e
 
-            print("🔄 [Gemini 3.5 Flash] 폴백 API 호출을 시작합니다...")
-            gemini_model = "gemini-3.5-flash"
+            print("🔄 [Gemini 2.5 Flash] 폴백 API 호출을 시작합니다...")
+            gemini_model = "gemini-2.5-flash"
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{gemini_model}:generateContent?key={gemini_key}"
 
             gemini_contents = []
