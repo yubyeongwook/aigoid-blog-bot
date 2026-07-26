@@ -21,25 +21,7 @@ INSTAGRAM_API_URL = "https://graph.facebook.com/v21.0"
 
 
 def generate_card_image_prompt(title: str, content: str, stars: str = "") -> str:
-    return f"""
-한국 주식/투자 전문 SNS 카드뉴스 이미지를 만들어줘.
-
-스타일:
-- 배경: 짙은 네이비 (#0A0E1A)
-- 강조색: 밝은 시안 (#00D4FF)
-- 텍스트: 흰색
-- 우상단: 멋쟁이 인사이트 SMART MONEY INTELLIGENCE 로고
-- 좌하단: 멋쟁이 인사이트
-- 전문적이고 세련된 금융 매거진 스타일
-- 정사각형 (1:1 비율)
-
-내용:
-제목: {title}
-{f'신뢰도: {stars}' if stars else ''}
-핵심 내용: {content[:200]}
-
-이미지 안에 텍스트를 명확하게 배치해줘.
-"""
+    return "stock market trading chart, candlestick financial graphics, corporate bull market, dark navy blue background, cyan neon accents, professional financial data visualization, 3d chart graph, high contrast, clean minimalist design, no human, no woman, no people, no face, no person"
 
 
 def call_gemini_image(api_key: str, prompt: str) -> bytes | None:
