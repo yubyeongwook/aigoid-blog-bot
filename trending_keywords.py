@@ -338,7 +338,7 @@ def main():
     current_date_str = datetime.now(kst).strftime("%Y년 %m월 %d일")
 
     results = []
-    for keyword in keywords[:1]:  # 가장 중요한 상위 1개 키워드만 선택
+    for keyword in keywords[:3]:  # 상위 3개 대표 트렌드 키워드 처리 (인스타그램 전용)
         result = generate_trend_blog(api_key, keyword, current_date_str)
         if result:
             title, content = result
