@@ -342,9 +342,25 @@ def main():
         result = generate_trend_blog(api_key, keyword, current_date_str)
         if result:
             title, content = result
-            url = post_to_blogger(blog_id, google_token, title, content, keyword=keyword)
-            results.append({"keyword": keyword, "title": title, "url": url})
-            print(f"✅ 발행 완료: {title}")
+            print(f"📸 [인스타그램] 트렌드 키워드 '{keyword}' 카드뉴스 자동 업로드 시도 중...")
+            try:
+                from instagram_post import post_to_instagram
+                caption = f"📊 [{keyword} 트렌드 분석]\n{title}\n\n#주식 #{keyword} #멋쟁이인사이트 #트렌드분석 #투자"
+                insta_res = post_to_instagram(
+                    title=f"[{keyword}] {title}",
+                    content=title,
+                    caption=caption,
+                    stars="★★★★★"
+                )
+                url = insta_res.get("post_url")
+                if insta_res.get("success"):
+                    print(f"✅ 인스타그램 업로드 성공: {url}")
+                else:
+                    print(f"⚠️ 인스타그램 업로드 결과: {insta_res}")
+                results.append({"keyword": keyword, "title": title, "instagram_url": url, "status": insta_res})
+            except Exception as ie:
+                print(f"⚠️ 인스타그램 업로드 중 오류: {ie}")
+                results.append({"keyword": keyword, "title": title, "error": str(ie)})
 
     print(json.dumps(results, ensure_ascii=False, indent=2))
 
