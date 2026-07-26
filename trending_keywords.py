@@ -307,21 +307,16 @@ def refresh_google_token(client_id: str, client_secret: str, refresh_token: str)
     return get_access_token()
 
 
-def post_to_blogger(blog_id: str, access_token: str, title: str, content: str) -> str | None:
-    url = f"https://www.googleapis.com/blogger/v3/blogs/{blog_id}/posts/?isDraft=false"
-    payload = {"title": title, "content": content}
-    data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=data, method="POST", headers={
-        "Authorization": f"Bearer {access_token}",
-        "Content-Type": "application/json",
-    })
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            result = json.loads(resp.read().decode("utf-8"))
-            return result.get("url")
-    except Exception as e:
-        print(f"Blogger 발행 실패: {e}")
-        return None
+def post_to_blogger(blog_id: str, access_token: str, title: str, content: str, keyword: str = "") -> str | None:
+    from publishers.blogger_publisher import publish_post
+    labels = ["멋쟁이인사이트", "트렌드분석", "실시간트렌드"]
+    if keyword:
+        labels.append(keyword)
+    res = publish_post(title=title, html_content=content, labels=labels)
+    if isinstance(res, dict) and "url" in res:
+        return res["url"]
+    print(f"Blogger 발행 실패: {res}")
+    return None
 
 
 def main():
@@ -347,7 +342,7 @@ def main():
         result = generate_trend_blog(api_key, keyword, current_date_str)
         if result:
             title, content = result
-            url = post_to_blogger(blog_id, google_token, title, content)
+            url = post_to_blogger(blog_id, google_token, title, content, keyword=keyword)
             results.append({"keyword": keyword, "title": title, "url": url})
             print(f"✅ 발행 완료: {title}")
 
