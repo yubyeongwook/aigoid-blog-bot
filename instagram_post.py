@@ -29,7 +29,7 @@ def generate_card_image_prompt(title: str, content: str, stars: str = "") -> str
 - 강조색: 밝은 시안 (#00D4FF)
 - 텍스트: 흰색
 - 우상단: 멋쟁이 인사이트 SMART MONEY INTELLIGENCE 로고
-- 좌하단: aigoid.blogspot.com
+- 좌하단: 멋쟁이 인사이트
 - 전문적이고 세련된 금융 매거진 스타일
 - 정사각형 (1:1 비율)
 
