@@ -303,17 +303,8 @@ def generate_trend_blog(api_key: str, keyword: str, current_date_str: str) -> tu
 
 
 def refresh_google_token(client_id: str, client_secret: str, refresh_token: str) -> str:
-    payload = {
-        "client_id": client_id, "client_secret": client_secret,
-        "refresh_token": refresh_token, "grant_type": "refresh_token",
-    }
-    data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
-        "https://oauth2.googleapis.com/token", data=data,
-        headers={"Content-Type": "application/json"}, method="POST"
-    )
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return json.loads(resp.read().decode("utf-8"))["access_token"]
+    from publishers.blogger_publisher import get_access_token
+    return get_access_token()
 
 
 def post_to_blogger(blog_id: str, access_token: str, title: str, content: str) -> str | None:
