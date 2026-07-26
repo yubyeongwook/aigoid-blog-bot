@@ -345,7 +345,18 @@ def main():
             print(f"📸 [인스타그램] 트렌드 키워드 '{keyword}' 카드뉴스 자동 업로드 시도 중...")
             try:
                 from instagram_post import post_to_instagram
-                caption = f"📊 [{keyword} 트렌드 분석]\n{title}\n\n#주식 #{keyword} #멋쟁이인사이트 #트렌드분석 #투자"
+                from bs4 import BeautifulSoup
+                
+                soup = BeautifulSoup(content, 'html.parser')
+                h2_tags = soup.find_all('h2')
+                slides_summary = ""
+                for idx, h2 in enumerate(h2_tags[:4], 1):
+                    p_next = h2.find_next_sibling('p')
+                    summary_text = p_next.text.strip()[:120] + "..." if p_next else ""
+                    slides_summary += f"\n📌 카드뉴스 {idx}. {h2.text.strip()}\n   - {summary_text}\n"
+                
+                caption = f"📊 [{keyword} 실시간 트렌드 카드뉴스 리포트]\n\n{title}\n{slides_summary}\n#주식 #{keyword} #멋쟁이인사이트 #카드뉴스 #트렌드분석 #투자"
+                
                 insta_res = post_to_instagram(
                     title=f"[{keyword}] {title}",
                     content=title,
