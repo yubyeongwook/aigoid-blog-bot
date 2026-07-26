@@ -21,7 +21,7 @@ INSTAGRAM_API_URL = "https://graph.facebook.com/v21.0"
 
 
 def generate_card_image_prompt(title: str, content: str, stars: str = "") -> str:
-    return "stock market trading chart, candlestick financial graphics, corporate bull market, dark navy blue background, cyan neon accents, professional financial data visualization, 3d chart graph, high contrast, clean minimalist design, no human, no woman, no people, no face, no person"
+    return "ultra modern minimalist financial tech art, sleek 3d glassmorphism glowing stock market chart, futuristic digital wealth sphere, dark obsidian background, electric cyan and emerald green accents, high-end finance tech magazine aesthetic, octane render, 8k resolution, photorealistic, clean composition, no text, no words, no human, no woman, no people, no face, no person"
 
 
 def call_gemini_image(api_key: str, prompt: str) -> bytes | None:
