@@ -112,6 +112,10 @@ def auto_labels(content: str) -> list:
 # ────────────────────────────────
 # 최신 오전 브리핑 내용 조회
 # ────────────────────────────────
+import sys
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 def get_latest_morning_brief() -> dict:
     token = get_access_token()
     if not token:
@@ -128,14 +132,14 @@ def get_latest_morning_brief() -> dict:
         for post in posts:
             title = post.get("title", "")
             content = post.get("content", "")
-            if "멋쟁이 인사이트" in title or "오전" in title or "글로벌 매크로 브리핑" in title or "통합 분석" in title or "오전 글로벌 매크로 브리핑" in content:
+            if "멋쟁이 인사이트" in title or "오전" in title or "글로벌 매크로 브리핑" in title or "통합 분석" in title or "장전 브리핑" in title or "오전 글로벌 매크로 브리핑" in content:
                 from bs4 import BeautifulSoup
                 soup = BeautifulSoup(content, 'html.parser')
                 text = soup.get_text(separator=' ').strip()
-                # 불필요한 줄바꿈 및 다중 공백 정리
                 text = " ".join(text.split())
                 return {
                     "title": title,
+                    "url": post.get("url", ""),
                     "published": post.get("published"),
                     "text_summary": text[:2500]
                 }
@@ -170,6 +174,7 @@ def get_latest_afternoon_report() -> dict:
                 text = " ".join(text.split())
                 return {
                     "title": title,
+                    "url": post.get("url", ""),
                     "published": post.get("published"),
                     "text_summary": text[:2500]
                 }

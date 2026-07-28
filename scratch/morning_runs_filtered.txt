@@ -1,0 +1,6 @@
+Run ID: 29705505006, Name: 멋쟁이 인사이트 v4 — 오전 7시 브리핑, Status: completed, Conclusion: success, Event: schedule, Created: 2026-07-19T22:04:51Z
+Run ID: 29616678042, Name: 멋쟁이 인사이트 v4 — 오전 7시 브리핑, Status: completed, Conclusion: success, Event: schedule, Created: 2026-07-17T22:03:09Z
+Run ID: 29538780621, Name: 멋쟁이 인사이트 v4 — 오전 7시 브리핑, Status: completed, Conclusion: success, Event: schedule, Created: 2026-07-16T22:12:47Z
+Run ID: 29454506636, Name: 멋쟁이 인사이트 v4 — 오전 7시 브리핑, Status: completed, Conclusion: success, Event: schedule, Created: 2026-07-15T22:10:31Z
+Run ID: 29372073406, Name: 멋쟁이 인사이트 v4 — 오전 7시 브리핑, Status: completed, Conclusion: success, Event: schedule, Created: 2026-07-14T22:09:48Z
+Run ID: 29288673298, Name: 멋쟁이 인사이트 v4 — 오전 7시 브리핑, Status: completed, Conclusion: success, Event: schedule, Created: 2026-07-13T22:04:59Z

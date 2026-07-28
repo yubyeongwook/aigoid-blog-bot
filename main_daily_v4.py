@@ -1,4 +1,6 @@
 import sys, os, json, datetime, re
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 sys.path.append(os.path.dirname(__file__))
 import agents.patch_anthropic
 
@@ -15,7 +17,7 @@ from agents.synthesis_agent_v3 import synthesize_and_write
 from backtesting.backtest_agent import analyze as backtest_analyze
 from social.card_news_generator import generate as generate_social, save_social_content
 from notifications.kakao_notify import send_kakao_message, send_telegram_message
-from trackers.pick_tracker import update_performance, generate_performance_html, save_picks, calculate_stats
+from trackers.pick_tracker import update_performance, save_picks, calculate_stats
 from publishers.blogger_publisher import publish_post, auto_labels, get_latest_afternoon_report
 
 # 쇼츠 에이전트 및 유튜브 퍼블리셔 연동 임포트
@@ -140,11 +142,9 @@ def main():
     print("\n[0/10] 전일 픽 성과 업데이트...")
     try:
         update_performance()
-        performance_html = generate_performance_html()
         stats = calculate_stats()
     except Exception as e:
         print(f"픽 추적 오류: {e}")
-        performance_html = ""
         stats = {}
 
     print("\n[1/10] 시장 데이터 수집...")
@@ -181,7 +181,6 @@ def main():
         dart_nlp=dart_result, foreign_tracker=foreign_result,
         sentiment=sentiment_result,
         market_data={**market_data, "backtest": backtest_result, "prev_afternoon_report": afternoon_report},
-        performance_html=performance_html,
         report_type="daily_v4"
     )
 
@@ -297,7 +296,8 @@ def main():
     print("\n"+"="*60)
     if "url" in result:
         print(f"  ✅ 발행 완료: {blog_url}")
-        print(f"  📊 누적 승률: {stats.get('win_rate',0)}%")
+        if stats and stats.get("total", 0) > 0:
+            print(f"  📊 누적 승률: {stats.get('win_rate',0)}%")
     else:
         print(f"  ⚠️ 결과: {result}")
     print("="*60)

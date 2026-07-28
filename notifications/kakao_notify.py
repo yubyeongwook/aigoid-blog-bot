@@ -25,7 +25,7 @@ def send_kakao_message(picks: list, blog_url: str, performance: dict = None) -> 
         pick_section = f"\n{'='*30}{pick_lines}"
 
     perf_line = ""
-    if performance and picks:  # Only show performance stats if there are active picks
+    if performance and performance.get("total", 0) > 0 and picks:
         wr = performance.get("win_rate", 0)
         avg = performance.get("avg_return", 0)
         perf_line = f"\n\n📊 누적 승률 {wr}% | 평균 수익 +{avg}%"

@@ -2,7 +2,10 @@
 main_weekly.py — 주간 자동 실행 메인
 매주 일요일 오전 9시 자동 실행
 """
-import sys, os, datetime
+import sys, os, datetime, ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+os.environ["CURL_CA_BUNDLE"] = ""
+os.environ["PYTHONHTTPSVERIFY"] = "0"
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 sys.path.append(os.path.dirname(__file__))

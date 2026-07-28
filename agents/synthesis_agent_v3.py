@@ -89,10 +89,9 @@ SYNTHESIS_V3_SYSTEM = """
 HTML 최종 작성 구조 및 순서 (오전 7시 개장 전 브리핑 맞춤형)
 ═══════════════════════════════
 1. 마스트헤드 (VOL / 날짜 / 브리핑 종류 등 정보가 정리된 흰색 배경 table)
-2. [성과 트래커 HTML 삽입 지점] ← 여기에 반드시 {{PERFORMANCE_HTML}} 플레이스홀더를 위치시킬 것
-3. 수치 대시보드 (검정색 배경의 핵심 지표 대시보드 - 미국 나스닥, S&P500, SOXX, DXY 달러, 원달러 환율, 미10년 금리, 유가 등 글로벌 매크로 중심 구성)
-4. 히어로 이미지 (Unsplash 금융/주식 이미지 링크, 모바일에 맞추어 높이 220px 설정)
-5. H1 역설형/수치형 헤드라인 (정확한 팩트 지표를 대조하여 독자의 관심을 끄는 세련된 제목)
+2. 수치 대시보드 (검정색 배경의 핵심 지표 대시보드 - 미국 나스닥, S&P500, SOXX, DXY 달러, 원달러 환율, 미10년 금리, 유가 등 글로벌 매크로 중심 구성)
+3. 히어로 이미지 (Unsplash 금융/주식 이미지 링크, 모바일에 맞추어 높이 220px 설정)
+4. H1 역설형/수치형 헤드라인 (정확한 팩트 지표를 대조하여 독자의 관심을 끄는 세련된 제목)
 6. I. 글로벌 마감 바이트 (미국 시장 요약)
    - 전일 미국 3대 지수(나스닥·S&P500·SOXX 반도체 ETF) 마감 수치 인용 분석
    - 미국 반도체/빅테크주 급등락 현황과 원인 분석
@@ -122,7 +121,6 @@ def synthesize_and_write(
     foreign_tracker: dict = None,
     sentiment: dict = None,
     market_data: dict = None,
-    performance_html: str = "",
     report_type: str = "daily"
 ) -> str:
     today = datetime.datetime.now()
@@ -185,8 +183,7 @@ def synthesize_and_write(
 
 반드시 지킬 것:
 1. ★ 개별 종목 추천 및 단타 픽은 절대 본문에 포함하지 마십시오. (진입가/목표가/손절선 카드 포함 전체 금지)
-2. 마스트헤드 다음에 {{PERFORMANCE_HTML}} 텍스트를 항상 삽입하십시오.
-3. 미국 시장 마감 뉴스 및 주요 이슈를 바탕으로, 해당 요인들이 한국 주식 시장(KOSPI, KOSDAQ) 및 주요 업종/섹터(반도체, 2차전지 등)에 미칠 영향성만 정성적/거시적 관점에서 분석하십시오.
+2. 미국 시장 마감 뉴스 및 주요 이슈를 바탕으로, 해당 요인들이 한국 주식 시장(KOSPI, KOSDAQ) 및 주요 업종/섹터(반도체, 2차전지 등)에 미칠 영향성만 정성적/거시적 관점에서 분석하십시오.
 
 div-only HTML 전체 출력.
 
@@ -253,11 +250,8 @@ div-only HTML 전체 출력.
         elif "```" in text:
             text = text.split("```")[1].split("```")[0].strip()
 
-        # 픽 성과 HTML 삽입
-        if performance_html:
-            text = text.replace("{{PERFORMANCE_HTML}}", performance_html)
-        else:
-            text = text.replace("{{PERFORMANCE_HTML}}", "")
+        # {{PERFORMANCE_HTML}} 플레이스홀더 잔여물 제거
+        text = text.replace("{{PERFORMANCE_HTML}}", "")
 
         # ─────────────────────────────────────────────────────
         # 이미지 강제 주입 (Claude가 임의 URL 사용 방지)

@@ -1,4 +1,8 @@
-import os, requests
+import os, requests, sys
+from dotenv import load_dotenv
+load_dotenv()
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 def test_gemini():
     key = os.getenv("GEMINI_API_KEY", "")

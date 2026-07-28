@@ -1,4 +1,6 @@
 import sys, os, json, datetime, re
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 sys.path.append(os.path.dirname(__file__))
 import agents.patch_anthropic
 
@@ -58,7 +60,6 @@ def main():
             send_telegram_message(
                 picks=[],
                 blog_url=blog_url,
-                performance=None,
                 news_data=news_data,
                 macro_result={"key_insight": "9시 개장 직전 동시호가 브리핑입니다. 미 증시 여파 및 국내 개장 수급 흐름을 확인하십시오."}
             )
@@ -83,20 +84,16 @@ def main():
             card = social_content["instagram_card"]
             card_title = card.get("title", f"{today.strftime('%m/%d')} 장전 동시호가 브리핑")
             
-            # 슬라이드 텍스트 포맷팅
-            slides = card.get("slides", [])
-            slides_text = ""
-            for s in slides:
-                slide_num = s.get("slide_num", "")
+            # 짧고 직관적인 슬림형 캡션 포맷
+            brief_bullets = ""
+            for s in slides[:3]:
                 headline = s.get("headline", "")
-                sub_text = s.get("sub_text", "")
-                slides_text += f"{slide_num}. {headline}\n   - {sub_text}\n"
+                brief_bullets += f"• {headline}\n"
             
-            # 해시태그 합치기
-            hashtags_list = card.get("hashtags", ["#주식", "#동시호가", "#멋쟁이인사이트"])
-            hashtags = " ".join(hashtags_list)
+            hashtags_list = card.get("hashtags", ["#주식", "#멋쟁이인사이트", "#장전브리핑"])
+            hashtags = " ".join(hashtags_list[:5])
             
-            caption = f"📊 {card_title}\n\n{slides_text}\n자세한 리포트는 프로필 링크의 블로그에서 확인하세요!\n\n{hashtags}"
+            caption = f"📊 {card_title}\n\n{brief_bullets}\n🔗 자세한 분석과 픽 목표가/손절가는 프로필 링크에서 확인하세요!\n\n{hashtags}"
             
             print("📸 인스타그램 동시호가 카드뉴스 자동 업로드 시작...")
             inst_result = post_to_instagram(

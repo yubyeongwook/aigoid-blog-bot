@@ -9,7 +9,7 @@ def test_gemini_full():
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
     body = {
         "contents": [{"parts": [{"text": "Hello, write one sentence."}]}],
-        "generationConfig": {"maxOutputTokens": 50, "temperature": 0.3}
+        "generationConfig": {"maxOutputTokens": 1000, "temperature": 0.3}
     }
     try:
         res = requests.post(url, json=body, timeout=20)

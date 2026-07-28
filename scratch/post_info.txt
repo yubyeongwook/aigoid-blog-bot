@@ -1,0 +1,26 @@
+Length: 788
+First 1000 chars:
+<div style="font-family:'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; max-width:720px; margin:0 auto; padding:0 10px; background-color:#ffffff; color:#334155; line-height:1.95; font-size:14.5px; letter-spacing:-0.015em;">
+
+  <!-- 마스트헤드 -->
+  <div style="background-color:#ffffff; padding:16px 0 20px; border-bottom:1px solid #e0e0e0; margin-bottom:20px;">
+    <table style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td style="padding:4px 0; font-size:11px; color:#6b7280; text-align:left;">VOL. 20260720</td>
+        <td style="padding:4px 0; font-size:11px; color:#6b7280; text-align:right;">2026년 07월 20일 (월) 오전 7시 브리핑</td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding-top:8px; font-size:24px; font-weight:800; color:#1a3a6b; text-align:center;">
+
+Last 1000 chars:
+<div style="font-family:'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; max-width:720px; margin:0 auto; padding:0 10px; background-color:#ffffff; color:#334155; line-height:1.95; font-size:14.5px; letter-spacing:-0.015em;">
+
+  <!-- 마스트헤드 -->
+  <div style="background-color:#ffffff; padding:16px 0 20px; border-bottom:1px solid #e0e0e0; margin-bottom:20px;">
+    <table style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td style="padding:4px 0; font-size:11px; color:#6b7280; text-align:left;">VOL. 20260720</td>
+        <td style="padding:4px 0; font-size:11px; color:#6b7280; text-align:right;">2026년 07월 20일 (월) 오전 7시 브리핑</td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding-top:8px; font-size:24px; font-weight:800; color:#1a3a6b; text-align:center;">

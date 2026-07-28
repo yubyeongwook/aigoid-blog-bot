@@ -1,0 +1,685 @@
+﻿2026-07-19T22:04:53.9166966Z Current runner version: '2.335.1'
+2026-07-19T22:04:53.9193456Z ##[group]Runner Image Provisioner
+2026-07-19T22:04:53.9194584Z Hosted Compute Agent
+2026-07-19T22:04:53.9195364Z Version: 20260707.563
+2026-07-19T22:04:53.9197032Z Commit: 02667638d2b423fbc733a8e32a88b44996a3ba6e
+2026-07-19T22:04:53.9197939Z Build Date: 2026-07-07T19:33:50Z
+2026-07-19T22:04:53.9198853Z Worker ID: {bbc95237-e620-490f-b333-b591c6eba92e}
+2026-07-19T22:04:53.9199770Z Azure Region: eastus
+2026-07-19T22:04:53.9200538Z ##[endgroup]
+2026-07-19T22:04:53.9203038Z ##[group]Operating System
+2026-07-19T22:04:53.9203971Z Ubuntu
+2026-07-19T22:04:53.9204662Z 24.04.4
+2026-07-19T22:04:53.9205391Z LTS
+2026-07-19T22:04:53.9206382Z ##[endgroup]
+2026-07-19T22:04:53.9207185Z ##[group]Runner Image
+2026-07-19T22:04:53.9207935Z Image: ubuntu-24.04
+2026-07-19T22:04:53.9208701Z Version: 20260714.240.1
+2026-07-19T22:04:53.9210170Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260714.240/images/ubuntu/Ubuntu2404-Readme.md
+2026-07-19T22:04:53.9211900Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260714.240
+2026-07-19T22:04:53.9213095Z ##[endgroup]
+2026-07-19T22:04:53.9214540Z ##[group]GITHUB_TOKEN Permissions
+2026-07-19T22:04:53.9217329Z Contents: read
+2026-07-19T22:04:53.9218181Z Metadata: read
+2026-07-19T22:04:53.9218855Z Packages: read
+2026-07-19T22:04:53.9219548Z ##[endgroup]
+2026-07-19T22:04:53.9221785Z Secret source: Actions
+2026-07-19T22:04:53.9222986Z Prepare workflow directory
+2026-07-19T22:04:53.9564838Z Prepare all required actions
+2026-07-19T22:04:53.9604466Z Getting action download info
+2026-07-19T22:04:54.1599463Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-07-19T22:04:54.3110117Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-07-19T22:04:54.3902740Z Download action repository 'actions/cache@v3' (SHA:6f8efc29b200d32929f49075959781ed54ec270c)
+2026-07-19T22:04:54.6376616Z Complete job name: daily_v4
+2026-07-19T22:04:54.7146898Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-19T22:04:54.7155628Z ##[group]Run actions/checkout@v4
+2026-07-19T22:04:54.7156726Z with:
+2026-07-19T22:04:54.7157285Z   repository: yubyeongwook/aigoid-blog-bot
+2026-07-19T22:04:54.7161110Z   token: ***
+2026-07-19T22:04:54.7161631Z   ssh-strict: true
+2026-07-19T22:04:54.7162159Z   ssh-user: git
+2026-07-19T22:04:54.7162698Z   persist-credentials: true
+2026-07-19T22:04:54.7163285Z   clean: true
+2026-07-19T22:04:54.7163876Z   sparse-checkout-cone-mode: true
+2026-07-19T22:04:54.7164485Z   fetch-depth: 1
+2026-07-19T22:04:54.7165007Z   fetch-tags: false
+2026-07-19T22:04:54.7165548Z   show-progress: true
+2026-07-19T22:04:54.7166543Z   lfs: false
+2026-07-19T22:04:54.7167121Z   submodules: false
+2026-07-19T22:04:54.7167668Z   set-safe-directory: true
+2026-07-19T22:04:54.7168574Z ##[endgroup]
+2026-07-19T22:04:54.8152676Z Syncing repository: yubyeongwook/aigoid-blog-bot
+2026-07-19T22:04:54.8155575Z ##[group]Getting Git version info
+2026-07-19T22:04:54.8157257Z Working directory is '/home/runner/work/aigoid-blog-bot/aigoid-blog-bot'
+2026-07-19T22:04:54.8159282Z [command]/usr/bin/git version
+2026-07-19T22:04:54.8211869Z git version 2.54.0
+2026-07-19T22:04:54.8234350Z ##[endgroup]
+2026-07-19T22:04:54.8251701Z Temporarily overriding HOME='/home/runner/work/_temp/feacc029-1e0a-4944-98d6-9f65e5ba5674' before making global git config changes
+2026-07-19T22:04:54.8254356Z Adding repository directory to the temporary git global config as a safe directory
+2026-07-19T22:04:54.8257112Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aigoid-blog-bot/aigoid-blog-bot
+2026-07-19T22:04:54.8307650Z Deleting the contents of '/home/runner/work/aigoid-blog-bot/aigoid-blog-bot'
+2026-07-19T22:04:54.8311687Z ##[group]Initializing the repository
+2026-07-19T22:04:54.8316708Z [command]/usr/bin/git init /home/runner/work/aigoid-blog-bot/aigoid-blog-bot
+2026-07-19T22:04:54.8421465Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-07-19T22:04:54.8423778Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-07-19T22:04:54.8426176Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-07-19T22:04:54.8428083Z hint: call:
+2026-07-19T22:04:54.8429127Z hint:
+2026-07-19T22:04:54.8430402Z hint: 	git config --global init.defaultBranch <name>
+2026-07-19T22:04:54.8431814Z hint:
+2026-07-19T22:04:54.8433119Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-07-19T22:04:54.8435074Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-07-19T22:04:54.8437009Z hint:
+2026-07-19T22:04:54.8438054Z hint: 	git branch -m <name>
+2026-07-19T22:04:54.8439231Z hint:
+2026-07-19T22:04:54.8440739Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-07-19T22:04:54.8443026Z Initialized empty Git repository in /home/runner/work/aigoid-blog-bot/aigoid-blog-bot/.git/
+2026-07-19T22:04:54.8447661Z [command]/usr/bin/git remote add origin https://github.com/yubyeongwook/aigoid-blog-bot
+2026-07-19T22:04:54.8522788Z ##[endgroup]
+2026-07-19T22:04:54.8524367Z ##[group]Disabling automatic garbage collection
+2026-07-19T22:04:54.8527515Z [command]/usr/bin/git config --local gc.auto 0
+2026-07-19T22:04:54.8561472Z ##[endgroup]
+2026-07-19T22:04:54.8563114Z ##[group]Setting up auth
+2026-07-19T22:04:54.8571338Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-07-19T22:04:54.8626540Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-07-19T22:04:54.9399426Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-07-19T22:04:54.9441008Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-07-19T22:04:54.9782824Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-07-19T22:04:54.9819229Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-07-19T22:04:55.0078089Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-07-19T22:04:55.0118618Z ##[endgroup]
+2026-07-19T22:04:55.0120420Z ##[group]Fetching the repository
+2026-07-19T22:04:55.0132498Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +310176a4e96a226f6965fa022ba916bb1a27dfa6:refs/remotes/origin/master
+2026-07-19T22:04:55.6827028Z From https://github.com/yubyeongwook/aigoid-blog-bot
+2026-07-19T22:04:55.6829859Z  * [new ref]         310176a4e96a226f6965fa022ba916bb1a27dfa6 -> origin/master
+2026-07-19T22:04:55.6865260Z ##[endgroup]
+2026-07-19T22:04:55.6867638Z ##[group]Determining the checkout info
+2026-07-19T22:04:55.6947115Z ##[endgroup]
+2026-07-19T22:04:55.6947929Z [command]/usr/bin/git sparse-checkout disable
+2026-07-19T22:04:55.6949694Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-07-19T22:04:55.6966602Z ##[group]Checking out the ref
+2026-07-19T22:04:55.6972055Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2026-07-19T22:04:55.7210212Z Reset branch 'master'
+2026-07-19T22:04:55.7213592Z branch 'master' set up to track 'origin/master'.
+2026-07-19T22:04:55.7222072Z ##[endgroup]
+2026-07-19T22:04:55.7274890Z [command]/usr/bin/git log -1 --format=%H
+2026-07-19T22:04:55.7301246Z 310176a4e96a226f6965fa022ba916bb1a27dfa6
+2026-07-19T22:04:55.7599350Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-19T22:04:55.7603018Z ##[group]Run actions/setup-python@v5
+2026-07-19T22:04:55.7603719Z with:
+2026-07-19T22:04:55.7604241Z   python-version: 3.12
+2026-07-19T22:04:55.7604847Z   check-latest: false
+2026-07-19T22:04:55.7610102Z   token: ***
+2026-07-19T22:04:55.7610681Z   update-environment: true
+2026-07-19T22:04:55.7611346Z   allow-prereleases: false
+2026-07-19T22:04:55.7611989Z   freethreaded: false
+2026-07-19T22:04:55.7612567Z ##[endgroup]
+2026-07-19T22:04:55.8907590Z ##[group]Installed versions
+2026-07-19T22:04:55.8998221Z (node:2250) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-07-19T22:04:55.9000811Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-07-19T22:04:55.9002834Z Successfully set up CPython (3.12.13)
+2026-07-19T22:04:55.9004878Z ##[endgroup]
+2026-07-19T22:04:55.9830515Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-19T22:04:55.9833771Z ##[group]Run actions/cache@v3
+2026-07-19T22:04:55.9834409Z with:
+2026-07-19T22:04:55.9834932Z   path: ~/.cache/pip
+2026-07-19T22:04:55.9836269Z   key: Linux-pip-7a760e66428d083ed8466374237b0d322675dd722ec026879acc9d3165b1e848
+2026-07-19T22:04:55.9837543Z   enableCrossOsArchive: false
+2026-07-19T22:04:55.9838229Z   fail-on-cache-miss: false
+2026-07-19T22:04:55.9838882Z   lookup-only: false
+2026-07-19T22:04:55.9839441Z env:
+2026-07-19T22:04:55.9840131Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:04:55.9841289Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+2026-07-19T22:04:55.9842465Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:04:55.9843490Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:04:55.9844519Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:04:55.9845571Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+2026-07-19T22:04:55.9846731Z ##[endgroup]
+2026-07-19T22:04:56.0874594Z (node:2271) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-07-19T22:04:56.0876995Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-07-19T22:04:56.1596729Z Cache hit for: Linux-pip-7a760e66428d083ed8466374237b0d322675dd722ec026879acc9d3165b1e848
+2026-07-19T22:04:56.1697782Z (node:2271) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-07-19T22:04:56.9756487Z Received 165220641 of 165220641 (100.0%), 206.5 MBs/sec
+2026-07-19T22:04:56.9758123Z Cache Size: ~158 MB (165220641 B)
+2026-07-19T22:04:56.9828454Z [command]/usr/bin/tar -xf /home/runner/work/_temp/8d50edb2-d36c-45d1-a318-fe2524b17852/cache.tzst -P -C /home/runner/work/aigoid-blog-bot/aigoid-blog-bot --use-compress-program unzstd
+2026-07-19T22:04:57.2626856Z Cache restored successfully
+2026-07-19T22:04:57.2782632Z Cache restored from key: Linux-pip-7a760e66428d083ed8466374237b0d322675dd722ec026879acc9d3165b1e848
+2026-07-19T22:04:57.2944586Z ##[group]Run pip install -r requirements.txt
+2026-07-19T22:04:57.2945451Z [36;1mpip install -r requirements.txt[0m
+2026-07-19T22:04:57.3070016Z shell: /usr/bin/bash -e {0}
+2026-07-19T22:04:57.3070404Z env:
+2026-07-19T22:04:57.3070798Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:04:57.3071642Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+2026-07-19T22:04:57.3072234Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:04:57.3072768Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:04:57.3073291Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:04:57.3073821Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+2026-07-19T22:04:57.3074300Z ##[endgroup]
+2026-07-19T22:05:00.0341664Z Collecting aiohappyeyeballs==2.7.1 (from -r requirements.txt (line 1))
+2026-07-19T22:05:00.0356698Z   Using cached aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+2026-07-19T22:05:00.4965292Z Collecting aiohttp==3.14.1 (from -r requirements.txt (line 2))
+2026-07-19T22:05:00.4981569Z   Using cached aiohttp-3.14.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.3 kB)
+2026-07-19T22:05:00.5148672Z Collecting aiosignal==1.4.0 (from -r requirements.txt (line 3))
+2026-07-19T22:05:00.5166909Z   Using cached aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+2026-07-19T22:05:00.5283397Z Collecting annotated-types==0.7.0 (from -r requirements.txt (line 4))
+2026-07-19T22:05:00.5306992Z   Using cached annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+2026-07-19T22:05:00.6185478Z Collecting anthropic==0.116.0 (from -r requirements.txt (line 5))
+2026-07-19T22:05:00.6197934Z   Using cached anthropic-0.116.0-py3-none-any.whl.metadata (3.2 kB)
+2026-07-19T22:05:00.6343082Z Collecting anyio==4.14.1 (from -r requirements.txt (line 6))
+2026-07-19T22:05:00.6355552Z   Using cached anyio-4.14.1-py3-none-any.whl.metadata (4.6 kB)
+2026-07-19T22:05:00.6458450Z Collecting appdirs==1.4.4 (from -r requirements.txt (line 7))
+2026-07-19T22:05:00.6471270Z   Using cached appdirs-1.4.4-py2.py3-none-any.whl.metadata (9.0 kB)
+2026-07-19T22:05:00.6894555Z Collecting arelle-release==2.41.6 (from -r requirements.txt (line 8))
+2026-07-19T22:05:00.6906045Z   Using cached arelle_release-2.41.6-py3-none-any.whl.metadata (9.5 kB)
+2026-07-19T22:05:00.7031700Z Collecting attrs==26.1.0 (from -r requirements.txt (line 9))
+2026-07-19T22:05:00.7044420Z   Using cached attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+2026-07-19T22:05:00.7165457Z Collecting beautifulsoup4==4.15.0 (from -r requirements.txt (line 10))
+2026-07-19T22:05:00.7177232Z   Using cached beautifulsoup4-4.15.0-py3-none-any.whl.metadata (3.8 kB)
+2026-07-19T22:05:00.7287323Z Collecting bottle==0.13.4 (from -r requirements.txt (line 11))
+2026-07-19T22:05:00.7299128Z   Using cached bottle-0.13.4-py2.py3-none-any.whl.metadata (1.6 kB)
+2026-07-19T22:05:00.7423417Z Collecting certifi==2026.6.17 (from -r requirements.txt (line 12))
+2026-07-19T22:05:00.7435392Z   Using cached certifi-2026.6.17-py3-none-any.whl.metadata (2.5 kB)
+2026-07-19T22:05:00.8329228Z Collecting cffi==2.0.0 (from -r requirements.txt (line 13))
+2026-07-19T22:05:00.8342818Z   Using cached cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+2026-07-19T22:05:00.9403722Z Collecting charset-normalizer==3.4.7 (from -r requirements.txt (line 14))
+2026-07-19T22:05:00.9418103Z   Using cached charset_normalizer-3.4.7-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+2026-07-19T22:05:00.9546835Z Collecting colorama==0.4.6 (from -r requirements.txt (line 15))
+2026-07-19T22:05:00.9559130Z   Using cached colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+2026-07-19T22:05:01.0095454Z Collecting contourpy==1.3.3 (from -r requirements.txt (line 16))
+2026-07-19T22:05:01.0109072Z   Using cached contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+2026-07-19T22:05:01.1625980Z Collecting cryptography==49.0.0 (from -r requirements.txt (line 17))
+2026-07-19T22:05:01.1639829Z   Using cached cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+2026-07-19T22:05:01.2146375Z Collecting curl_cffi==0.15.0 (from -r requirements.txt (line 18))
+2026-07-19T22:05:01.2159622Z   Using cached curl_cffi-0.15.0-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (18 kB)
+2026-07-19T22:05:01.2275673Z Collecting cycler==0.12.1 (from -r requirements.txt (line 19))
+2026-07-19T22:05:01.2288275Z   Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+2026-07-19T22:05:01.2398160Z Collecting decorator==4.4.2 (from -r requirements.txt (line 20))
+2026-07-19T22:05:01.2410052Z   Using cached decorator-4.4.2-py2.py3-none-any.whl.metadata (4.2 kB)
+2026-07-19T22:05:01.2543917Z Collecting Deprecated==1.3.1 (from -r requirements.txt (line 21))
+2026-07-19T22:05:01.2556165Z   Using cached deprecated-1.3.1-py2.py3-none-any.whl.metadata (5.9 kB)
+2026-07-19T22:05:01.2645210Z Collecting distro==1.9.0 (from -r requirements.txt (line 22))
+2026-07-19T22:05:01.2657189Z   Using cached distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)
+2026-07-19T22:05:01.2743326Z Collecting docstring_parser==0.18.0 (from -r requirements.txt (line 23))
+2026-07-19T22:05:01.2755404Z   Using cached docstring_parser-0.18.0-py3-none-any.whl.metadata (3.5 kB)
+2026-07-19T22:05:01.2881218Z Collecting edge-tts==7.2.8 (from -r requirements.txt (line 24))
+2026-07-19T22:05:01.2893050Z   Using cached edge_tts-7.2.8-py3-none-any.whl.metadata (5.5 kB)
+2026-07-19T22:05:01.2973287Z Collecting et_xmlfile==2.0.0 (from -r requirements.txt (line 25))
+2026-07-19T22:05:01.2984635Z   Using cached et_xmlfile-2.0.0-py3-none-any.whl.metadata (2.7 kB)
+2026-07-19T22:05:01.3078514Z Collecting fake-useragent==2.2.0 (from -r requirements.txt (line 26))
+2026-07-19T22:05:01.3090768Z   Using cached fake_useragent-2.2.0-py3-none-any.whl.metadata (17 kB)
+2026-07-19T22:05:01.3257913Z Collecting filelock==3.29.5 (from -r requirements.txt (line 27))
+2026-07-19T22:05:01.3269837Z   Using cached filelock-3.29.5-py3-none-any.whl.metadata (2.0 kB)
+2026-07-19T22:05:01.3384380Z Collecting finance-datareader==0.9.202 (from -r requirements.txt (line 28))
+2026-07-19T22:05:01.3396106Z   Using cached finance_datareader-0.9.202-py3-none-any.whl.metadata (15 kB)
+2026-07-19T22:05:01.4611615Z Collecting fonttools==4.63.0 (from -r requirements.txt (line 29))
+2026-07-19T22:05:01.4625384Z   Using cached fonttools-4.63.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (118 kB)
+2026-07-19T22:05:01.5290399Z Collecting frozenlist==1.8.0 (from -r requirements.txt (line 30))
+2026-07-19T22:05:01.5302903Z   Using cached frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+2026-07-19T22:05:01.5543888Z Collecting google-api-core==2.31.0 (from -r requirements.txt (line 31))
+2026-07-19T22:05:01.5557004Z   Using cached google_api_core-2.31.0-py3-none-any.whl.metadata (3.2 kB)
+2026-07-19T22:05:01.5868719Z Collecting google-api-python-client==2.198.0 (from -r requirements.txt (line 32))
+2026-07-19T22:05:01.5880564Z   Using cached google_api_python_client-2.198.0-py3-none-any.whl.metadata (7.0 kB)
+2026-07-19T22:05:01.6384172Z Collecting google-auth==2.55.1 (from -r requirements.txt (line 33))
+2026-07-19T22:05:01.6396921Z   Using cached google_auth-2.55.1-py3-none-any.whl.metadata (5.1 kB)
+2026-07-19T22:05:01.6546320Z Collecting google-auth-httplib2==0.4.0 (from -r requirements.txt (line 34))
+2026-07-19T22:05:01.6558074Z   Using cached google_auth_httplib2-0.4.0-py3-none-any.whl.metadata (3.0 kB)
+2026-07-19T22:05:01.6656394Z Collecting google-auth-oauthlib==1.4.0 (from -r requirements.txt (line 35))
+2026-07-19T22:05:01.6668769Z   Using cached google_auth_oauthlib-1.4.0-py3-none-any.whl.metadata (2.6 kB)
+2026-07-19T22:05:01.6840876Z Collecting google-genai==2.10.0 (from -r requirements.txt (line 36))
+2026-07-19T22:05:01.6852736Z   Using cached google_genai-2.10.0-py3-none-any.whl.metadata (53 kB)
+2026-07-19T22:05:01.7022100Z Collecting googleapis-common-protos==1.75.0 (from -r requirements.txt (line 37))
+2026-07-19T22:05:01.7034597Z   Using cached googleapis_common_protos-1.75.0-py3-none-any.whl.metadata (8.6 kB)
+2026-07-19T22:05:01.7121337Z Collecting h11==0.16.0 (from -r requirements.txt (line 38))
+2026-07-19T22:05:01.7133013Z   Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-07-19T22:05:01.7263251Z Collecting httpcore==1.0.9 (from -r requirements.txt (line 39))
+2026-07-19T22:05:01.7274969Z   Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2026-07-19T22:05:01.7393397Z Collecting httplib2==0.32.0 (from -r requirements.txt (line 40))
+2026-07-19T22:05:01.7405352Z   Using cached httplib2-0.32.0-py3-none-any.whl.metadata (2.2 kB)
+2026-07-19T22:05:01.7541792Z Collecting httpx==0.28.1 (from -r requirements.txt (line 41))
+2026-07-19T22:05:01.7553907Z   Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2026-07-19T22:05:01.7665942Z Collecting idna==3.18 (from -r requirements.txt (line 42))
+2026-07-19T22:05:01.7677801Z   Using cached idna-3.18-py3-none-any.whl.metadata (6.1 kB)
+2026-07-19T22:05:01.7830599Z Collecting ImageIO==2.37.3 (from -r requirements.txt (line 43))
+2026-07-19T22:05:01.7842333Z   Using cached imageio-2.37.3-py3-none-any.whl.metadata (9.7 kB)
+2026-07-19T22:05:01.8043735Z Collecting imageio-ffmpeg==0.6.0 (from -r requirements.txt (line 44))
+2026-07-19T22:05:01.8055555Z   Using cached imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+2026-07-19T22:05:01.8131054Z Collecting isodate==0.7.2 (from -r requirements.txt (line 45))
+2026-07-19T22:05:01.8142521Z   Using cached isodate-0.7.2-py3-none-any.whl.metadata (11 kB)
+2026-07-19T22:05:01.8224677Z Collecting jaconv==0.5.0 (from -r requirements.txt (line 46))
+2026-07-19T22:05:01.8242224Z   Using cached jaconv-0.5.0-py3-none-any.whl.metadata (8.9 kB)
+2026-07-19T22:05:01.9077490Z Collecting jiter==0.16.0 (from -r requirements.txt (line 47))
+2026-07-19T22:05:01.9098516Z   Using cached jiter-0.16.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
+2026-07-19T22:05:01.9288318Z Collecting jsonschema==4.26.0 (from -r requirements.txt (line 48))
+2026-07-19T22:05:01.9299892Z   Using cached jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)
+2026-07-19T22:05:01.9409702Z Collecting jsonschema-specifications==2025.9.1 (from -r requirements.txt (line 49))
+2026-07-19T22:05:01.9421218Z   Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+2026-07-19T22:05:01.9945632Z Collecting kiwisolver==1.5.0 (from -r requirements.txt (line 50))
+2026-07-19T22:05:01.9958184Z   Using cached kiwisolver-1.5.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.1 kB)
+2026-07-19T22:05:02.1840250Z Collecting lxml==6.1.1 (from -r requirements.txt (line 51))
+2026-07-19T22:05:02.1853933Z   Using cached lxml-6.1.1-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl.metadata (3.5 kB)
+2026-07-19T22:05:02.1977273Z Collecting markdown-it-py==4.2.0 (from -r requirements.txt (line 52))
+2026-07-19T22:05:02.1989542Z   Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+2026-07-19T22:05:02.3232637Z Collecting matplotlib==3.11.0 (from -r requirements.txt (line 53))
+2026-07-19T22:05:02.3247125Z   Using cached matplotlib-3.11.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+2026-07-19T22:05:02.3468543Z Collecting mdurl==0.1.2 (from -r requirements.txt (line 54))
+2026-07-19T22:05:02.3495369Z   Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-07-19T22:05:02.3595080Z Collecting moviepy==1.0.3 (from -r requirements.txt (line 55))
+2026-07-19T22:05:02.3596934Z   Using cached moviepy-1.0.3-py3-none-any.whl
+2026-07-19T22:05:02.6075612Z Collecting multidict==6.7.1 (from -r requirements.txt (line 56))
+2026-07-19T22:05:02.6089857Z   Using cached multidict-6.7.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.3 kB)
+2026-07-19T22:05:02.6176663Z Collecting multipledispatch==1.0.0 (from -r requirements.txt (line 57))
+2026-07-19T22:05:02.6188498Z   Using cached multipledispatch-1.0.0-py3-none-any.whl.metadata (3.8 kB)
+2026-07-19T22:05:02.6265527Z Collecting multitasking==0.0.13 (from -r requirements.txt (line 58))
+2026-07-19T22:05:02.6277618Z   Using cached multitasking-0.0.13-py3-none-any.whl.metadata (16 kB)
+2026-07-19T22:05:02.6558388Z Collecting narwhals==2.23.0 (from -r requirements.txt (line 59))
+2026-07-19T22:05:02.6571690Z   Using cached narwhals-2.23.0-py3-none-any.whl.metadata (15 kB)
+2026-07-19T22:05:02.8322154Z Collecting numpy==2.5.0 (from -r requirements.txt (line 60))
+2026-07-19T22:05:02.8336357Z   Using cached numpy-2.5.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-07-19T22:05:02.8443266Z Collecting oauthlib==3.3.1 (from -r requirements.txt (line 61))
+2026-07-19T22:05:02.8457090Z   Using cached oauthlib-3.3.1-py3-none-any.whl.metadata (7.9 kB)
+2026-07-19T22:05:02.8580928Z Collecting openpyxl==3.1.5 (from -r requirements.txt (line 62))
+2026-07-19T22:05:02.8593315Z   Using cached openpyxl-3.1.5-py2.py3-none-any.whl.metadata (2.5 kB)
+2026-07-19T22:05:02.8708303Z Collecting packaging==26.2 (from -r requirements.txt (line 63))
+2026-07-19T22:05:02.8720612Z   Using cached packaging-26.2-py3-none-any.whl.metadata (3.5 kB)
+2026-07-19T22:05:02.9724273Z Collecting pandas==2.3.3 (from -r requirements.txt (line 64))
+2026-07-19T22:05:02.9737904Z   Using cached pandas-2.3.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (91 kB)
+2026-07-19T22:05:03.0156815Z Collecting peewee==4.1.2 (from -r requirements.txt (line 65))
+2026-07-19T22:05:03.0169487Z   Using cached peewee-4.1.2-py3-none-any.whl.metadata (10 kB)
+2026-07-19T22:05:03.2164883Z Collecting pillow==12.3.0 (from -r requirements.txt (line 66))
+2026-07-19T22:05:03.2179190Z   Using cached pillow-12.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+2026-07-19T22:05:03.2336712Z Collecting platformdirs==4.10.0 (from -r requirements.txt (line 67))
+2026-07-19T22:05:03.2348838Z   Using cached platformdirs-4.10.0-py3-none-any.whl.metadata (5.5 kB)
+2026-07-19T22:05:03.2580552Z Collecting plotly==6.8.0 (from -r requirements.txt (line 68))
+2026-07-19T22:05:03.2592748Z   Using cached plotly-6.8.0-py3-none-any.whl.metadata (9.0 kB)
+2026-07-19T22:05:03.2736720Z Collecting proglog==0.1.12 (from -r requirements.txt (line 69))
+2026-07-19T22:05:03.2748311Z   Using cached proglog-0.1.12-py3-none-any.whl.metadata (794 bytes)
+2026-07-19T22:05:03.3233070Z Collecting propcache==0.5.2 (from -r requirements.txt (line 70))
+2026-07-19T22:05:03.3246266Z   Using cached propcache-0.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (16 kB)
+2026-07-19T22:05:03.3384017Z Collecting proto-plus==1.28.0 (from -r requirements.txt (line 71))
+2026-07-19T22:05:03.3395665Z   Using cached proto_plus-1.28.0-py3-none-any.whl.metadata (2.2 kB)
+2026-07-19T22:05:03.4682776Z Collecting protobuf==7.35.1 (from -r requirements.txt (line 72))
+2026-07-19T22:05:03.4695833Z   Using cached protobuf-7.35.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+2026-07-19T22:05:03.4863778Z Collecting pyasn1==0.6.3 (from -r requirements.txt (line 73))
+2026-07-19T22:05:03.4875545Z   Using cached pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+2026-07-19T22:05:03.5031168Z Collecting pyasn1_modules==0.4.2 (from -r requirements.txt (line 74))
+2026-07-19T22:05:03.5042778Z   Using cached pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+2026-07-19T22:05:03.5126487Z Collecting pycparser==3.0 (from -r requirements.txt (line 75))
+2026-07-19T22:05:03.5138275Z   Using cached pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+2026-07-19T22:05:03.6038041Z Collecting pydantic==2.13.4 (from -r requirements.txt (line 76))
+2026-07-19T22:05:03.6050574Z   Using cached pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+2026-07-19T22:05:04.2694562Z Collecting pydantic_core==2.46.4 (from -r requirements.txt (line 77))
+2026-07-19T22:05:04.2710165Z   Using cached pydantic_core-2.46.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+2026-07-19T22:05:04.2862075Z Collecting Pygments==2.20.0 (from -r requirements.txt (line 78))
+2026-07-19T22:05:04.2873934Z   Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+2026-07-19T22:05:04.3027732Z Collecting pykrx==1.2.8 (from -r requirements.txt (line 79))
+2026-07-19T22:05:04.3039345Z   Using cached pykrx-1.2.8-py3-none-any.whl.metadata (64 kB)
+2026-07-19T22:05:04.3273202Z Collecting pyparsing==3.3.2 (from -r requirements.txt (line 80))
+2026-07-19T22:05:04.3284823Z   Using cached pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
+2026-07-19T22:05:04.3390153Z Collecting python-dateutil==2.9.0.post0 (from -r requirements.txt (line 81))
+2026-07-19T22:05:04.3402022Z   Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+2026-07-19T22:05:04.3538070Z Collecting python-dotenv==1.2.2 (from -r requirements.txt (line 82))
+2026-07-19T22:05:04.3551317Z   Using cached python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+2026-07-19T22:05:04.3854825Z Collecting pytz==2026.2 (from -r requirements.txt (line 83))
+2026-07-19T22:05:04.3870042Z   Using cached pytz-2026.2-py2.py3-none-any.whl.metadata (22 kB)
+2026-07-19T22:05:04.4080317Z Collecting referencing==0.37.0 (from -r requirements.txt (line 84))
+2026-07-19T22:05:04.4098088Z   Using cached referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+2026-07-19T22:05:04.8104453Z Collecting regex==2026.6.28 (from -r requirements.txt (line 85))
+2026-07-19T22:05:04.8119717Z   Using cached regex-2026.6.28-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+2026-07-19T22:05:04.8314324Z Collecting requests==2.34.2 (from -r requirements.txt (line 86))
+2026-07-19T22:05:04.8327653Z   Using cached requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-07-19T22:05:04.8413128Z Collecting requests-file==3.0.1 (from -r requirements.txt (line 87))
+2026-07-19T22:05:04.8426762Z   Using cached requests_file-3.0.1-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-07-19T22:05:04.8521441Z Collecting requests-oauthlib==2.0.0 (from -r requirements.txt (line 88))
+2026-07-19T22:05:04.8534098Z   Using cached requests_oauthlib-2.0.0-py2.py3-none-any.whl.metadata (11 kB)
+2026-07-19T22:05:04.8785467Z Collecting rich==15.0.0 (from -r requirements.txt (line 89))
+2026-07-19T22:05:04.8798073Z   Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+2026-07-19T22:05:05.1149213Z Collecting rpds-py==2026.6.3 (from -r requirements.txt (line 90))
+2026-07-19T22:05:05.1162749Z   Using cached rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+2026-07-19T22:05:05.1253534Z Collecting schedule==1.2.2 (from -r requirements.txt (line 91))
+2026-07-19T22:05:05.1265116Z   Using cached schedule-1.2.2-py3-none-any.whl.metadata (3.8 kB)
+2026-07-19T22:05:05.1371833Z Collecting six==1.17.0 (from -r requirements.txt (line 92))
+2026-07-19T22:05:05.1383485Z   Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-07-19T22:05:05.1453534Z Collecting sniffio==1.3.1 (from -r requirements.txt (line 93))
+2026-07-19T22:05:05.1465329Z   Using cached sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+2026-07-19T22:05:05.1600353Z Collecting soupsieve==2.8.4 (from -r requirements.txt (line 94))
+2026-07-19T22:05:05.1612178Z   Using cached soupsieve-2.8.4-py3-none-any.whl.metadata (4.6 kB)
+2026-07-19T22:05:05.1694870Z Collecting tabulate==0.10.0 (from -r requirements.txt (line 95))
+2026-07-19T22:05:05.1706570Z   Using cached tabulate-0.10.0-py3-none-any.whl.metadata (40 kB)
+2026-07-19T22:05:05.1848121Z Collecting tenacity==9.1.4 (from -r requirements.txt (line 96))
+2026-07-19T22:05:05.1859830Z   Using cached tenacity-9.1.4-py3-none-any.whl.metadata (1.2 kB)
+2026-07-19T22:05:05.1943116Z Collecting termcolor==3.3.0 (from -r requirements.txt (line 97))
+2026-07-19T22:05:05.1954971Z   Using cached termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
+2026-07-19T22:05:05.2172320Z Collecting tqdm==4.68.3 (from -r requirements.txt (line 98))
+2026-07-19T22:05:05.2183587Z   Using cached tqdm-4.68.3-py3-none-any.whl.metadata (57 kB)
+2026-07-19T22:05:05.2310801Z Collecting truststore==0.10.4 (from -r requirements.txt (line 99))
+2026-07-19T22:05:05.2322517Z   Using cached truststore-0.10.4-py3-none-any.whl.metadata (4.4 kB)
+2026-07-19T22:05:05.2400942Z Collecting typing-inspection==0.4.2 (from -r requirements.txt (line 100))
+2026-07-19T22:05:05.2412785Z   Using cached typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-07-19T22:05:05.2566432Z Collecting typing_extensions==4.16.0 (from -r requirements.txt (line 101))
+2026-07-19T22:05:05.2578456Z   Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-07-19T22:05:05.2676237Z Collecting tzdata==2026.2 (from -r requirements.txt (line 102))
+2026-07-19T22:05:05.2688393Z   Using cached tzdata-2026.2-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-07-19T22:05:05.2766133Z Collecting uritemplate==4.2.0 (from -r requirements.txt (line 103))
+2026-07-19T22:05:05.2784285Z   Using cached uritemplate-4.2.0-py3-none-any.whl.metadata (2.6 kB)
+2026-07-19T22:05:05.2935697Z Collecting urllib3==2.7.0 (from -r requirements.txt (line 104))
+2026-07-19T22:05:05.2948316Z   Using cached urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
+2026-07-19T22:05:05.3778302Z Collecting websockets==16.0 (from -r requirements.txt (line 105))
+2026-07-19T22:05:05.3791195Z   Using cached websockets-16.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+2026-07-19T22:05:05.6824322Z Collecting wrapt==2.2.2 (from -r requirements.txt (line 106))
+2026-07-19T22:05:05.6838121Z   Using cached wrapt-2.2.2-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (7.4 kB)
+2026-07-19T22:05:05.6938124Z Collecting xmltodict==1.0.4 (from -r requirements.txt (line 107))
+2026-07-19T22:05:05.6949750Z   Using cached xmltodict-1.0.4-py3-none-any.whl.metadata (14 kB)
+2026-07-19T22:05:05.9170061Z Collecting yarl==1.24.2 (from -r requirements.txt (line 108))
+2026-07-19T22:05:05.9183896Z   Using cached yarl-1.24.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (94 kB)
+2026-07-19T22:05:05.9378309Z Collecting yaspin==3.4.0 (from -r requirements.txt (line 109))
+2026-07-19T22:05:05.9390376Z   Using cached yaspin-3.4.0-py3-none-any.whl.metadata (15 kB)
+2026-07-19T22:05:05.9585287Z Collecting yfinance==1.5.1 (from -r requirements.txt (line 110))
+2026-07-19T22:05:05.9597727Z   Using cached yfinance-1.5.1-py2.py3-none-any.whl.metadata (6.2 kB)
+2026-07-19T22:05:06.1747663Z Using cached aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+2026-07-19T22:05:06.1759438Z Using cached aiohttp-3.14.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.8 MB)
+2026-07-19T22:05:06.1777498Z Using cached multidict-6.7.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (256 kB)
+2026-07-19T22:05:06.1789748Z Using cached yarl-1.24.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (105 kB)
+2026-07-19T22:05:06.1801047Z Using cached aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+2026-07-19T22:05:06.1812590Z Using cached annotated_types-0.7.0-py3-none-any.whl (13 kB)
+2026-07-19T22:05:06.1823266Z Using cached anthropic-0.116.0-py3-none-any.whl (956 kB)
+2026-07-19T22:05:06.1837838Z Using cached anyio-4.14.1-py3-none-any.whl (124 kB)
+2026-07-19T22:05:06.1849524Z Using cached distro-1.9.0-py3-none-any.whl (20 kB)
+2026-07-19T22:05:06.1860815Z Using cached docstring_parser-0.18.0-py3-none-any.whl (22 kB)
+2026-07-19T22:05:06.1872005Z Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-07-19T22:05:06.1883378Z Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-07-19T22:05:06.1895048Z Using cached jiter-0.16.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (343 kB)
+2026-07-19T22:05:06.1907405Z Using cached pydantic-2.13.4-py3-none-any.whl (472 kB)
+2026-07-19T22:05:06.1920161Z Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-07-19T22:05:06.1931648Z Using cached appdirs-1.4.4-py2.py3-none-any.whl (9.6 kB)
+2026-07-19T22:05:06.1942960Z Using cached arelle_release-2.41.6-py3-none-any.whl (5.9 MB)
+2026-07-19T22:05:06.1974649Z Using cached bottle-0.13.4-py2.py3-none-any.whl (103 kB)
+2026-07-19T22:05:06.1986002Z Using cached isodate-0.7.2-py3-none-any.whl (22 kB)
+2026-07-19T22:05:06.1997227Z Using cached jaconv-0.5.0-py3-none-any.whl (16 kB)
+2026-07-19T22:05:06.2008293Z Using cached jsonschema-4.26.0-py3-none-any.whl (90 kB)
+2026-07-19T22:05:06.2019916Z Using cached lxml-6.1.1-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (5.2 MB)
+2026-07-19T22:05:06.2049223Z Using cached numpy-2.5.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+2026-07-19T22:05:06.2118398Z Using cached openpyxl-3.1.5-py2.py3-none-any.whl (250 kB)
+2026-07-19T22:05:06.2131126Z Using cached pillow-12.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)
+2026-07-19T22:05:06.2165921Z Using cached pyparsing-3.3.2-py3-none-any.whl (122 kB)
+2026-07-19T22:05:06.2177744Z Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+2026-07-19T22:05:06.2189406Z Using cached truststore-0.10.4-py3-none-any.whl (18 kB)
+2026-07-19T22:05:06.2201193Z Using cached attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-07-19T22:05:06.2213003Z Using cached beautifulsoup4-4.15.0-py3-none-any.whl (109 kB)
+2026-07-19T22:05:06.2224919Z Using cached certifi-2026.6.17-py3-none-any.whl (133 kB)
+2026-07-19T22:05:06.2236606Z Using cached cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (219 kB)
+2026-07-19T22:05:06.2249100Z Using cached charset_normalizer-3.4.7-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (216 kB)
+2026-07-19T22:05:06.2260211Z Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+2026-07-19T22:05:06.2271723Z Using cached contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (362 kB)
+2026-07-19T22:05:06.2284325Z Using cached cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+2026-07-19T22:05:06.2312233Z Using cached curl_cffi-0.15.0-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (11.1 MB)
+2026-07-19T22:05:06.2361094Z Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+2026-07-19T22:05:06.2372186Z Using cached decorator-4.4.2-py2.py3-none-any.whl (9.2 kB)
+2026-07-19T22:05:06.2383180Z Using cached deprecated-1.3.1-py2.py3-none-any.whl (11 kB)
+2026-07-19T22:05:06.2394751Z Using cached wrapt-2.2.2-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (169 kB)
+2026-07-19T22:05:06.2405858Z Using cached edge_tts-7.2.8-py3-none-any.whl (31 kB)
+2026-07-19T22:05:06.2417346Z Using cached tabulate-0.10.0-py3-none-any.whl (39 kB)
+2026-07-19T22:05:06.2428420Z Using cached et_xmlfile-2.0.0-py3-none-any.whl (18 kB)
+2026-07-19T22:05:06.2439541Z Using cached fake_useragent-2.2.0-py3-none-any.whl (161 kB)
+2026-07-19T22:05:06.2451664Z Using cached filelock-3.29.5-py3-none-any.whl (45 kB)
+2026-07-19T22:05:06.2462852Z Using cached finance_datareader-0.9.202-py3-none-any.whl (53 kB)
+2026-07-19T22:05:06.2474970Z Using cached fonttools-4.63.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.0 MB)
+2026-07-19T22:05:06.2503866Z Using cached frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (242 kB)
+2026-07-19T22:05:06.2515213Z Using cached google_api_core-2.31.0-py3-none-any.whl (173 kB)
+2026-07-19T22:05:06.2527012Z Using cached google_auth-2.55.1-py3-none-any.whl (252 kB)
+2026-07-19T22:05:06.2538938Z Using cached googleapis_common_protos-1.75.0-py3-none-any.whl (300 kB)
+2026-07-19T22:05:06.2551023Z Using cached proto_plus-1.28.0-py3-none-any.whl (50 kB)
+2026-07-19T22:05:06.2562337Z Using cached protobuf-7.35.1-cp310-abi3-manylinux2014_x86_64.whl (327 kB)
+2026-07-19T22:05:06.2574388Z Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+2026-07-19T22:05:06.2585657Z Using cached idna-3.18-py3-none-any.whl (65 kB)
+2026-07-19T22:05:06.2597581Z Using cached urllib3-2.7.0-py3-none-any.whl (131 kB)
+2026-07-19T22:05:06.2609277Z Using cached google_api_python_client-2.198.0-py3-none-any.whl (15.6 MB)
+2026-07-19T22:05:06.2675200Z Using cached google_auth_httplib2-0.4.0-py3-none-any.whl (9.5 kB)
+2026-07-19T22:05:06.2686132Z Using cached httplib2-0.32.0-py3-none-any.whl (93 kB)
+2026-07-19T22:05:06.2697733Z Using cached uritemplate-4.2.0-py3-none-any.whl (11 kB)
+2026-07-19T22:05:06.2708848Z Using cached google_auth_oauthlib-1.4.0-py3-none-any.whl (19 kB)
+2026-07-19T22:05:06.2719950Z Using cached google_genai-2.10.0-py3-none-any.whl (957 kB)
+2026-07-19T22:05:06.2734223Z Using cached tenacity-9.1.4-py3-none-any.whl (28 kB)
+2026-07-19T22:05:06.2746154Z Using cached websockets-16.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (184 kB)
+2026-07-19T22:05:06.2757283Z Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+2026-07-19T22:05:06.2768722Z Using cached imageio-2.37.3-py3-none-any.whl (317 kB)
+2026-07-19T22:05:06.2781125Z Using cached imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl (29.5 MB)
+2026-07-19T22:05:06.2896240Z Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+2026-07-19T22:05:06.2907832Z Using cached kiwisolver-1.5.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+2026-07-19T22:05:06.2924024Z Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-07-19T22:05:06.2935267Z Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-07-19T22:05:06.2947840Z Using cached matplotlib-3.11.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (10.0 MB)
+2026-07-19T22:05:06.2993175Z Using cached proglog-0.1.12-py3-none-any.whl (6.3 kB)
+2026-07-19T22:05:06.3004293Z Using cached tqdm-4.68.3-py3-none-any.whl (78 kB)
+2026-07-19T22:05:06.3015548Z Using cached multipledispatch-1.0.0-py3-none-any.whl (12 kB)
+2026-07-19T22:05:06.3026569Z Using cached multitasking-0.0.13-py3-none-any.whl (16 kB)
+2026-07-19T22:05:06.3037781Z Using cached narwhals-2.23.0-py3-none-any.whl (458 kB)
+2026-07-19T22:05:06.3050276Z Using cached oauthlib-3.3.1-py3-none-any.whl (160 kB)
+2026-07-19T22:05:06.3061800Z Using cached packaging-26.2-py3-none-any.whl (100 kB)
+2026-07-19T22:05:06.3075122Z Using cached pandas-2.3.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (12.4 MB)
+2026-07-19T22:05:06.3130281Z Using cached peewee-4.1.2-py3-none-any.whl (173 kB)
+2026-07-19T22:05:06.3142028Z Using cached platformdirs-4.10.0-py3-none-any.whl (22 kB)
+2026-07-19T22:05:06.3153078Z Using cached plotly-6.8.0-py3-none-any.whl (9.9 MB)
+2026-07-19T22:05:06.3199261Z Using cached propcache-0.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (61 kB)
+2026-07-19T22:05:06.3210113Z Using cached pyasn1-0.6.3-py3-none-any.whl (83 kB)
+2026-07-19T22:05:06.3221487Z Using cached pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+2026-07-19T22:05:06.3233093Z Using cached pycparser-3.0-py3-none-any.whl (48 kB)
+2026-07-19T22:05:06.3245519Z Using cached pydantic_core-2.46.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2026-07-19T22:05:06.3263892Z Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+2026-07-19T22:05:06.3279263Z Using cached pykrx-1.2.8-py3-none-any.whl (2.2 MB)
+2026-07-19T22:05:06.3298023Z Using cached python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+2026-07-19T22:05:06.3309161Z Using cached pytz-2026.2-py2.py3-none-any.whl (510 kB)
+2026-07-19T22:05:06.3321891Z Using cached referencing-0.37.0-py3-none-any.whl (26 kB)
+2026-07-19T22:05:06.3333556Z Using cached regex-2026.6.28-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (801 kB)
+2026-07-19T22:05:06.3347206Z Using cached requests_file-3.0.1-py2.py3-none-any.whl (4.5 kB)
+2026-07-19T22:05:06.3358311Z Using cached requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
+2026-07-19T22:05:06.3369090Z Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+2026-07-19T22:05:06.3381714Z Using cached rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (366 kB)
+2026-07-19T22:05:06.3394004Z Using cached schedule-1.2.2-py3-none-any.whl (12 kB)
+2026-07-19T22:05:06.3406419Z Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-07-19T22:05:06.3417715Z Using cached sniffio-1.3.1-py3-none-any.whl (10 kB)
+2026-07-19T22:05:06.3428807Z Using cached soupsieve-2.8.4-py3-none-any.whl (37 kB)
+2026-07-19T22:05:06.3440174Z Using cached termcolor-3.3.0-py3-none-any.whl (7.7 kB)
+2026-07-19T22:05:06.3451364Z Using cached typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+2026-07-19T22:05:06.3462391Z Using cached tzdata-2026.2-py2.py3-none-any.whl (349 kB)
+2026-07-19T22:05:06.3474638Z Using cached xmltodict-1.0.4-py3-none-any.whl (13 kB)
+2026-07-19T22:05:06.3485708Z Using cached yaspin-3.4.0-py3-none-any.whl (21 kB)
+2026-07-19T22:05:06.3497281Z Using cached yfinance-1.5.1-py2.py3-none-any.whl (144 kB)
+2026-07-19T22:05:06.8697068Z Installing collected packages: pytz, peewee, multitasking, multipledispatch, jaconv, bottle, appdirs, xmltodict, wrapt, websockets, urllib3, uritemplate, tzdata, typing_extensions, truststore, tqdm, termcolor, tenacity, tabulate, soupsieve, sniffio, six, schedule, rpds-py, regex, python-dotenv, pyparsing, Pygments, pycparser, pyasn1, protobuf, propcache, platformdirs, pillow, packaging, oauthlib, numpy, narwhals, multidict, mdurl, lxml, kiwisolver, jiter, isodate, imageio-ffmpeg, idna, h11, frozenlist, fonttools, filelock, fake-useragent, et_xmlfile, docstring_parser, distro, decorator, cycler, colorama, charset-normalizer, certifi, attrs, annotated-types, aiohappyeyeballs, yaspin, yarl, typing-inspection, requests, referencing, python-dateutil, pydantic_core, pyasn1_modules, proto-plus, proglog, plotly, openpyxl, markdown-it-py, ImageIO, httplib2, httpcore, googleapis-common-protos, Deprecated, contourpy, cffi, beautifulsoup4, anyio, aiosignal, rich, requests-oauthlib, requests-file, pydantic, pandas, moviepy, matplotlib, jsonschema-specifications, httpx, cryptography, aiohttp, pykrx, jsonschema, google-auth, finance-datareader, edge-tts, curl_cffi, anthropic, yfinance, google-auth-oauthlib, google-auth-httplib2, google-api-core, arelle-release, google-genai, google-api-python-client
+2026-07-19T22:05:28.2498861Z 
+2026-07-19T22:05:28.2590199Z Successfully installed Deprecated-1.3.1 ImageIO-2.37.3 Pygments-2.20.0 aiohappyeyeballs-2.7.1 aiohttp-3.14.1 aiosignal-1.4.0 annotated-types-0.7.0 anthropic-0.116.0 anyio-4.14.1 appdirs-1.4.4 arelle-release-2.41.6 attrs-26.1.0 beautifulsoup4-4.15.0 bottle-0.13.4 certifi-2026.6.17 cffi-2.0.0 charset-normalizer-3.4.7 colorama-0.4.6 contourpy-1.3.3 cryptography-49.0.0 curl_cffi-0.15.0 cycler-0.12.1 decorator-4.4.2 distro-1.9.0 docstring_parser-0.18.0 edge-tts-7.2.8 et_xmlfile-2.0.0 fake-useragent-2.2.0 filelock-3.29.5 finance-datareader-0.9.202 fonttools-4.63.0 frozenlist-1.8.0 google-api-core-2.31.0 google-api-python-client-2.198.0 google-auth-2.55.1 google-auth-httplib2-0.4.0 google-auth-oauthlib-1.4.0 google-genai-2.10.0 googleapis-common-protos-1.75.0 h11-0.16.0 httpcore-1.0.9 httplib2-0.32.0 httpx-0.28.1 idna-3.18 imageio-ffmpeg-0.6.0 isodate-0.7.2 jaconv-0.5.0 jiter-0.16.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 kiwisolver-1.5.0 lxml-6.1.1 markdown-it-py-4.2.0 matplotlib-3.11.0 mdurl-0.1.2 moviepy-1.0.3 multidict-6.7.1 multipledispatch-1.0.0 multitasking-0.0.13 narwhals-2.23.0 numpy-2.5.0 oauthlib-3.3.1 openpyxl-3.1.5 packaging-26.2 pandas-2.3.3 peewee-4.1.2 pillow-12.3.0 platformdirs-4.10.0 plotly-6.8.0 proglog-0.1.12 propcache-0.5.2 proto-plus-1.28.0 protobuf-7.35.1 pyasn1-0.6.3 pyasn1_modules-0.4.2 pycparser-3.0 pydantic-2.13.4 pydantic_core-2.46.4 pykrx-1.2.8 pyparsing-3.3.2 python-dateutil-2.9.0.post0 python-dotenv-1.2.2 pytz-2026.2 referencing-0.37.0 regex-2026.6.28 requests-2.34.2 requests-file-3.0.1 requests-oauthlib-2.0.0 rich-15.0.0 rpds-py-2026.6.3 schedule-1.2.2 six-1.17.0 sniffio-1.3.1 soupsieve-2.8.4 tabulate-0.10.0 tenacity-9.1.4 termcolor-3.3.0 tqdm-4.68.3 truststore-0.10.4 typing-inspection-0.4.2 typing_extensions-4.16.0 tzdata-2026.2 uritemplate-4.2.0 urllib3-2.7.0 websockets-16.0 wrapt-2.2.2 xmltodict-1.0.4 yarl-1.24.2 yaspin-3.4.0 yfinance-1.5.1
+2026-07-19T22:05:28.5668089Z ##[group]Run python main_daily_v4.py
+2026-07-19T22:05:28.5668475Z [36;1mpython main_daily_v4.py[0m
+2026-07-19T22:05:28.5728382Z shell: /usr/bin/bash -e {0}
+2026-07-19T22:05:28.5728691Z env:
+2026-07-19T22:05:28.5729018Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:05:28.5729731Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+2026-07-19T22:05:28.5730241Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:05:28.5730699Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:05:28.5731159Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:05:28.5731643Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+2026-07-19T22:05:28.5732824Z   ANTHROPIC_API_KEY: ***
+2026-07-19T22:05:28.5733285Z   GEMINI_API_KEY: ***
+2026-07-19T22:05:28.5733667Z   KIS_APP_KEY: ***
+2026-07-19T22:05:28.5734733Z   KIS_APP_SECRET: ***
+2026-07-19T22:05:28.5735095Z   DART_API_KEY: ***
+2026-07-19T22:05:28.5735418Z   BLOG_ID: ***
+2026-07-19T22:05:28.5736283Z   GOOGLE_CLIENT_ID: ***
+2026-07-19T22:05:28.5736681Z   GOOGLE_CLIENT_SECRET: ***
+2026-07-19T22:05:28.5737419Z   GOOGLE_REFRESH_TOKEN: ***
+
+2026-07-19T22:05:28.5737745Z   KAKAO_ACCESS_TOKEN: 
+2026-07-19T22:05:28.5738144Z   TELEGRAM_BOT_TOKEN: ***
+2026-07-19T22:05:28.5738487Z   TELEGRAM_CHAT_ID: ***
+
+2026-07-19T22:05:28.5738814Z   NAVER_CLIENT_ID: ***
+2026-07-19T22:05:28.5739127Z   NAVER_CLIENT_SECRET: ***
+2026-07-19T22:05:28.5740668Z   META_ACCESS_TOKEN: ***
+
+2026-07-19T22:05:28.5741007Z   INSTAGRAM_ACCOUNT_ID: ***
+2026-07-19T22:05:28.5741365Z   IMGBB_API_KEY: ***
+2026-07-19T22:05:28.5741613Z ##[endgroup]
+2026-07-19T22:07:28.4093973Z KRX 로그인 실패: KRX_ID 또는 KRX_PW 환경 변수가 설정되지 않았습니다.
+2026-07-19T22:07:28.4094857Z ============================================================
+2026-07-19T22:07:28.4096371Z   멋쟁이 인사이트 v4 — 완전 고도화 (유튜브 쇼츠 에디션)
+2026-07-19T22:07:28.4097150Z   2026년 07월 20일 월요일 KST
+2026-07-19T22:07:28.4097749Z ============================================================
+2026-07-19T22:07:28.4098088Z 
+2026-07-19T22:07:28.4098292Z [0/10] 전일 픽 성과 업데이트...
+2026-07-19T22:07:28.4098688Z ✅ 성과 업데이트: 0개
+2026-07-19T22:07:28.4098879Z 
+2026-07-19T22:07:28.4099061Z [1/10] 시장 데이터 수집...
+2026-07-19T22:07:28.4099466Z 📊 시장 데이터 수집 시작...
+2026-07-19T22:07:28.4099898Z   [글로벌] 해외 매크로 지표 수집 중...
+2026-07-19T22:07:28.4100506Z Error occurred in get_index_ohlcv_by_date: Expecting value: line 1 column 1 (char 0)
+2026-07-19T22:07:28.4101326Z Error occurred in __fetch: Expecting value: line 1 column 1 (char 0)
+2026-07-19T22:07:28.4102137Z 📈 장중 15% 이상 급등 종목 수집 중 (yfinance)...
+2026-07-19T22:07:28.4102848Z ✅ 시장 데이터 수집 완료
+2026-07-19T22:07:28.4103047Z 
+2026-07-19T22:07:28.4103244Z [2/10] 뉴스·공시 수집...
+2026-07-19T22:07:28.4103840Z 📰 뉴스·공시 수집 시작...
+2026-07-19T22:07:28.4104386Z ✅ 뉴스·공시 수집 완료
+2026-07-19T22:07:28.4104582Z 
+2026-07-19T22:07:28.4104888Z [3/10] 글로벌 매크로 분석...
+2026-07-19T22:07:28.4105348Z 🌍 매크로 에이전트 분석 중...
+2026-07-19T22:07:28.4106071Z [Claude Sonnet 4.6] API call attempt (claude-sonnet-4-6)...
+2026-07-19T22:07:28.4107981Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCG8XS7N431BRvKzKn'}
+2026-07-19T22:07:28.4110876Z 매크로 오류: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCG8XS7N431BRvKzKn'}
+2026-07-19T22:07:28.4112175Z 
+2026-07-19T22:07:28.4112377Z [4/10] 수급 + 외국인 종목 추적...
+2026-07-19T22:07:28.4112790Z 📊 수급 에이전트 분석 중...
+2026-07-19T22:07:28.4113186Z [Claude Sonnet 4.6] API call attempt (claude-sonnet-4-6)...
+2026-07-19T22:07:28.4114774Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCGkjafy5mP8U64XyL'}
+2026-07-19T22:07:28.4117067Z 수급 오류: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCGkjafy5mP8U64XyL'}
+2026-07-19T22:07:28.4118279Z 🔍 외국인 추적 에이전트 분석 중...
+2026-07-19T22:07:28.4118622Z [Claude Sonnet 4.6] API call attempt (claude-sonnet-4-6)...
+2026-07-19T22:07:28.4119786Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCS7nyMgtr7H1ivHqP'}
+2026-07-19T22:07:28.4121737Z 외국인 추적 오류: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCS7nyMgtr7H1ivHqP'}
+2026-07-19T22:07:28.4122615Z 
+2026-07-19T22:07:28.4122761Z [5/10] 실적 + 공시 NLP 분석...
+2026-07-19T22:07:28.4123070Z 📈 실적·공시 에이전트 분석 중...
+2026-07-19T22:07:28.4123401Z [Claude Sonnet 4.6] API call attempt (claude-sonnet-4-6)...
+2026-07-19T22:07:28.4124552Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCT8Zn8cdShGEpFYA1'}
+2026-07-19T22:07:28.4126697Z 실적 오류: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCT8Zn8cdShGEpFYA1'}
+2026-07-19T22:07:28.4127718Z 📋 공시 NLP 에이전트 분석 중...
+2026-07-19T22:07:28.4127877Z 
+2026-07-19T22:07:28.4128035Z [6/10] 기술적 분석 + 감성 지수...
+2026-07-19T22:07:28.4128329Z 📉 기술적 에이전트 분석 중...
+2026-07-19T22:07:28.4128646Z [Claude Sonnet 4.6] API call attempt (claude-sonnet-4-6)...
+2026-07-19T22:07:28.4129783Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCXzWsmgCjexyWLNDe'}
+2026-07-19T22:07:28.4131688Z 기술적 오류: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCXzWsmgCjexyWLNDe'}
+2026-07-19T22:07:28.4132666Z 💭 감성 에이전트 분석 중...
+2026-07-19T22:07:28.4132978Z [Claude Sonnet 4.6] API call attempt (claude-sonnet-4-6)...
+2026-07-19T22:07:28.4134113Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCgHqM5Q3TUUKBYuWU'}
+2026-07-19T22:07:28.4136207Z 감성 에이전트 오류: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCgHqM5Q3TUUKBYuWU'}
+2026-07-19T22:07:28.4137090Z 
+2026-07-19T22:07:28.4137232Z [7/10] 백테스팅 검증...
+2026-07-19T22:07:28.4137517Z 📐 백테스팅 에이전트 분석 중...
+2026-07-19T22:07:28.4137834Z [Claude Sonnet 4.6] API call attempt (claude-sonnet-4-6)...
+2026-07-19T22:07:28.4138949Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCgo6Z1MqMXR2g3jGu'}
+2026-07-19T22:07:28.4140979Z 백테스팅 오류: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBCgo6Z1MqMXR2g3jGu'}
+2026-07-19T22:07:28.4142200Z    신호 신뢰도: 50점 (C등급)
+2026-07-19T22:07:28.4142357Z 
+2026-07-19T22:07:28.4142640Z [8/10] 통합 판단 + 블로그 생성...
+2026-07-19T22:07:28.4143113Z 🖼️ 이미지1: https://image.pollinations.ai/prompt/Seoul%20Korea%20stock%2...
+2026-07-19T22:07:28.4143733Z 🖼️ 이미지2: https://image.pollinations.ai/prompt/stock%20market%20candle...
+2026-07-19T22:07:28.4144200Z 🧠 통합 판단 v3 에이전트 작동 중...
+2026-07-19T22:07:28.4144549Z 🤖 [우선순위 1] Claude Sonnet 4.6으로 통합 분석서 생성 중...
+2026-07-19T22:07:28.4144953Z [Claude Sonnet 4.6] API call attempt (claude-sonnet-4-6)...
+2026-07-19T22:07:28.4146376Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBChJ7PjFuAKgFWygT8'}
+2026-07-19T22:07:28.4148469Z ⚠️ Claude Sonnet 4.6 호출 실패 (Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBChJ7PjFuAKgFWygT8'}) → Gemini 백업 시스템 작동...
+2026-07-19T22:07:28.4149660Z 🤖 Gemini 백업 호출 시도 중: gemini-2.5-pro...
+2026-07-19T22:07:28.4150050Z ❌ Gemini gemini-2.5-pro 응답 실패: HTTP 429 — {
+2026-07-19T22:07:28.4150371Z   "error": {
+2026-07-19T22:07:28.4150598Z     "code": 429,
+2026-07-19T22:07:28.4151133Z     "message": "You exceeded your current quota, please check your plan and billing details. For more information on t
+2026-07-19T22:07:28.4151776Z 🤖 Gemini 백업 호출 시도 중: gemini-2.5-flash...
+2026-07-19T22:07:28.4152150Z ✅ Gemini 백업 생성 완료 (gemini-2.5-flash)
+2026-07-19T22:07:28.4152608Z 🖼️ 이미지 주입 완료: https://image.pollinations.ai/prompt/Seoul%20Korea...
+2026-07-19T22:07:28.4153053Z ✅ 통합 판단 v3 완료
+2026-07-19T22:07:28.4153346Z ⚠️ PICKS_JSON 없음 → HTML 파싱 fallback
+2026-07-19T22:07:28.4153762Z ✅ 발행 완료: https://aigoid.blogspot.com/2026/07/07-20-9.html
+2026-07-19T22:07:28.4154028Z 
+2026-07-19T22:07:28.4154168Z [9/10] 소셜 콘텐츠 + 알림...
+2026-07-19T22:07:28.4154453Z 📱 소셜 콘텐츠 생성 중...
+2026-07-19T22:07:28.4154785Z [Claude Sonnet 4.6] API call attempt (claude-sonnet-4-6)...
+2026-07-19T22:07:28.4156159Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBFYtB9UWiAPy64wFHC'}
+2026-07-19T22:07:28.4158068Z 소셜 생성 오류: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBFYtB9UWiAPy64wFHC'}
+2026-07-19T22:07:28.4159126Z ✅ 소셜 콘텐츠 저장: social_content/20260720_social.json
+2026-07-19T22:07:28.4159495Z KAKAO_ACCESS_TOKEN 없음
+2026-07-19T22:07:28.4159779Z ✅ 텔레그램 알림 전송 완료
+2026-07-19T22:07:28.4159917Z 
+2026-07-19T22:07:28.4160073Z [10/10] 유튜브 쇼츠 자동 제작 및 발행...
+2026-07-19T22:07:28.4160400Z 🎬 쇼츠 총괄 편집장 에이전트 기획서 제작 시작...
+2026-07-19T22:07:41.7447921Z [Claude Sonnet 4.6] API call attempt (claude-3-5-sonnet-20241022)...
+2026-07-19T22:07:41.7450170Z [Claude Sonnet 4.6] API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBFbZA2gctTE8KTVicu'}
+2026-07-19T22:07:41.7453899Z 쇼츠 편집장 에이전트 기획 오류: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'You have reached your specified API usage limits. You will regain access on 2026-08-01 at 00:00 UTC.'}, 'request_id': 'req_011CdCBFbZA2gctTE8KTVicu'}
+2026-07-19T22:07:41.7455551Z 
+2026-07-19T22:07:41.7456376Z [Video Agent] 쇼츠 이미지 에셋 소싱 시작...
+2026-07-19T22:07:41.7457267Z 🎨 일러스트 전문가: 'Bullish financial chart with upward arrows' 컨셉 AI 이미지 생성 중...
+2026-07-19T22:07:41.7458437Z 🎨 일러스트 전문가: 'Stock analysis bar graph' 컨셉 AI 이미지 생성 중...
+2026-07-19T22:07:41.7459500Z 🎨 일러스트 전문가: 'Laptop displaying a stock blog article' 컨셉 AI 이미지 생성 중...
+2026-07-19T22:07:41.7460501Z 
+2026-07-19T22:07:41.7460889Z [Editor Agent] 쇼츠 동영상 렌더링 편집 시작...
+2026-07-19T22:07:41.7461701Z 🎙️ 성우 에이전트: 씬 0 오디오 녹음 중...
+2026-07-19T22:07:41.7523729Z 🎬 편집 에이전트: 씬 0 자막 입히는 중 -> '오늘 급등 후보 종목'
+2026-07-19T22:07:41.7524396Z 🎙️ 성우 에이전트: 씬 1 오디오 녹음 중...
+2026-07-19T22:07:41.7524992Z 🎬 편집 에이전트: 씬 1 자막 입히는 중 -> '수급 유입 포착'
+2026-07-19T22:07:41.7525574Z 🎙️ 성우 에이전트: 씬 2 오디오 녹음 중...
+2026-07-19T22:07:41.7526420Z 🎬 편집 에이전트: 씬 2 자막 입히는 중 -> '전체 분석 링크 확인'
+2026-07-19T22:07:41.7527023Z ⚙️ 전체 씬 오토 컴포징 및 병합 렌더링 중...
+2026-07-19T22:07:41.7527641Z 🎉 쇼츠 렌더링 최종 완성: temp_shorts/final_shorts.mp4
+2026-07-19T22:07:41.7528036Z 
+2026-07-19T22:07:41.7528394Z [Publisher Agent] 유튜브 쇼츠 자동 업로드 단계 진입...
+2026-07-19T22:07:41.7529134Z 📤 유튜브 업로드 중: '오늘 주목해야 할 급등 추천 종목 #Shorts' (파일 크기: 0.72 MB)
+2026-07-19T22:07:41.7530268Z 유튜브 쇼츠 업로드 중 예외 발생: ('invalid_scope: Bad Request', {'error': 'invalid_scope', 'error_description': 'Bad Request'})
+2026-07-19T22:07:41.7530996Z 
+2026-07-19T22:07:41.7531217Z ============================================================
+2026-07-19T22:07:41.7532028Z   ✅ 발행 완료: https://aigoid.blogspot.com/2026/07/07-20-9.html
+2026-07-19T22:07:41.7532673Z   📊 누적 승률: 0%
+2026-07-19T22:07:41.7533102Z ============================================================
+2026-07-19T22:07:42.1597762Z ##[group]Run git config user.name "멋쟁이봇"
+2026-07-19T22:07:42.1598189Z [36;1mgit config user.name "멋쟁이봇"[0m
+2026-07-19T22:07:42.1598570Z [36;1mgit config user.email "aigoid1203@gmail.com"[0m
+2026-07-19T22:07:42.1598988Z [36;1mgit add trackers/ social_content/ || true[0m
+2026-07-19T22:07:42.1599422Z [36;1mgit commit -m "자동: $(date +'%Y-%m-%d') 픽성과+소셜" || true[0m
+2026-07-19T22:07:42.1599830Z [36;1mgit push || true[0m
+2026-07-19T22:07:42.1658817Z shell: /usr/bin/bash -e {0}
+2026-07-19T22:07:42.1659122Z env:
+2026-07-19T22:07:42.1659455Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:07:42.1659991Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+2026-07-19T22:07:42.1660543Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:07:42.1661005Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:07:42.1661474Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-07-19T22:07:42.1661984Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+2026-07-19T22:07:42.1662386Z ##[endgroup]
+2026-07-19T22:07:42.1961452Z [master 4fdc568] 자동: 2026-07-19 픽성과+소셜
+2026-07-19T22:07:42.1961835Z  1 file changed, 3 insertions(+)
+2026-07-19T22:07:42.1962216Z  create mode 100644 social_content/20260720_social.json
+2026-07-19T22:07:42.2822088Z remote: Permission to yubyeongwook/aigoid-blog-bot.git denied to github-actions[bot].
+2026-07-19T22:07:42.2824523Z fatal: unable to access 'https://github.com/yubyeongwook/aigoid-blog-bot/': The requested URL returned error: 403
+2026-07-19T22:07:42.3474745Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-19T22:07:42.3477574Z Post job cleanup.
+2026-07-19T22:07:42.4702822Z Cache hit occurred on the primary key Linux-pip-7a760e66428d083ed8466374237b0d322675dd722ec026879acc9d3165b1e848, not saving cache.
+2026-07-19T22:07:42.4705131Z (node:3458) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-07-19T22:07:42.4706630Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-07-19T22:07:42.4844975Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-19T22:07:42.4846676Z Post job cleanup.
+2026-07-19T22:07:42.6073570Z (node:3466) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-07-19T22:07:42.6075032Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-07-19T22:07:42.6314626Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-19T22:07:42.6316353Z Post job cleanup.
+2026-07-19T22:07:42.7234763Z [command]/usr/bin/git version
+2026-07-19T22:07:42.7276692Z git version 2.54.0
+2026-07-19T22:07:42.7321063Z Temporarily overriding HOME='/home/runner/work/_temp/c286b60c-50ea-4b9a-9433-641c61dfbd8b' before making global git config changes
+2026-07-19T22:07:42.7322864Z Adding repository directory to the temporary git global config as a safe directory
+2026-07-19T22:07:42.7327444Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aigoid-blog-bot/aigoid-blog-bot
+2026-07-19T22:07:42.7371515Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-07-19T22:07:42.7410168Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-07-19T22:07:42.7667176Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-07-19T22:07:42.7698126Z http.https://github.com/.extraheader
+2026-07-19T22:07:42.7713810Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-07-19T22:07:42.7749367Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-07-19T22:07:42.8061363Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-07-19T22:07:42.8100539Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-07-19T22:07:42.8627591Z Cleaning up orphan processes
+2026-07-19T22:07:42.8939259Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache@v3, actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
