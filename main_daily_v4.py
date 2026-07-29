@@ -13,7 +13,7 @@ from agents.technical_agent import analyze as technical_analyze
 from agents.dart_nlp_agent import analyze as dart_nlp_analyze
 from agents.foreign_tracker_agent import analyze as foreign_analyze
 from agents.sentiment_agent import analyze as sentiment_analyze
-from agents.synthesis_agent_v3 import synthesize_and_write
+from agents.synthesis_agent_v3 import synthesize_and_write, generate_seo_title
 from backtesting.backtest_agent import analyze as backtest_analyze
 from social.card_news_generator import generate as generate_social, save_social_content
 from notifications.kakao_notify import send_kakao_message, send_telegram_message
@@ -202,7 +202,8 @@ def main():
             print(f"  {log}")
         print("  ✅ 모든 수치 오류 교정 완료 후 발행을 승인합니다.\n")
 
-    seo_title = f"{today.strftime('%m월 %d일')} {weekday}요일 멋쟁이 인사이트 — 9개 전문가 통합 분석·백테스팅 검증"
+    market_summary = f"KOSPI: {market_data.get('kospi', {}).get('close', '-')}, Key News: {macro_result.get('key_insight', '')}"
+    seo_title = generate_seo_title(market_summary)
     labels = auto_labels(html_content)
     labels.extend(["멋쟁이픽","단타픽","수급분석","공시분석","백테스팅"])
     result = publish_post(seo_title, html_content, labels)

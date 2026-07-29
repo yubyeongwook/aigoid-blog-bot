@@ -1,45 +1,121 @@
 """
 synthesis_agent_v3.py — 통합 판단 에이전트 v3
-6개 전문가 분석 + 픽 성과 추적 통합
-모바일 친화적 · 픽 섹션 최상단 · 손절선 필수
+6개 전문가 분석 통합
+모바일 친화적 · 검정 배경 대시보드 · 역설형 SEO 제목
 """
-import os, json, datetime, hashlib, urllib.parse, re, requests
+import os, json, datetime, re, requests
 
 from anthropic import Anthropic
 from dotenv import load_dotenv
 load_dotenv()
 
-
-
-def get_blog_image_urls(date_str: str, market_theme: str = "") -> tuple:
-    """Pollinations AI로 블로그용 이미지 2장 URL 생성 (무료, API 키 불필요)
-    날짜 기반 시드 사용 → 같은 날 같은 이미지 유지
-    """
-    seed1 = int(hashlib.md5(f"{date_str}_hero".encode()).hexdigest()[:8], 16) % 99999 + 1
-    seed2 = int(hashlib.md5(f"{date_str}_chart".encode()).hexdigest()[:8], 16) % 99999 + 1
-
-    theme = market_theme[:80] if market_theme else "Seoul Korea financial district"
-    p1 = urllib.parse.quote(
-        f"Seoul Korea stock exchange financial district modern professional cityscape {theme} "
-        f"cinematic lighting 4K photography"
-    )
-    img1 = (
-        f"https://image.pollinations.ai/prompt/{p1}"
-        f"?width=720&height=380&nologo=true&seed={seed1}"
-    )
-
-    p2 = urllib.parse.quote(
-        "stock market candlestick chart analysis dark blue background professional "
-        "trading screen data visualization Korea KOSPI financial"
-    )
-    img2 = (
-        f"https://image.pollinations.ai/prompt/{p2}"
-        f"?width=720&height=340&nologo=true&seed={seed2}"
-    )
-
-    return img1, img2
-
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY",""))
+
+UNSPLASH_IMAGE_URL = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80"
+
+def generate_seo_title(market_summary: str) -> str:
+    prompt = f"""
+오늘 한국 주식 블로그 제목 1개 만들어줘.
+
+오늘 시장 요약:
+{market_summary}
+
+규칙:
+- 역설형 제목: "A가 B인데 C다 — D"
+- 느낌표 금지
+- 50자 이내
+- 한국어만
+- SEO 키워드 포함 (코스피·반도체·외국인·상한가 등)
+
+예시:
+"엔비디아가 -5% 빠졌는데 SK하이닉스 64조가 답을 준다 — 오늘 수익성 세계 1위 확인"
+"외국인이 2조를 팔았는데 코스피가 올랐다 — AI 쇼티지가 만든 역설"
+
+제목 1개만 출력. 다른 말 금지.
+"""
+    try:
+        res = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=100,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return res.content[0].text.strip()
+    except Exception as e:
+        print(f"SEO 제목 생성 오류: {e}")
+        today = datetime.datetime.now()
+        weekday = ["월","화","수","목","금","토","일"][today.weekday()]
+        return f"{today.strftime('%m월 %d일')} {weekday}요일 코스피 분석 — 시장 주요 변수 통합 정리"
+
+def generate_dashboard_html(market_data: dict) -> str:
+    def color(val):
+        if val is None: return "#f0c040"
+        return "#4ade80" if float(str(val).replace('%','').replace('+','')) >= 0 else "#ef4444"
+
+    nasdaq_pct = market_data.get('nasdaq_pct', '0%')
+    nasdaq_val = market_data.get('nasdaq_val', '-')
+    sp500_pct  = market_data.get('sp500_pct', '0%')
+    sp500_val  = market_data.get('sp500_val', '-')
+    soxx_pct   = market_data.get('soxx_pct', '0%')
+    soxx_val   = market_data.get('soxx_val', '-')
+    usdkrw     = market_data.get('usdkrw', '-')
+    kospi_pct  = market_data.get('kospi_pct', '0%')
+    kospi_val  = market_data.get('kospi_val', '-')
+    wti        = market_data.get('wti', '-')
+    vix        = market_data.get('vix', '-')
+    foreign    = market_data.get('foreign_flow', '-')
+
+    return f"""
+<table width="100%" cellpadding="0" cellspacing="1"
+style="border-collapse:separate;border-spacing:1px;background:#111;margin:0 0 1px">
+<tr>
+  <td width="25%" style="background:#1a1a1a;padding:10px 6px;text-align:center;vertical-align:top">
+    <p style="font-size:9px;color:#888;margin:0 0 3px">나스닥</p>
+    <p style="font-size:14px;font-weight:700;color:{color(nasdaq_pct)};margin:0 0 1px;font-family:Georgia,serif">{nasdaq_pct}</p>
+    <p style="font-size:10px;color:#aaa;margin:0">{nasdaq_val}</p>
+  </td>
+  <td width="25%" style="background:#1a1a1a;padding:10px 6px;text-align:center;vertical-align:top">
+    <p style="font-size:9px;color:#888;margin:0 0 3px">S&P500</p>
+    <p style="font-size:14px;font-weight:700;color:{color(sp500_pct)};margin:0 0 1px;font-family:Georgia,serif">{sp500_pct}</p>
+    <p style="font-size:10px;color:#aaa;margin:0">{sp500_val}</p>
+  </td>
+  <td width="25%" style="background:#1a1a1a;padding:10px 6px;text-align:center;vertical-align:top">
+    <p style="font-size:9px;color:#888;margin:0 0 3px">필라델피아반도체</p>
+    <p style="font-size:14px;font-weight:700;color:{color(soxx_pct)};margin:0 0 1px;font-family:Georgia,serif">{soxx_pct}</p>
+    <p style="font-size:10px;color:#aaa;margin:0">{soxx_val}</p>
+  </td>
+  <td width="25%" style="background:#1a1a1a;padding:10px 6px;text-align:center;vertical-align:top">
+    <p style="font-size:9px;color:#888;margin:0 0 3px">원달러 환율</p>
+    <p style="font-size:14px;font-weight:700;color:#f0c040;margin:0 0 1px;font-family:Georgia,serif">{usdkrw}</p>
+    <p style="font-size:10px;color:#aaa;margin:0">원</p>
+  </td>
+</tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="1"
+style="border-collapse:separate;border-spacing:1px;background:#111;margin:0 0 0">
+<tr>
+  <td width="25%" style="background:#1a1a1a;padding:9px 6px;text-align:center;vertical-align:top">
+    <p style="font-size:9px;color:#888;margin:0 0 2px">코스피</p>
+    <p style="font-size:12px;font-weight:700;color:{color(kospi_pct)};margin:0 0 1px">{kospi_pct}</p>
+    <p style="font-size:10px;color:#aaa;margin:0">{kospi_val}</p>
+  </td>
+  <td width="25%" style="background:#1a1a1a;padding:9px 6px;text-align:center;vertical-align:top">
+    <p style="font-size:9px;color:#888;margin:0 0 2px">WTI 유가</p>
+    <p style="font-size:12px;font-weight:700;color:#f0c040;margin:0 0 1px">{wti}</p>
+    <p style="font-size:10px;color:#aaa;margin:0">달러</p>
+  </td>
+  <td width="25%" style="background:#1a1a1a;padding:9px 6px;text-align:center;vertical-align:top">
+    <p style="font-size:9px;color:#888;margin:0 0 2px">VIX 공포지수</p>
+    <p style="font-size:12px;font-weight:700;color:#f0c040;margin:0 0 1px">{vix}</p>
+    <p style="font-size:10px;color:#aaa;margin:0"></p>
+  </td>
+  <td width="25%" style="background:#1a1a1a;padding:9px 6px;text-align:center;vertical-align:top">
+    <p style="font-size:9px;color:#888;margin:0 0 2px">외국인 수급</p>
+    <p style="font-size:12px;font-weight:700;color:#f0c040;margin:0 0 1px">{foreign}</p>
+    <p style="font-size:10px;color:#aaa;margin:0">억원</p>
+  </td>
+</tr>
+</table>
+"""
 
 SYNTHESIS_V3_SYSTEM = """
 당신은 멋쟁이 인사이트의 수석이사(Chief Managing Director)이자 최고투자전략책임자입니다.
@@ -59,17 +135,13 @@ SYNTHESIS_V3_SYSTEM = """
 - 전일 오후 마감 브리핑(`prev_afternoon_report`) 내용을 확인하고, 전날 오후 한국 시장의 수급 변화, 특징적 급등 테마/섹터 정보를 활용하십시오.
 - 밤사이 미국 마켓의 핵심 섹터 등락 요인(예: 미국 반도체 하락, AI 전력 인프라 급등 등)이 전날 한국장에서 주도적이었던 테마들과 어떻게 충돌하거나 탄력을 주며 연결되는지 인과관계를 매끄럽고 설득력 있게 서술하여 분석의 영속성을 부여하십시오.
 
-
-
 ═══════════════════════════════
 절대 금지 및 팩트 준수 규칙 (위반 시 즉시 반려)
 ═══════════════════════════════
 1. **수치 및 지수 왜곡 절대 금지 (가장 중요)**:
    - 제공된 원본 데이터(`market_data`) 및 각 분석기에서 제공된 코스피(KOSPI), 코스닥(KOSDAQ) 지수 및 개별 종목의 종가, 등락률 수치를 **반드시 소수점까지 한 글자도 틀리지 않고 그대로 적용**하십시오.
-   - 특히 **삼성전자(005930)와 SK하이닉스(000660)** 등 주요 종목들의 주가와 등락률을 서로 혼동하거나 뒤바꾸어 서술하지 마십시오. (예: 시뮬레이션 환경 데이터에서 삼성전자의 주가가 255,000원이고 SK하이닉스의 주가가 1,842,000원이라면, 절대로 'SK하이닉스가 25만원대로 추락했다'고 적거나 두 종목의 가격을 뒤섞어 작성해서는 안 됩니다.)
-   - 글의 극적인 연출이나 흥미를 위해 KOSPI가 9,000선을 돌파했다거나, 특정 종목이 역대 최대 폭락을 기록했다는 등의 **허구의 수치나 가짜 역사적 사건을 가공·창조하는 행위를 엄격히 금지**합니다. 모든 수치는 입력된 `market_data`와 1:1로 엄격하게 일치해야 합니다.
+   - 특히 **삼성전자(005930)와 SK하이닉스(000660)** 등 주요 종목들의 주가와 등락률을 서로 혼동하거나 뒤바꾸어 서술하지 마십시오.
    - 팩트에 기반한 정교하고 신뢰성 높은 서술만 허용됩니다.
-
 
 2. 느낌표(!) 사용 절대 금지 · 급등예상 등의 자극적인 선동 표현 금지
 3. JSON-LD 및 SVG 태그 본문 내 삽입 금지
@@ -79,7 +151,7 @@ SYNTHESIS_V3_SYSTEM = """
 ═══════════════════════════════
 모바일 친화적 디자인 및 레이아웃 (최우선)
 ═══════════════════════════════
-1. 흰색 배경 중심의 미니멀리즘 디자인 (정보 가독성을 극대화하기 위해 검정색 배경 박스는 본문 전체에서 최대 2개로 제한)
+1. 흰색 배경 중심의 미니멀리즘 디자인
 2. 복잡한 표(table) 지양 — 오직 상단의 '수치 대시보드' 1개에만 표 형식을 허용하고, 나머지는 깔끔한 카드형 div 활용
 3. ★ 개별 종목 매수 추천(단타/스윙 픽 카드 등)은 절대 작성하지 마십시오. (매우 중요)
 4. 대문자 로마숫자(I. II. III. IV. V.)를 사용한 논리적이고 정교한 섹션 분류 (한국어 제목 필수)
@@ -89,28 +161,17 @@ SYNTHESIS_V3_SYSTEM = """
 HTML 최종 작성 구조 및 순서 (오전 7시 개장 전 브리핑 맞춤형)
 ═══════════════════════════════
 1. 마스트헤드 (VOL / 날짜 / 브리핑 종류 등 정보가 정리된 흰색 배경 table)
-2. 수치 대시보드 (검정색 배경의 핵심 지표 대시보드 - 미국 나스닥, S&P500, SOXX, DXY 달러, 원달러 환율, 미10년 금리, 유가 등 글로벌 매크로 중심 구성)
-3. 히어로 이미지 (Unsplash 금융/주식 이미지 링크, 모바일에 맞추어 높이 220px 설정)
-4. H1 역설형/수치형 헤드라인 (정확한 팩트 지표를 대조하여 독자의 관심을 끄는 세련된 제목)
-6. I. 글로벌 마감 바이트 (미국 시장 요약)
-   - 전일 미국 3대 지수(나스닥·S&P500·SOXX 반도체 ETF) 마감 수치 인용 분석
-   - 미국 반도체/빅테크주 급등락 현황과 원인 분석
-7. II. 오늘 한국 시장 개장 영향 (KOSPI/KOSDAQ 갭상승·갭하락 시나리오)
-   - DXY 달러인덱스 및 원달러 환율 추이 기반 외국인 수급 방향 예측
-   - 미국 반도체주 변동에 따른 삼성전자·SK하이닉스 시초가 개장 영향 예상
-8. III. 오늘 장중 대응 프로토콜
-   - 오늘 장중에 집중 추적해야 할 주요 가격선/지지선 및 외국인 수급 분기점
-   - 시장 공포 수준(VIX 지수, 변동성 등)을 감안한 투자 강도 제안
-9. IV. 3대 조건부 시나리오 (글로벌 변수 기반)
-    - 낙관: 미국 야간선물 반등 및 외인 선물 매수 유입 시 지수 회복 경로
-    - 중립: 환율 강보합 및 수급 눈치보기 국면 시 박스권 횡보 경로
-    - 비관: 환율 추가 급등 및 외인 패닉 셀링 지속 시 지수 추가 붕괴 경로
-10. 멋쟁이의 시각 (검정색 박스에 금빛 텍스트 포인트로 수석이사의 최종 에센스 코멘트 작성 - 외부 인용 절대 배제하고 1인칭 브랜드 시각 기술)
-11. 투자 고지 (Disclaimer)
-12. 출처 표기
-
+2. 수치 대시보드 (검정색 배경의 핵심 지표 대시보드)
+3. 히어로 이미지 (Unsplash 이미지 태그)
+4. H1 역설형/수치형 헤드라인
+5. I. 글로벌 마감 바이트 (미국 시장 요약)
+6. II. 오늘 한국 시장 개장 영향
+7. III. 오늘 장중 대응 프로토콜
+8. IV. 3대 조건부 시나리오
+9. 멋쟁이의 시각
+10. 투자 고지 (Disclaimer)
+11. 출처 표기
 """
-
 
 def synthesize_and_write(
     macro: dict,
@@ -127,14 +188,7 @@ def synthesize_and_write(
     weekday = ["월","화","수","목","금","토","일"][today.weekday()]
     date_str = today.strftime("%Y년 %m월 %d일")
 
-    # 이미지 URL 생성
-    market_theme = ""
-    if market_data:
-        kospi = market_data.get("kospi", {}).get("close", "")
-        market_theme = f"KOSPI {kospi} Korean stock market" if kospi else ""
-    img1_url, img2_url = get_blog_image_urls(today.strftime("%Y%m%d"), market_theme)
-    print(f"🖼️ 이미지1: {img1_url[:60]}...")
-    print(f"🖼️ 이미지2: {img2_url[:60]}...")
+    dashboard_html = generate_dashboard_html(market_data or {})
 
     print("🧠 통합 판단 v3 에이전트 작동 중...")
 
@@ -170,26 +224,22 @@ def synthesize_and_write(
 
 위 6개 전문가 분석을 종합해서 블로그를 작성하라.
 
-=== 블로그 이미지 (반드시 사용) ===
-히어로 이미지 URL: {img1_url}
-분석 이미지 URL:   {img2_url}
+=== 수치 대시보드 HTML (마스트헤드 직후에 그대로 삽입) ===
+{dashboard_html}
 
-이미지 삽입 위치:
-- 히어로 이미지: 마스트헤드 div 바로 아래
-- 분석 이미지: 섹션 III 또는 IV 시작 직전
-삽입 형식 (반드시 이대로):
-<img src="URL" style="width:100%;height:220px;object-fit:cover;border-radius:10px;margin:14px 0 20px;display:block" alt="멋쟁이 인사이트 시장 분석" loading="lazy">
-
+=== 히어로 이미지 (수치 대시보드 바로 아래 반드시 사용) ===
+<img src="{UNSPLASH_IMAGE_URL}"
+alt="멋쟁이 인사이트 한국 주식시장 분석"
+style="width:100%;height:280px;object-fit:cover;border-radius:10px;display:block;margin:18px 0 8px">
 
 반드시 지킬 것:
-1. ★ 개별 종목 추천 및 단타 픽은 절대 본문에 포함하지 마십시오. (진입가/목표가/손절선 카드 포함 전체 금지)
-2. 미국 시장 마감 뉴스 및 주요 이슈를 바탕으로, 해당 요인들이 한국 주식 시장(KOSPI, KOSDAQ) 및 주요 업종/섹터(반도체, 2차전지 등)에 미칠 영향성만 정성적/거시적 관점에서 분석하십시오.
+1. ★ 개별 종목 추천 및 단타 픽은 절대 본문에 포함하지 마십시오.
+2. 미국 시장 마감 뉴스 및 주요 이슈를 바탕으로 정성적/거시적 관점에서 분석하십시오.
 
 div-only HTML 전체 출력.
 
 ★★★ 필수: 개별 추천 종목이 없으므로 HTML 맨 마지막 줄에 항상 아래 형식의 JSON 주석만 한 줄 그대로 추가하십시오:
 <!-- PICKS_JSON: [] -->
-
 """
 
     text = ""
@@ -212,7 +262,6 @@ div-only HTML 전체 출력.
                 print("❌ GEMINI_API_KEY가 없습니다. 폴백 불가.")
                 raise claude_err
                 
-            # 백업 모델: gemini-2.5-pro 우선 시도 후 gemini-2.5-flash
             backup_models = ["gemini-2.5-pro", "gemini-2.5-flash"]
             gemini_success = False
             
@@ -250,58 +299,30 @@ div-only HTML 전체 출력.
         elif "```" in text:
             text = text.split("```")[1].split("```")[0].strip()
 
-        # {{PERFORMANCE_HTML}} 플레이스홀더 잔여물 제거
         text = text.replace("{{PERFORMANCE_HTML}}", "")
 
-        # ─────────────────────────────────────────────────────
-        # 이미지 강제 주입 (Claude가 임의 URL 사용 방지)
-        # ─────────────────────────────────────────────────────
-        img1_html = (
-            f'<img src="{img1_url}" '
-            f'style="width:100%;height:220px;object-fit:cover;border-radius:10px;'
-            f'margin:14px 0 20px;display:block;" '
-            f'alt="멋쟁이 인사이트 시장 분석 — 서울 금융가" loading="lazy">'
-        )
-        img2_html = (
-            f'<img src="{img2_url}" '
-            f'style="width:100%;height:200px;object-fit:cover;border-radius:10px;'
-            f'margin:14px 0 20px;display:block;" '
-            f'alt="멋쟁이 인사이트 차트 분석" loading="lazy">'
+        # Unsplash 이미지 태그 보정
+        img_tag = (
+            f'<img src="{UNSPLASH_IMAGE_URL}" '
+            f'alt="멋쟁이 인사이트 한국 주식시장 분석" '
+            f'style="width:100%;height:280px;object-fit:cover;border-radius:10px;display:block;margin:18px 0 8px">'
         )
 
-        # 1) GENERATING_IMAGE 플레이스홀절 치환
-        text = re.sub(r'src=["\']GENERATING_IMAGE_1["\']', f'src="{img1_url}"', text)
-        text = re.sub(r'src=["\']GENERATING_IMAGE_2["\']', f'src="{img2_url}"', text)
-
-        # 2) Unsplash/기타 임의 이미지 URL을 Pollinations URL로 교체
-        #    (히어로 이미지: 첫 번째 img 태그)
         from bs4 import BeautifulSoup as _BS
-        import re as _re
         soup = _BS(text, "html.parser")
         all_imgs = soup.find_all("img")
         if all_imgs:
-            # 첫 번째 이미지를 img1_url로 강제 교체
-            all_imgs[0]["src"] = img1_url
-            all_imgs[0]["style"] = "width:100%;height:220px;object-fit:cover;border-radius:10px;margin:14px 0 20px;display:block;"
-            all_imgs[0]["loading"] = "lazy"
-            # 두 번째 이미지가 있으면 img2_url로 강제 교체
-            if len(all_imgs) >= 2:
-                all_imgs[1]["src"] = img2_url
-                all_imgs[1]["style"] = "width:100%;height:200px;object-fit:cover;border-radius:10px;margin:14px 0 20px;display:block;"
-                all_imgs[1]["loading"] = "lazy"
+            for img in all_imgs:
+                img["src"] = UNSPLASH_IMAGE_URL
+                img["alt"] = "멋쟁이 인사이트 한국 주식시장 분석"
+                img["style"] = "width:100%;height:280px;object-fit:cover;border-radius:10px;display:block;margin:18px 0 8px"
             text = str(soup)
         else:
-            # 이미지 태그 자체가 없으면 강제 삽입
-            # 히어로: H1 태그 앞에 삽입
             if "<h1" in text:
-                text = text.replace("<h1", img1_html + "\n<h1", 1)
-            # 분석 이미지: III 섹션 앞에 삽입
-            if "III." in text or "Ⅲ." in text:
-                text = _re.sub(r'(III\.|Ⅲ\.)', img2_html + r'\n\1', text, count=1)
+                text = text.replace("<h1", img_tag + "\n<h1", 1)
             elif "</h1>" in text:
-                text = text.replace("</h1>", "</h1>\n" + img2_html, 1)
+                text = text.replace("</h1>", "</h1>\n" + img_tag, 1)
 
-        print(f"🖼️ 이미지 주입 완료: {img1_url[:50]}...")
         print("✅ 통합 판단 v3 완료")
         return text
     except Exception as e:

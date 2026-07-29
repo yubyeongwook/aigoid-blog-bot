@@ -121,41 +121,9 @@ def update_performance():
     print(f"✅ 성과 업데이트: {updated}개")
     return history
 
-# ────────────────────────────────
-# 누적 통계 계산
-# ────────────────────────────────
-def calculate_stats() -> dict:
-    history = load_history()
-    all_picks = []
-
-    for date_str, data in history.items():
-        for pick in data.get("picks", []):
-            if pick.get("status") in ["손절", "목표1달성", "목표2달성"]:
-                all_picks.append(pick)
-
-    if not all_picks:
-        return {
-            "total": 0, "win": 0, "lose": 0,
-            "win_rate": 0, "avg_return": 0,
-            "best": None, "worst": None
-        }
-
-    wins = [p for p in all_picks if p["status"] in ["목표1달성", "목표2달성"]]
-    losses = [p for p in all_picks if p["status"] == "손절"]
-    returns = [p.get("result_pct", 0) for p in all_picks]
-
-    return {
-        "total": len(all_picks),
-        "win": len(wins),
-        "lose": len(losses),
-        "win_rate": round(len(wins) / len(all_picks) * 100, 1),
-        "avg_return": round(sum(returns) / len(returns), 2),
-        "best": max(all_picks, key=lambda x: x.get("result_pct", 0)),
-        "worst": min(all_picks, key=lambda x: x.get("result_pct", 0))
-    }
-
-# ────────────────────────────────
-# 성과 블록 HTML 생성 (블로그 상단 표시용)
-# ────────────────────────────────
-def generate_performance_html() -> str:
+def generate_performance_html(picks=None):
     return ""
+
+def calculate_stats(picks=None):
+    return {}
+

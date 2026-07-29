@@ -3,33 +3,10 @@ from anthropic import Anthropic
 
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY",""))
 
+UNSPLASH_IMAGE_URL = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80"
+
 def get_blog_image_urls(date_str: str, market_theme: str = "") -> tuple:
-    """Pollinations AI로 블로그용 이미지 2장 URL 생성 (무료, API 키 불필요)
-    날짜 기반 시드 사용 → 같은 날 같은 이미지 유지
-    """
-    seed1 = int(hashlib.md5(f"{date_str}_afternoon_hero".encode()).hexdigest()[:8], 16) % 99999 + 1
-    seed2 = int(hashlib.md5(f"{date_str}_afternoon_chart".encode()).hexdigest()[:8], 16) % 99999 + 1
-
-    theme = market_theme[:80] if market_theme else "Seoul Korea financial district"
-    p1 = urllib.parse.quote(
-        f"Seoul Korea stock exchange financial district modern professional cityscape {theme} "
-        f"cinematic lighting 4K photography"
-    )
-    img1 = (
-        f"https://image.pollinations.ai/prompt/{p1}"
-        f"?width=720&height=380&nologo=true&seed={seed1}"
-    )
-
-    p2 = urllib.parse.quote(
-        "stock market candlestick chart analysis dark blue background professional "
-        "trading screen data visualization Korea KOSPI financial"
-    )
-    img2 = (
-        f"https://image.pollinations.ai/prompt/{p2}"
-        f"?width=720&height=340&nologo=true&seed={seed2}"
-    )
-
-    return img1, img2
+    return UNSPLASH_IMAGE_URL, UNSPLASH_IMAGE_URL
 
 AFTERNOON_SYSTEM = """
 당신은 멋쟁이 인사이트의 수석이사(Chief Managing Director)이자 최고투자전략책임자입니다.

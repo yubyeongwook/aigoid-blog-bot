@@ -25,12 +25,6 @@ def generate_card_image_prompt(title: str, content: str, stars: str = "") -> str
 
 
 def call_gemini_image(api_key: str, prompt: str) -> bytes | None:
-    # 1순위: 초고속 Pollinations AI 사용
-    img_bytes = call_pollinations_image(prompt)
-    if img_bytes:
-        return img_bytes
-
-    # 2순위: Gemini API 백업
     url = f"{GEMINI_API_URL}?key={api_key}"
     payload = {
         "prompt": prompt,
@@ -45,21 +39,7 @@ def call_gemini_image(api_key: str, prompt: str) -> bytes | None:
                 b64_data = result["generatedImages"][0]["image"]["imageBytes"]
                 return base64.b64decode(b64_data)
     except Exception as e:
-        print(f"Gemini 이미지 생성 백업 실패: {e}")
-    return None
-
-
-def call_pollinations_image(prompt: str) -> bytes | None:
-    try:
-        url = f"https://image.pollinations.ai/prompt/{requests.utils.quote(prompt, safe='')}?width=1024&height=1024&nologo=true&private=true"
-        print("🤖 Pollinations AI 이미지 생성 시도 중...")
-        res = requests.get(url, timeout=30)
-        if res.status_code == 200:
-            return res.content
-        else:
-            print(f"Pollinations AI API 오류 ({res.status_code}): {res.text}")
-    except Exception as e:
-        print(f"Pollinations AI 이미지 생성 실패: {e}")
+        print(f"Gemini 이미지 생성 실패: {e}")
     return None
 
 

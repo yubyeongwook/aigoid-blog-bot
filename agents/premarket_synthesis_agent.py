@@ -3,19 +3,10 @@ from anthropic import Anthropic
 
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY",""))
 
-def get_blog_image_urls(date_str: str, market_theme: str = "") -> tuple:
-    """Pollinations AI로 블로그용 이미지 1장 URL 생성 (동시호가 맞춤형)"""
-    seed1 = int(hashlib.md5(f"{date_str}_premarket_hero".encode()).hexdigest()[:8], 16) % 99999 + 1
-    theme = market_theme[:80] if market_theme else "Seoul Korea financial trading desk"
-    p1 = urllib.parse.quote(
-        f"Seoul Korea stock exchange terminal screens trading room active morning {theme} "
-        f"cinematic lighting 4K photography"
-    )
-    img1 = (
-        f"https://image.pollinations.ai/prompt/{p1}"
-        f"?width=720&height=380&nologo=true&seed={seed1}"
-    )
-    return img1
+UNSPLASH_IMAGE_URL = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80"
+
+def get_blog_image_urls(date_str: str, market_theme: str = "") -> str:
+    return UNSPLASH_IMAGE_URL
 
 PREMARKET_SYSTEM = """
 당신은 멋쟁이 인사이트의 수석이사(Chief Managing Director)이자 최고투자전략책임자입니다.

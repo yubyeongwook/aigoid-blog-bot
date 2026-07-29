@@ -50,13 +50,10 @@ def generate_financial_chart_image(ticker: str, name: str, output_path: str) -> 
         return False
 
 def generate_ai_theme_image(prompt: str, output_path: str) -> bool:
-    """Pollinations AI를 통해 금융 컨셉 일러스트레이션을 생성하여 다운로드합니다."""
-    print(f"🎨 일러스트 전문가: '{prompt}' 컨셉 AI 이미지 생성 중...")
+    """Unsplash 금융 이미지를 다운로드합니다."""
+    print(f"🎨 일러스트 전문가: Unsplash 이미지 다운로드 중...")
     try:
-        clean_prompt = urllib.parse.quote(f"{prompt}, high quality 4k financial stock illustration, neon corporate colors, dark background, vertical aspect ratio")
-        # Pollinations AI 이미지 생성 URL (9:16 세로형 비율 유도 파라미터 추가)
-        url = f"https://image.pollinations.ai/prompt/{clean_prompt}?width=1080&height=1920&nologo=true"
-        
+        url = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80"
         req = urllib.request.Request(
             url, 
             headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}

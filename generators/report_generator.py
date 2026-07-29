@@ -518,39 +518,7 @@ def generate_and_upload_image(prompt_text: str) -> str:
                     print("⚠️ Gemini Imagen 응답에 이미지 데이터가 없음")
             else:
                 print(f"⚠️ Gemini Imagen API 오류 ({res.status_code}): {res.text}")
-        except Exception as e:
-            print(f"⚠️ Gemini Imagen 생성 오류: {e} → Pollinations AI 백업 사용")
-            
-    # 2. Pollinations AI 백업 시도
-    try:
-        encoded_prompt = requests.utils.quote(prompt_text)
-        url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=576&nologo=true&private=true"
-        print(f"🤖 Pollinations AI 이미지 생성 백업 시도 중: '{prompt_text[:45]}...'")
-        res = requests.get(url, timeout=35)
-        if res.status_code == 200:
-            # Catbox 호스팅 업로드 (최대 2회 시도)
-            for attempt in range(2):
-                try:
-                    upload_url = "https://catbox.moe/user/api.php"
-                    upload_data = {"reqtype": "fileupload"}
-                    files = {"fileToUpload": ("image.png", res.content, "image/png")}
-                    print(f"🤖 Catbox 이미지 호스팅 업로드 중 (Pollinations, 시도 {attempt+1})...")
-                    upload_res = requests.post(upload_url, data=upload_data, files=files, timeout=30)
-                    if upload_res.status_code == 200 and upload_res.text.startswith("https"):
-                        url_hosted = upload_res.text.strip()
-                        print(f"✅ Pollinations AI + Catbox 성공: {url_hosted}")
-                        return url_hosted
-                    else:
-                        print(f"⚠️ Catbox 업로드 오류: {upload_res.text}")
-                except Exception as upload_err:
-                    print(f"⚠️ Catbox 업로드 시도 {attempt+1} 실패: {upload_err}")
-                    if attempt == 0:
-                        time.sleep(2)
-        else:
-            print(f"⚠️ Pollinations 이미지 생성 API 응답 실패 ({res.status_code})")
-    except Exception as e:
-        print(f"⚠️ 이미지 생성 및 업로드 오류: {e}")
-    return ""
+    return "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80"
 
 def generate_and_replace_images(html_content: str) -> str:
     from bs4 import BeautifulSoup

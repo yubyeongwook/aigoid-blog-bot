@@ -89,31 +89,10 @@ TREND_BLOG_PROMPT = """당신은 '멋쟁이 인사이트 SMART MONEY INTELLIGENC
 """
 
 
+UNSPLASH_IMAGE_URL = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80"
+
 def generate_trend_image(keyword: str) -> str:
-    print(f"[Image] Generating trend image for keyword: {keyword}...")
-    prompt = f"{keyword} stock trading corporate financial style, dark background, obsidian black and gold accents, high contrast, clean minimalist design, no text, no words, no letters"
-    try:
-        encoded_prompt = urllib.parse.quote(prompt)
-        url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=576&nologo=true&private=true"
-        
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=40) as resp:
-            img_bytes = resp.read()
-            
-        upload_url = "https://catbox.moe/user/api.php"
-        upload_data = {"reqtype": "fileupload"}
-        files = {"fileToUpload": ("image.png", img_bytes, "image/png")}
-        print("🤖 Catbox 이미지 호스팅 업로드 중 (Trending)...")
-        upload_res = requests.post(upload_url, data=upload_data, files=files, timeout=30)
-        if upload_res.status_code == 200 and upload_res.text.startswith("https"):
-            url_hosted = upload_res.text.strip()
-            print(f"✅ Trending Image + Catbox 성공: {url_hosted}")
-            return url_hosted
-        else:
-            print(f"⚠️ Catbox 업로드 실패: {upload_res.text}")
-    except Exception as e:
-        print(f"⚠️ 이미지 생성 및 업로드 오류: {e}")
-    return ""
+    return UNSPLASH_IMAGE_URL
 
 
 def generate_trend_blog(api_key: str, keyword: str, current_date_str: str) -> tuple[str, str] | None:
