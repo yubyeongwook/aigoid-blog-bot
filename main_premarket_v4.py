@@ -39,11 +39,9 @@ def main():
     )
 
     print("\n[5/5] 발행...")
-    seo_title = (
-        f"{today.strftime('%m월 %d일')} {weekday}요일 "
-        f"오전 8시 50분 동시호가 — "
-        f"오늘 주목 종목과 장 시작 전략"
-    )
+    from agents.synthesis_agent_v3 import generate_seo_title
+    market_summary = f"Pre-market opening order flow, KOSPI/KOSDAQ futures, semiconductor and active stocks for today"
+    seo_title = generate_seo_title(market_summary)
     labels = auto_labels(html_content)
     labels.extend(["동시호가", "멋쟁이픽", "장전브리핑"])
     result = publish_post(seo_title, html_content, labels)
