@@ -21,7 +21,8 @@ INSTAGRAM_API_URL = "https://graph.facebook.com/v21.0"
 
 
 def generate_card_image_prompt(title: str, content: str, stars: str = "") -> str:
-    return "ultra modern minimalist financial tech art, sleek 3d glassmorphism glowing stock market chart, futuristic digital wealth sphere, dark obsidian background, electric cyan and emerald green accents, high-end finance tech magazine aesthetic, octane render, 8k resolution, photorealistic, clean composition, no text, no words, no human, no woman, no people, no face, no person"
+    clean_title = re.sub(r'[^\w\s]', '', title[:60])
+    return f"ultra modern minimalist 3d financial concept art inspired by '{clean_title}', sleek glowing stock chart, futuristic digital wealth, dark obsidian background with electric gold and neon green accents, 8k resolution, photorealistic, octane render, clean composition, no text, no words, no letters, no human, no people"
 
 
 def call_gemini_image(api_key: str, prompt: str) -> bytes | None:
@@ -104,13 +105,17 @@ def post_to_instagram(title: str, content: str, caption: str, stars: str = "") -
 
     # 이미지 생성
     prompt = generate_card_image_prompt(title, content, stars)
-    image_bytes = call_gemini_image(gemini_key, prompt)
     if not image_bytes:
-        print("⚠️ Gemini 이미지 생성 실패. Pollinations AI 백업으로 시도합니다...")
-        image_bytes = call_pollinations_image(prompt)
+        print("⚠️ Gemini 이미지 생성 실패. Unsplash 금융 이미지 백업을 다운로드합니다...")
+        try:
+            res = requests.get("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop&q=80", timeout=15)
+            if res.status_code == 200:
+                image_bytes = res.content
+        except Exception as unsplash_err:
+            print(f"Unsplash 다운로드 실패: {unsplash_err}")
 
     if not image_bytes:
-        return {"success": False, "error": "이미지 생성 실패"}
+        return {"success": False, "error": "이미지 생성 및 백업 실패"}
 
     # imgbb에 이미지 업로드
     imgbb_key = os.environ.get("IMGBB_API_KEY", "")
