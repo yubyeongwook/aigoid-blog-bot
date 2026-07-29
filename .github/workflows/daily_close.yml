@@ -2,7 +2,8 @@ name: 멋쟁이 인사이트 v4 — 오후 5시 마감 브리핑
 
 on:
   schedule:
-    - cron: '30 7 * * 1-5'
+    - cron: '20 7 * * 1-5' # KST 16:20 (1차)
+    - cron: '40 7 * * 1-5' # KST 16:40 (2차 백업)
   workflow_dispatch:
 
 jobs:

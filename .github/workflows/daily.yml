@@ -2,7 +2,8 @@ name: 멋쟁이 인사이트 v4 — 오전 7시 브리핑
 
 on:
   schedule:
-    - cron: '0 22 * * 0-4'
+    - cron: '50 21 * * 0-4' # KST 06:50 (1차)
+    - cron: '0 22 * * 0-4'  # KST 07:00 (2차 백업)
   workflow_dispatch:
 
 jobs:

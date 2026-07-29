@@ -2,7 +2,8 @@ name: 멋쟁이 인사이트 v4 — 오전 8시 50분 동시호가
 
 on:
   schedule:
-    - cron: '30 23 * * 0-4'
+    - cron: '35 23 * * 0-4' # KST 08:35 (1차)
+    - cron: '45 23 * * 0-4' # KST 08:45 (2차 백업)
   workflow_dispatch:
 
 jobs:
