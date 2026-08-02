@@ -202,8 +202,8 @@ def main():
             print(f"  {log}")
         print("  ✅ 모든 수치 오류 교정 완료 후 발행을 승인합니다.\n")
 
-    market_summary = f"KOSPI: {market_data.get('kospi', {}).get('close', '-')}, Key News: {macro_result.get('key_insight', '')}"
-    seo_title = generate_seo_title(market_summary)
+    news_items = macro_result.get('news', []) if isinstance(macro_result, dict) else []
+    seo_title = generate_seo_title(market_data, news_items)
     labels = auto_labels(html_content)
     labels.extend(["멋쟁이픽","단타픽","수급분석","공시분석","백테스팅"])
     result = publish_post(seo_title, html_content, labels)
