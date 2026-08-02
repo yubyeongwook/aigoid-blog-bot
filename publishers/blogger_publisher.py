@@ -48,6 +48,9 @@ def publish_post(title: str, html_content: str,
     if labels is None:
         labels = ["멋쟁이인사이트", "코스피", "주식분석"]
 
+    from utils.seo_optimizer import enrich_seo_html, ping_search_engines
+    html_content = enrich_seo_html(html_content, title)
+
     body = {
         "kind": "blogger#post",
         "title": title,
@@ -66,6 +69,11 @@ def publish_post(title: str, html_content: str,
         result = res.json()
         if "url" in result:
             print(f"✅ 발행 완료: {result['url']}")
+            # 구글 / 네이버 / Bing 검색엔진에 자동 색인 Ping 전송
+            try:
+                ping_search_engines(result['url'])
+            except Exception as p_err:
+                print(f"⚠️ 검색엔진 Ping 예외: {p_err}")
         else:
             print(f"⚠️ 발행 결과: {result}")
         return result
