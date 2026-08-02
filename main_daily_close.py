@@ -667,6 +667,13 @@ def main():
     # 5. HTML 생성
     html = generate_close_html(date_str, wd_str, market_data, upper_analysis, picks_result, candidates)
 
+    from utils.fact_validator import validate_and_correct
+    html, v_logs = validate_and_correct(html, market_data)
+    if v_logs:
+        print("\n🚨 [팩트 검증 및 수치/표현 교정 시스템 작동]")
+        for l in v_logs:
+            print(f"  {l}")
+
     # 6. 제목 생성
     title = generate_close_title(market_data, candidates)
 

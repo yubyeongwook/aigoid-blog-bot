@@ -335,6 +335,13 @@ def main():
         if hasattr(signal, 'SIGALRM'):
             signal.alarm(0)
 
+    from utils.fact_validator import validate_and_correct
+    html_content, v_logs = validate_and_correct(html_content, market_data)
+    if v_logs:
+        print("\n🚨 [팩트 검증 및 수치/표현 교정 시스템 작동]")
+        for l in v_logs:
+            print(f"  {l}")
+
     print("\n[5/5] 발행...")
     seo_title = generate_premarket_title(market_data, upper_stocks)
     labels = auto_labels(html_content)
