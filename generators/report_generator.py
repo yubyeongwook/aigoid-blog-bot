@@ -518,6 +518,8 @@ def generate_and_upload_image(prompt_text: str) -> str:
                     print("⚠️ Gemini Imagen 응답에 이미지 데이터가 없음")
             else:
                 print(f"⚠️ Gemini Imagen API 오류 ({res.status_code}): {res.text}")
+        except Exception as e:
+            print(f"⚠️ Gemini Imagen 3.0 이미지 생성 중 오류: {e}")
     return "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop&q=80"
 
 def generate_and_replace_images(html_content: str) -> str:
