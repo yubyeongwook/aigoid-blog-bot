@@ -284,6 +284,11 @@ def main():
     print(f"  {today.strftime('%Y년 %m월 %d일')} {weekday}요일 KST")
     print("="*60)
 
+    from publishers.blogger_publisher import is_already_published_today
+    if is_already_published_today("동시호가"):
+        print("✅ 오늘 동시호가 브리핑이 이미 발행되어 다중 백업 실행을 안전하게 건너땁니다.")
+        return
+
     print("\n[1/5] 실시간 시장 데이터 수집 (장전 동시호가)...")
     market_data = collect_market()
 

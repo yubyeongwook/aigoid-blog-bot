@@ -139,6 +139,11 @@ def main():
     print(f"  {today.strftime('%Y년 %m월 %d일')} {weekday}요일 KST")
     print("="*60)
 
+    from publishers.blogger_publisher import is_already_published_today
+    if is_already_published_today("오전"):
+        print("✅ 오늘 오전 브리핑이 이미 발행되어 다중 백업 실행을 안전하게 건너땁니다.")
+        return
+
     print("\n[0/10] 전일 픽 성과 업데이트...")
     try:
         update_performance()

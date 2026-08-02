@@ -183,7 +183,37 @@ def get_latest_afternoon_report() -> dict:
     return {}
 
 
+# ────────────────────────────────
+# 오늘 이미 발행되었는지 중복 검사
+# ────────────────────────────────
+def is_already_published_today(label_or_keyword: str) -> bool:
+    token = get_access_token()
+    if not token:
+        return False
+
+    url = f"https://www.googleapis.com/blogger/v3/blogs/{BLOG_ID}/posts?maxResults=5&status=live"
+    headers = {"Authorization": f"Bearer {token}"}
+
+    today_str = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)).strftime("%Y-%m-%d")
+
+    try:
+        res = requests.get(url, headers=headers, timeout=10)
+        posts = res.json().get("items", [])
+        for post in posts:
+            pub_date = post.get("published", "")[:10]
+            title = post.get("title", "")
+            labels = post.get("labels", [])
+            
+            if pub_date == today_str:
+                if label_or_keyword in labels or label_or_keyword in title:
+                    print(f"ℹ️ 오늘({today_str}) 이미 '{label_or_keyword}' 브리핑이 발행됨: {title}")
+                    return True
+    except Exception as e:
+        print(f"⚠️ 오늘 발행 여부 확인 중 오류: {e}")
+    return False
+
 if __name__ == "__main__":
     print("blogger_publisher.py 로드 완료")
     token = get_access_token()
     print(f"토큰 발급: {'성공' if token else '실패'}")
+

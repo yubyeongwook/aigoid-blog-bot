@@ -638,6 +638,11 @@ def main():
     print(f"  {date_str} {wd_str}요일 KST")
     print(f"==========================================\n")
 
+    from publishers.blogger_publisher import is_already_published_today
+    if is_already_published_today("마감"):
+        print("✅ 오늘 장마감 브리핑이 이미 발행되어 다중 백업 실행을 안전하게 건너땁니다.")
+        return
+
     # 1. 오늘 마감 데이터 수집
     market_data = collect_close_data()
 

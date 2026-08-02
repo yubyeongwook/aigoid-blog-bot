@@ -1,8 +1,11 @@
-name: 멋쟁이 인사이트 장마감 분석
+name: 멋쟁이 인사이트 장마감 분석 (강력 다중 트리거)
 
 on:
   schedule:
-    - cron: '30 7 * * 1-5'
+    - cron: '20 7 * * 1-5' # KST 16:20 (1차)
+    - cron: '30 7 * * 1-5' # KST 16:30 (2차)
+    - cron: '40 7 * * 1-5' # KST 16:40 (3차)
+    - cron: '0 8 * * 1-5'  # KST 17:00 (4차 백업)
   workflow_dispatch:
 
 jobs:
