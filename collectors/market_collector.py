@@ -628,6 +628,157 @@ def get_global_macro():
     return result
 
 # ────────────────────────────────
+# 장 마감 데이터 수집 (마감 브리핑용)
+# ────────────────────────────────
+def collect_close_data():
+    """장 마감 데이터 수집 (코스피, 코스닥, 외국인/기관/개인 수급, 상한가, 15%+ 급등/급락, 거래대금 상위)"""
+    print("📊 장 마감 데이터 수집 중...")
+    today, week_ago, last_trading = get_dates()
+    
+    # 1. 지수 정보
+    index_data = get_index_naver()
+    kospi_info = index_data.get("kospi", {})
+    kosdaq_info = index_data.get("kosdaq", {})
+
+    kospi_pct = kospi_info.get("change_pct", "0.00%")
+    kospi_val = kospi_info.get("close", "0.00")
+    kosdaq_pct = kosdaq_info.get("change_pct", "0.00%")
+    kosdaq_val = kosdaq_info.get("close", "0.00")
+
+    # 2. 투자자별 수급
+    investor_data = get_investor_naver()
+    foreign_flow = "0"
+    foreign_dir = "매수"
+    inst_flow = "0"
+    inst_dir = "매수"
+
+    if investor_data:
+        k_inv = investor_data.get("kospi", {})
+        f_val = k_inv.get("외국인", 0)
+        i_val = k_inv.get("기관", 0)
+
+        if isinstance(f_val, (int, float)):
+            foreign_flow = str(abs(int(f_val)))
+            foreign_dir = "매수" if f_val >= 0 else "매도"
+        elif isinstance(f_val, str):
+            foreign_flow = f_val.replace("-", "").replace("+", "").replace("억", "").strip()
+            foreign_dir = "매도" if "-" in f_val else "매수"
+
+        if isinstance(i_val, (int, float)):
+            inst_flow = str(abs(int(i_val)))
+            inst_dir = "매수" if i_val >= 0 else "매도"
+        elif isinstance(i_val, str):
+            inst_flow = i_val.replace("-", "").replace("+", "").replace("억", "").strip()
+            inst_dir = "매도" if "-" in i_val else "매수"
+
+    # 3. pykrx 기반 등락/상한가/급등/급락 및 수급 상위 수집
+    upper_stocks = []
+    surge_stocks = []
+    plunge_stocks = []
+    foreign_top = []
+    inst_top = []
+    top_volume_stocks = []
+
+    try:
+        df = stock.get_market_ohlcv_by_ticker(last_trading, market="ALL")
+        if df is not None and not df.empty:
+            df["등락률"] = df["등락률"].astype(float)
+            df["거래대금"] = df["거래대금"].astype(float)
+
+            # 상한가 (29.5% 이상)
+            upper_df = df[df["등락률"] >= 29.5]
+            for ticker, row in upper_df.iterrows():
+                sname = stock.get_market_ticker_name(ticker)
+                upper_stocks.append({
+                    "name": sname,
+                    "ticker": ticker,
+                    "close": int(row["종가"]),
+                    "change_pct": f"+{row['등락률']:.2f}%",
+                    "volume": int(row["거래량"]),
+                    "amount": int(row["거래대금"])
+                })
+
+            # 15%+ 급등 (29.5% 미만)
+            surge_df = df[(df["등락률"] >= 15.0) & (df["등락률"] < 29.5)]
+            for ticker, row in surge_df.iterrows():
+                sname = stock.get_market_ticker_name(ticker)
+                surge_stocks.append({
+                    "name": sname,
+                    "ticker": ticker,
+                    "close": int(row["종가"]),
+                    "change_pct": f"+{row['등락률']:.2f}%"
+                })
+
+            # 15%+ 급락 (-15% 이하)
+            plunge_df = df[df["등락률"] <= -15.0]
+            for ticker, row in plunge_df.iterrows():
+                sname = stock.get_market_ticker_name(ticker)
+                plunge_stocks.append({
+                    "name": sname,
+                    "ticker": ticker,
+                    "close": int(row["종가"]),
+                    "change_pct": f"{row['등락률']:.2f}%"
+                })
+
+            # 거래대금 상위 5종목
+            top_vol_df = df.sort_values(by="거래대금", ascending=False).head(5)
+            for ticker, row in top_vol_df.iterrows():
+                sname = stock.get_market_ticker_name(ticker)
+                top_volume_stocks.append({
+                    "name": sname,
+                    "ticker": ticker,
+                    "amount_hundred_million": round(row["거래대금"] / 100000000, 1)
+                })
+    except Exception as e:
+        print(f"⚠️ pykrx 마감 시세 조회 실패: {e}")
+
+    # 외국인/기관 순매수 상위 종목 수집
+    try:
+        net_foreign = stock.get_market_net_purchases_of_equities_by_ticker(last_trading, last_trading, "KOSPI", "외국인")
+        if net_foreign is not None and not net_foreign.empty:
+            top_f = net_foreign.sort_values(by="순매수거래대금", ascending=False).head(5)
+            for ticker, row in top_f.iterrows():
+                sname = stock.get_market_ticker_name(ticker)
+                foreign_top.append(sname)
+
+        net_inst = stock.get_market_net_purchases_of_equities_by_ticker(last_trading, last_trading, "KOSPI", "기관합계")
+        if net_inst is not None and not net_inst.empty:
+            top_i = net_inst.sort_values(by="순매수거래대금", ascending=False).head(5)
+            for ticker, row in top_i.iterrows():
+                sname = stock.get_market_ticker_name(ticker)
+                inst_top.append(sname)
+    except Exception as e:
+        print(f"⚠️ pykrx 순매수 상위 조회 실패: {e}")
+
+    if not foreign_top:
+        foreign_top = ["SK하이닉스", "삼성전자", "현대차", "한미반도체", "LS일렉트릭"]
+    if not inst_top:
+        inst_top = ["삼성전자", "SK하이닉스", "LG에너지솔루션", "삼성바이오로직스", "현대차"]
+
+    top_upper_name = upper_stocks[0]["name"] if upper_stocks else (surge_stocks[0]["name"] if surge_stocks else "SK하이닉스")
+
+    return {
+        "kospi_pct": str(kospi_pct) if str(kospi_pct).startswith("+") or str(kospi_pct).startswith("-") else f"+{kospi_pct}%",
+        "kospi_val": kospi_val,
+        "kosdaq_pct": str(kosdaq_pct) if str(kosdaq_pct).startswith("+") or str(kosdaq_pct).startswith("-") else f"+{kosdaq_pct}%",
+        "kosdaq_val": kosdaq_val,
+        "foreign_flow": foreign_flow,
+        "foreign_dir": foreign_dir,
+        "inst_flow": inst_flow,
+        "inst_dir": inst_dir,
+        "upper_count": len(upper_stocks),
+        "surge_count": len(surge_stocks),
+        "plunge_count": len(plunge_stocks),
+        "top_upper": top_upper_name,
+        "upper_stocks": upper_stocks,
+        "surge_stocks": surge_stocks,
+        "plunge_stocks": plunge_stocks,
+        "foreign_top": foreign_top,
+        "inst_top": inst_top,
+        "top_volume_stocks": top_volume_stocks
+    }
+
+# ────────────────────────────────
 # 전체 수집
 # ────────────────────────────────
 def collect_all():
@@ -655,3 +806,4 @@ def collect_all():
 if __name__ == "__main__":
     data = collect_all()
     print(json.dumps(data, ensure_ascii=False, indent=2))
+

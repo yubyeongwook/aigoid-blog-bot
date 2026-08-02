@@ -295,6 +295,19 @@ def main():
     if morning_brief:
         print(f"   오늘 오전 브리핑 로드 완료: {morning_brief.get('title')}")
 
+    # PART 5. 순환 연결 구조: 전일 장마감 예비 픽 후보 불러오기
+    candidates_path = "trackers/tomorrow_candidates.json"
+    if os.path.exists(candidates_path):
+        try:
+            with open(candidates_path, 'r', encoding='utf-8') as f:
+                yesterday_candidates = json.load(f)
+                print(f"   전일 장마감 예비 픽 후보 {len(yesterday_candidates)}개 로드 완료 (순환 연결)")
+        except Exception as e:
+            print(f"   ⚠️ 예비 픽 후보 로드 실패: {e}")
+            yesterday_candidates = []
+    else:
+        yesterday_candidates = []
+
     upper_stocks = market_data.get('upper_stocks', [])
     top_stocks = market_data.get('top_stocks', [])
 
