@@ -1,0 +1,57 @@
+[
+  {
+    "rank": 1,
+    "name": "SK하이닉스",
+    "ticker": "000660",
+    "reason": "HBM 독점력 강화 및 외국인 동반 수급 폭발\n전고점 돌파 후 신고가 랠리 채비",
+    "today_close": "198000",
+    "expected_direction": "상승",
+    "key_condition": "오전 9시 10분 외국인 순매수 500억 이상 유입 시",
+    "risk": "미국 기술주 실적 발표 변동성 주의",
+    "priority": "A"
+  },
+  {
+    "rank": 2,
+    "name": "한미반도체",
+    "ticker": "042700",
+    "reason": "TC본더 추가 수주 및 수급 집중 구간 돌파\n상한가 직전 장대양봉 형성",
+    "today_close": "145000",
+    "expected_direction": "상승",
+    "key_condition": "시초가 142,000원 지지 확인 후",
+    "risk": "단기 차익 실현 물량 경계",
+    "priority": "B"
+  },
+  {
+    "rank": 3,
+    "name": "삼성전자",
+    "ticker": "005930",
+    "reason": "외국인 장기 매수세 전환 및 지수 견인\n환율 하향 안정화 최대 수혜",
+    "today_close": "83200",
+    "expected_direction": "상승",
+    "key_condition": "기관 동반 매수세 유지 시",
+    "risk": "원달러 환율 반등 여부 체크",
+    "priority": "C"
+  },
+  {
+    "rank": 4,
+    "name": "LS일렉트릭",
+    "ticker": "010120",
+    "reason": "북미 전력망 인프라 호조 및 수주잔고 최고치\nAI 데이터센터 전력망 확장 동반",
+    "today_close": "168000",
+    "expected_direction": "보합",
+    "key_condition": "165,000원 지지 여부",
+    "risk": "구리 가격 변동성 체크",
+    "priority": "D"
+  },
+  {
+    "rank": 5,
+    "name": "현대차",
+    "ticker": "005380",
+    "reason": "밸류업 기업가치 제고 모멘텀 지속\n자사주 소각 및 배당 성향 확대 수혜",
+    "today_close": "248000",
+    "expected_direction": "상승",
+    "key_condition": "외국인 지속 매수 유입 시",
+    "risk": "미국 자동차 판매 성장률 점검",
+    "priority": "E"
+  }
+]
