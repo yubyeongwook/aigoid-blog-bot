@@ -12,13 +12,15 @@ jobs:
   market_close:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
         python-version: '3.12'
     - name: 라이브러리 캐시
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
@@ -43,3 +45,10 @@ jobs:
         INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
         IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
       run: python main_daily_close.py
+    - name: 자동 커밋
+      run: |
+        git config user.name "멋쟁이봇"
+        git config user.email "aigoid1203@gmail.com"
+        git add trackers/ social_content/ || true
+        git commit -m "자동: $(date +'%Y-%m-%d') 마감분석+내일예비픽" || true
+        git push || true

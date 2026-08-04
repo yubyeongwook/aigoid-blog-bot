@@ -12,13 +12,15 @@ jobs:
   premarket_v4:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
         python-version: '3.12'
     - name: pip 캐시
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
@@ -44,3 +46,10 @@ jobs:
         INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
         IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
       run: python main_premarket_v4.py
+    - name: 자동 커밋
+      run: |
+        git config user.name "멋쟁이봇"
+        git config user.email "aigoid1203@gmail.com"
+        git add trackers/ social_content/ scratch/ || true
+        git commit -m "자동: $(date +'%Y-%m-%d') 동시호가 픽+소셜" || true
+        git push || true
