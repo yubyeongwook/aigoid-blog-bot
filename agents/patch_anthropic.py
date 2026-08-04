@@ -34,20 +34,28 @@ class AnthropicFallback:
     def messages(self):
         return self
 
-    def create(self, model, max_tokens, system, messages, tools=None):
+    def create(self, model="claude-3-5-sonnet-20241022", max_tokens=1000, system=None, messages=None, tools=None, **kwargs):
+        if messages is None:
+            messages = []
         print(f"[Claude Sonnet 4.6] API call attempt ({model})...")
         try:
             if not self.api_key:
                 raise RuntimeError("ANTHROPIC_API_KEY가 설정되지 않았습니다.")
             if self.real_client is None:
                 self.real_client = RealAnthropic(api_key=self.api_key)
-            resp = self.real_client.messages.create(
-                model=model,
-                max_tokens=max_tokens,
-                system=system,
-                messages=messages,
-                **({"tools": tools} if tools else {})
-            )
+            
+            call_kwargs = {
+                "model": model,
+                "max_tokens": max_tokens,
+                "messages": messages,
+                **kwargs
+            }
+            if system:
+                call_kwargs["system"] = system
+            if tools:
+                call_kwargs["tools"] = tools
+
+            resp = self.real_client.messages.create(**call_kwargs)
             print("[Claude Sonnet 4.6] API call success")
             return resp
         except Exception as e:

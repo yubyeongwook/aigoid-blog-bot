@@ -15,16 +15,22 @@ REFRESH_TOKEN = os.getenv("GOOGLE_REFRESH_TOKEN")
 # 액세스 토큰 발급
 # ────────────────────────────────
 def get_access_token() -> str:
+    client_id = os.getenv("GOOGLE_CLIENT_ID") or CLIENT_ID
+    client_secret = os.getenv("GOOGLE_CLIENT_SECRET") or CLIENT_SECRET
+    refresh_token = os.getenv("GOOGLE_REFRESH_TOKEN") or REFRESH_TOKEN
     url = "https://oauth2.googleapis.com/token"
     data = {
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "refresh_token": REFRESH_TOKEN,
+        "client_id": client_id,
+        "client_secret": client_secret,
+        "refresh_token": refresh_token,
         "grant_type": "refresh_token"
     }
     try:
         res = requests.post(url, data=data, timeout=10)
-        return res.json().get("access_token", "")
+        token = res.json().get("access_token", "")
+        if not token:
+            print(f"⚠️ 구글 액세스 토큰 발급 실패 (Status {res.status_code}): {res.text}")
+        return token
     except Exception as e:
         print(f"토큰 발급 오류: {e}")
         return ""
